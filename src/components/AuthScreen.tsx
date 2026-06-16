@@ -30,10 +30,10 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [rememberMe, setRememberMe] = useState(true);
 
   // Onboarding parameters
-  const [age, setAge] = useState<number>(25);
+  const [age, setAge] = useState<number | ''>('');
   const [gender, setGender] = useState('Male');
-  const [height, setHeight] = useState<number>(175);
-  const [weight, setWeight] = useState<number>(70);
+  const [height, setHeight] = useState<number | ''>('');
+  const [weight, setWeight] = useState<number | ''>('');
   const [fitnessLevel, setFitnessLevel] = useState('Intermediate');
   const [primaryGoal, setPrimaryGoal] = useState('General Fitness');
   const [workoutFrequency, setWorkoutFrequency] = useState('3–4 days/week');
@@ -42,6 +42,11 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Validation warnings derived from state
+  const isAgeWarn = age !== '' && (age < 10 || age > 100);
+  const isHeightWarn = height !== '' && (height < 120 || height > 220);
+  const isWeightWarn = weight !== '' && (weight < 30 || weight > 250);
 
   // Authenticated placeholder user till onboarding finished
   const [tempUser, setTempUser] = useState<UserProfile | null>(null);
@@ -109,22 +114,50 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const handleOnboardingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tempUser) return;
+
+    if (age === '') {
+      setError('❌ Please input your age.');
+      return;
+    }
+    if (age < 10 || age > 100) {
+      setError('❌ Age must be between 10 and 100 years.');
+      return;
+    }
+
+    if (weight === '') {
+      setError('❌ Please input your weight.');
+      return;
+    }
+    if (weight < 30 || weight > 250) {
+      setError('❌ Weight must be between 30kg and 250kg.');
+      return;
+    }
+
+    if (height === '') {
+      setError('❌ Please input your height.');
+      return;
+    }
+    if (height < 120 || height > 220) {
+      setError('❌ Height must be between 120cm and 220cm.');
+      return;
+    }
+
     setLoading(true);
     resetMessages();
     try {
       const onboardedProfile = await supabaseService.saveOnboarding({
         ...tempUser,
-        age,
+        age: Number(age),
         gender,
-        height,
-        weight,
+        height: Number(height),
+        weight: Number(weight),
         fitness_goal: primaryGoal,
         fitness_level: fitnessLevel,
         workout_frequency: workoutFrequency,
       });
 
       // Quick log initial weight inside user session database logs
-      await supabaseService.logWeight(weight);
+      await supabaseService.logWeight(Number(weight));
       
       // Seed step, water and health targets
       const stepGoalVal = primaryGoal === 'Weight Loss' ? 12000 : 10000;
@@ -476,13 +509,22 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   <label className="text-xs text-neutral-400 font-medium">Age (years)</label>
                   <input 
                     type="number" 
-                    min={1} 
-                    max={120}
+                    min={10} 
+                    max={100}
+                    placeholder="e.g. 25"
                     value={age}
-                    onChange={(e) => setAge(parseInt(e.target.value) || 25)}
-                    className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setAge(val === '' ? '' : parseInt(val));
+                    }}
+                    className={`w-full bg-[#0D0D0D] border ${
+                      isAgeWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                    } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                     required
                   />
+                  {isAgeWarn && (
+                    <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 10 to 100</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs text-neutral-400 font-medium">Gender</label>
@@ -505,26 +547,44 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   <label className="text-xs text-neutral-400 font-medium">Height (cm)</label>
                   <input 
                     type="number" 
-                    min={40} 
-                    max={250}
+                    min={120} 
+                    max={220}
+                    placeholder="e.g. 175"
                     value={height}
-                    onChange={(e) => setHeight(parseInt(e.target.value) || 170)}
-                    className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setHeight(val === '' ? '' : parseInt(val));
+                    }}
+                    className={`w-full bg-[#0D0D0D] border ${
+                      isHeightWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                    } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                     required
                   />
+                  {isHeightWarn && (
+                    <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 120 - 220 cm</p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-xs text-neutral-400 font-medium">Weight (kg)</label>
                   <input 
                     type="number" 
                     step="0.1"
-                    min={10} 
-                    max={300}
+                    min={30} 
+                    max={250}
+                    placeholder="e.g. 72.5"
                     value={weight}
-                    onChange={(e) => setWeight(parseFloat(e.target.value) || 70)}
-                    className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setWeight(val === '' ? '' : parseFloat(val));
+                    }}
+                    className={`w-full bg-[#0D0D0D] border ${
+                      isWeightWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                    } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                     required
                   />
+                  {isWeightWarn && (
+                    <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 30 - 250 kg</p>
+                  )}
                 </div>
               </div>
 

@@ -20,9 +20,9 @@ interface ProfilePageProps {
 export default function ProfilePage({ user, onLogout, onUpdateSuccess }: ProfilePageProps) {
   // Input fields
   const [name, setName] = useState(user.name || '');
-  const [age, setAge] = useState<number>(user.age || 25);
-  const [height, setHeight] = useState<number>(user.height || 180);
-  const [weight, setWeight] = useState<number>(user.weight || 75);
+  const [age, setAge] = useState<number | ''>(user.age || '');
+  const [height, setHeight] = useState<number | ''>(user.height || '');
+  const [weight, setWeight] = useState<number | ''>(user.weight || '');
   
   const [goal, setGoal] = useState(user.fitness_goal || 'General Fitness');
   const [level, setLevel] = useState(user.fitness_level || 'Intermediate');
@@ -42,17 +42,56 @@ export default function ProfilePage({ user, onLogout, onUpdateSuccess }: Profile
   const [passwordMsg, setPasswordMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Validation warnings derived from state
+  const isProfileAgeWarn = age !== '' && (age < 10 || age > 100);
+  const isProfileHeightWarn = height !== '' && (height < 120 || height > 220);
+  const isProfileWeightWarn = weight !== '' && (weight < 30 || weight > 250);
+
   // Save changes handler
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setProfileMsg('');
+
+    if (age === '') {
+      setProfileMsg('❌ Please enter your age.');
+      setLoading(false);
+      return;
+    }
+    if (age < 10 || age > 100) {
+      setProfileMsg('❌ Age must be between 10 and 100 years.');
+      setLoading(false);
+      return;
+    }
+
+    if (weight === '') {
+      setProfileMsg('❌ Please enter your weight.');
+      setLoading(false);
+      return;
+    }
+    if (weight < 30 || weight > 250) {
+      setProfileMsg('❌ Weight must be between 30kg and 250kg.');
+      setLoading(false);
+      return;
+    }
+
+    if (height === '') {
+      setProfileMsg('❌ Please enter your height.');
+      setLoading(false);
+      return;
+    }
+    if (height < 120 || height > 220) {
+      setProfileMsg('❌ Height must be between 120cm and 220cm.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const updated = await supabaseService.saveOnboarding({
         name,
-        age,
-        height,
-        weight,
+        age: Number(age),
+        height: Number(height),
+        weight: Number(weight),
         fitness_goal: goal,
         fitness_level: level,
         workout_frequency: frequency
@@ -136,11 +175,21 @@ export default function ProfilePage({ user, onLogout, onUpdateSuccess }: Profile
                 <label className="text-xs text-neutral-400 font-medium">Age</label>
                 <input 
                   type="number" 
+                  min={10}
+                  max={100}
                   value={age}
-                  onChange={(e) => setAge(parseInt(e.target.value) || 25)}
-                  className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setAge(val === '' ? '' : parseInt(val));
+                  }}
+                  className={`w-full bg-[#0D0D0D] border ${
+                    isProfileAgeWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                  } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                   required
                 />
+                {isProfileAgeWarn && (
+                  <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 10 to 100</p>
+                )}
               </div>
             </div>
 
@@ -149,22 +198,42 @@ export default function ProfilePage({ user, onLogout, onUpdateSuccess }: Profile
                 <label className="text-xs text-neutral-400">Height (cm)</label>
                 <input 
                   type="number" 
+                  min={120}
+                  max={220}
                   value={height}
-                  onChange={(e) => setHeight(parseInt(e.target.value) || 180)}
-                  className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setHeight(val === '' ? '' : parseInt(val));
+                  }}
+                  className={`w-full bg-[#0D0D0D] border ${
+                    isProfileHeightWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                  } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                   required
                 />
+                {isProfileHeightWarn && (
+                  <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 120 - 220 cm</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <label className="text-xs text-neutral-400 font-medium">Weight (kg)</label>
                 <input 
                   type="number" 
                   step="0.1"
+                  min={30}
+                  max={250}
                   value={weight}
-                  onChange={(e) => setWeight(parseFloat(e.target.value) || 75)}
-                  className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-xs text-neutral-100 focus:outline-none"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setWeight(val === '' ? '' : parseFloat(val));
+                  }}
+                  className={`w-full bg-[#0D0D0D] border ${
+                    isProfileWeightWarn ? 'border-red-500 focus:border-red-500 text-red-100' : 'border-neutral-800 focus:border-emerald-500 text-neutral-100'
+                  } rounded-xl py-2 px-3 text-xs focus:outline-none transition-colors`}
                   required
                 />
+                {isProfileWeightWarn && (
+                  <p className="text-[10px] text-red-400 font-medium animate-pulse mt-1">❌ Invalid: Must be 30 - 250 kg</p>
+                )}
               </div>
             </div>
 

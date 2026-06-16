@@ -181,6 +181,10 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
     e.preventDefault();
     const wt = parseFloat(logWeightVal);
     if (!wt || isNaN(wt)) return;
+    if (wt < 30 || wt > 250) {
+      // Quiet guard, form's min/max usually prevents this
+      return;
+    }
     await supabaseService.logWeight(wt);
     setShowLogWeight(false);
     setLogWeightVal('');
@@ -367,6 +371,8 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
               <input 
                 type="number" 
                 step="0.1"
+                min={30}
+                max={250}
                 placeholder={`Current model weight: ${currentWeight}`} 
                 value={logWeightVal}
                 onChange={(e) => setLogWeightVal(e.target.value)}
