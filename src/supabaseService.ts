@@ -12,20 +12,25 @@ import {
 // Check for Supabase configuration
 const getSupabaseUrl = () => {
   // @ts-ignore - env is injected by Vite during build time
-  const envUrl = import.meta.env?.VITE_SUPABASE_URL;
-  if (
-    envUrl && 
-    typeof envUrl === 'string' && 
-    envUrl.trim() !== '' && 
-    envUrl.trim() !== 'undefined' && 
-    envUrl.trim() !== 'null' && 
-    !envUrl.includes('your-supabase-project')
-  ) {
-    try {
-      new URL(envUrl.trim());
-      return envUrl.trim();
-    } catch (_) {
-      // Ignored, fallback to default
+  let envUrl = import.meta.env?.VITE_SUPABASE_URL;
+  if (envUrl && typeof envUrl === 'string') {
+    envUrl = envUrl.trim();
+    // Strip quotes if they were included by mistake (e.g. from copy-pasting of .env.example)
+    if ((envUrl.startsWith('"') && envUrl.endsWith('"')) || (envUrl.startsWith("'") && envUrl.endsWith("'"))) {
+      envUrl = envUrl.slice(1, -1).trim();
+    }
+    if (
+      envUrl !== '' && 
+      envUrl !== 'undefined' && 
+      envUrl !== 'null' && 
+      !envUrl.includes('your-supabase-project')
+    ) {
+      try {
+        new URL(envUrl);
+        return envUrl;
+      } catch (_) {
+        // Ignored, fallback to default
+      }
     }
   }
   return 'https://mkyaqacvhigrkkommrjz.supabase.co';
@@ -33,16 +38,21 @@ const getSupabaseUrl = () => {
 
 const getSupabaseAnonKey = () => {
   // @ts-ignore - env is injected by Vite during build time
-  const envKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
-  if (
-    envKey && 
-    typeof envKey === 'string' && 
-    envKey.trim() !== '' && 
-    envKey.trim() !== 'undefined' && 
-    envKey.trim() !== 'null' && 
-    !envKey.includes('your-supabase-anon-key')
-  ) {
-    return envKey.trim();
+  let envKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
+  if (envKey && typeof envKey === 'string') {
+    envKey = envKey.trim();
+    // Strip quotes if they were included by mistake
+    if ((envKey.startsWith('"') && envKey.endsWith('"')) || (envKey.startsWith("'") && envKey.endsWith("'"))) {
+      envKey = envKey.slice(1, -1).trim();
+    }
+    if (
+      envKey !== '' && 
+      envKey !== 'undefined' && 
+      envKey !== 'null' && 
+      !envKey.includes('your-supabase-anon-key')
+    ) {
+      return envKey;
+    }
   }
   return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1reWFxYWN2aGlncmtrb21tcmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTc4MjgsImV4cCI6MjA5NzMzMzgyOH0.uaa9xND65hSv3jyLOnfSz1lazVtJ5tKEJxEtEvlg5Ec';
 };
@@ -51,31 +61,8 @@ const supabaseUrl = getSupabaseUrl();
 const supabaseAnonKey = getSupabaseAnonKey();
 
 const getIsConfigured = (): boolean => {
-  if (!supabaseUrl || !supabaseAnonKey) return false;
-  
-  const urlStr = supabaseUrl.trim();
-  const keyStr = supabaseAnonKey.trim();
-  
-  if (
-    urlStr === 'undefined' || 
-    urlStr === 'null' || 
-    urlStr === '' ||
-    keyStr === 'undefined' || 
-    keyStr === 'null' || 
-    keyStr === '' ||
-    urlStr.includes('your-supabase-project') || 
-    keyStr.includes('your-supabase-anon-key')
-  ) {
-    return false;
-  }
-  
-  try {
-    new URL(urlStr);
-    return true;
-  } catch (e) {
-    console.warn("Invalid Supabase URL format configured: ", urlStr);
-    return false;
-  }
+  // Always return true because we have guaranteed fallback values that point to an active, working database.
+  return true;
 };
 
 export const isSupabaseConfigured = getIsConfigured();
