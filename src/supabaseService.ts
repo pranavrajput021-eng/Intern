@@ -366,31 +366,35 @@ export const supabaseService = {
 
   async login(email: string, _password?: string): Promise<UserProfile> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password: _password || 'password123',
-      });
-      if (error) throw error;
-      if (data?.user) {
-        // Fetch or create user model
-        const { data: profile, error: profileErr } = await supabase
-          .from('Users')
-          .select('*')
-          .eq('id', data.user.id)
-          .single();
-        
-        if (profile && !profileErr) {
-          return profile as UserProfile;
-        } else {
-          // Create default profile
-          const newProf: UserProfile = {
-            id: data.user.id,
-            name: data.user.user_metadata?.name || email.split('@')[0],
-            email: email,
-          };
-          await supabase.from('Users').upsert(newProf);
-          return newProf;
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password: _password || 'password123',
+        });
+        if (error) throw error;
+        if (data?.user) {
+          // Fetch or create user model
+          const { data: profile, error: profileErr } = await supabase
+            .from('Users')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+          
+          if (profile && !profileErr) {
+            return profile as UserProfile;
+          } else {
+            // Create default profile
+            const newProf: UserProfile = {
+              id: data.user.id,
+              name: data.user.user_metadata?.name || email.split('@')[0],
+              email: email,
+            };
+            await supabase.from('Users').upsert(newProf);
+            return newProf;
+          }
         }
+      } catch (err) {
+        console.warn('Supabase login failed, using sandbox LocalStorage mode:', err);
       }
     }
 
@@ -414,23 +418,27 @@ export const supabaseService = {
 
   async register(name: string, email: string, _password?: string): Promise<UserProfile> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password: _password || 'password123',
-        options: {
-          data: { name }
-        }
-      });
-      if (error) throw error;
-      if (data?.user) {
-        const newProf: UserProfile = {
-          id: data.user.id,
-          name,
+      try {
+        const { data, error } = await supabase.auth.signUp({
           email,
-        };
-        const { error: dbErr } = await supabase.from('Users').insert(newProf);
-        if (dbErr) console.error('Error writing registered user to DB table', dbErr);
-        return newProf;
+          password: _password || 'password123',
+          options: {
+            data: { name }
+          }
+        });
+        if (error) throw error;
+        if (data?.user) {
+          const newProf: UserProfile = {
+            id: data.user.id,
+            name,
+            email,
+          };
+          const { error: dbErr } = await supabase.from('Users').insert(newProf);
+          if (dbErr) console.error('Error writing registered user to DB table', dbErr);
+          return newProf;
+        }
+      } catch (err) {
+        console.warn('Supabase registration failed, using sandbox LocalStorage mode:', err);
       }
     }
 
@@ -454,13 +462,15 @@ export const supabaseService = {
 
   async logout(): Promise<void> {
     if (isSupabaseConfigured && supabase) {
-      await supabase.auth.signOut();
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.warn('Supabase signOut error:', err);
+      }
     }
     activeSessionUser = null;
     localStorage.removeItem('fitness_app_active_user');
-  },
-
-  async saveOnboarding(profileData: Partial<UserProfile>): Promise<UserProfile> {
+  },  async saveOnboarding(profileData: Partial<UserProfile>): Promise<UserProfile> {
     const currentUser = await this.getCurrentUser();
     if (!currentUser) throw new Error('Not logged in');
 
@@ -469,12 +479,20 @@ export const supabaseService = {
       ...profileData,
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase
-        .from('Users')
-        .upsert(updatedProfile);
-      if (error) throw error;
-    } else {
+      try {
+        const { error } = await supabase
+          .from('Users')
+          .upsert(updatedProfile);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase saveOnboarding error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const users = loadLocal<UserProfile[]>('users', []);
       const index = users.findIndex(u => u.id === currentUser.id);
       if (index !== -1) {
@@ -496,13 +514,17 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('Workouts')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return (data || []) as Workout[];
+      try {
+        const { data, error } = await supabase
+          .from('Workouts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        return (data || []) as Workout[];
+      } catch (err) {
+        console.warn('Supabase getWorkouts error, falling back to Local Storage:', err);
+      }
     }
 
     const workouts = loadLocal<Workout[]>('workouts', []);
@@ -522,19 +544,27 @@ export const supabaseService = {
       created_at: new Date().toISOString()
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error: wError } = await supabase.from('Workouts').insert(newWorkout);
-      if (wError) throw wError;
+      try {
+        const { error: wError } = await supabase.from('Workouts').insert(newWorkout);
+        if (wError) throw wError;
 
-      const exerciseRecords: Exercise[] = exercises.map(ex => ({
-        ...ex,
-        id: generateId(),
-        workout_id: newWorkout.id
-      }));
+        const exerciseRecords: Exercise[] = exercises.map(ex => ({
+          ...ex,
+          id: generateId(),
+          workout_id: newWorkout.id
+        }));
 
-      const { error: eError } = await supabase.from('Exercises').insert(exerciseRecords);
-      if (eError) throw eError;
-    } else {
+        const { error: eError } = await supabase.from('Exercises').insert(exerciseRecords);
+        if (eError) throw eError;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase createWorkout error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       // Save Workout locally
       const workouts = loadLocal<Workout[]>('workouts', []);
       workouts.unshift(newWorkout);
@@ -567,12 +597,16 @@ export const supabaseService = {
   // --- EXERCISES ---
   async getExercises(workoutId: string): Promise<Exercise[]> {
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('Exercises')
-        .select('*')
-        .eq('workout_id', workoutId);
-      if (error) throw error;
-      return (data || []) as Exercise[];
+      try {
+        const { data, error } = await supabase
+          .from('Exercises')
+          .select('*')
+          .eq('workout_id', workoutId);
+        if (error) throw error;
+        return (data || []) as Exercise[];
+      } catch (err) {
+        console.warn('Supabase getExercises error, falling back to Local Storage:', err);
+      }
     }
 
     const exercises = loadLocal<Exercise[]>('exercises', []);
@@ -585,12 +619,16 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('Goals')
-        .select('*')
-        .eq('user_id', user.id);
-      if (error) throw error;
-      return (data || []) as Goal[];
+      try {
+        const { data, error } = await supabase
+          .from('Goals')
+          .select('*')
+          .eq('user_id', user.id);
+        if (error) throw error;
+        return (data || []) as Goal[];
+      } catch (err) {
+        console.warn('Supabase getGoals error, falling back to Local Storage:', err);
+      }
     }
 
     const goals = loadLocal<Goal[]>('goals', []);
@@ -608,10 +646,18 @@ export const supabaseService = {
       created_at: new Date().toISOString()
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.from('Goals').insert(newGoal);
-      if (error) throw error;
-    } else {
+      try {
+        const { error } = await supabase.from('Goals').insert(newGoal);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase createGoal error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const goals = loadLocal<Goal[]>('goals', []);
       goals.unshift(newGoal);
       saveLocal('goals', goals);
@@ -621,13 +667,21 @@ export const supabaseService = {
   },
 
   async updateGoalProgress(goalId: string, value: number): Promise<void> {
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase
-        .from('Goals')
-        .update({ current_value: value })
-        .eq('id', goalId);
-      if (error) throw error;
-    } else {
+      try {
+        const { error } = await supabase
+          .from('Goals')
+          .update({ current_value: value })
+          .eq('id', goalId);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase updateGoalProgress error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const goals = loadLocal<Goal[]>('goals', []);
       const index = goals.findIndex(g => g.id === goalId);
       if (index !== -1) {
@@ -647,13 +701,17 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('WeightLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('date', { ascending: true });
-      if (error) throw error;
-      return (data || []) as WeightLog[];
+      try {
+        const { data, error } = await supabase
+          .from('WeightLogs')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: true });
+        if (error) throw error;
+        return (data || []) as WeightLog[];
+      } catch (err) {
+        console.warn('Supabase getWeightLogs error, falling back to Local Storage:', err);
+      }
     }
 
     const logs = loadLocal<WeightLog[]>('weight_logs', []);
@@ -674,13 +732,21 @@ export const supabaseService = {
       date
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.from('WeightLogs').insert(newLog);
-      if (error) throw error;
-      
-      // Update the user's current weight in the primary Profile as well
-      await supabase.from('Users').update({ weight }).eq('id', user.id);
-    } else {
+      try {
+        const { error } = await supabase.from('WeightLogs').insert(newLog);
+        if (error) throw error;
+        
+        // Update the user's current weight in the primary Profile as well
+        await supabase.from('Users').update({ weight }).eq('id', user.id);
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase logWeight error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const logs = loadLocal<WeightLog[]>('weight_logs', []);
       logs.push(newLog);
       saveLocal('weight_logs', logs);
@@ -713,13 +779,17 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      // In Supabase we check if custom table exists, or we store measurement points dynamically
-      const { data, error } = await supabase
-        .from('MeasurementLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('date', { ascending: true });
-      if (!error && data) return data as MeasurementLog[];
+      try {
+        const { data, error } = await supabase
+          .from('MeasurementLogs')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: true });
+        if (!error && data) return data as MeasurementLog[];
+        if (error) throw error;
+      } catch (err) {
+        console.warn('Supabase getMeasurementLogs error, falling back to Local Storage:', err);
+      }
     }
 
     const logs = loadLocal<MeasurementLog[]>('measurement_logs', []);
@@ -739,9 +809,18 @@ export const supabaseService = {
       date: new Date().toISOString().split('T')[0]
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      await supabase.from('MeasurementLogs').insert(newLog);
-    } else {
+      try {
+        const { error } = await supabase.from('MeasurementLogs').insert(newLog);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase logMeasurements error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const logs = loadLocal<MeasurementLog[]>('measurement_logs', []);
       logs.push(newLog);
       saveLocal('measurement_logs', logs);
@@ -758,13 +837,17 @@ export const supabaseService = {
     const d = dateStr || new Date().toISOString().split('T')[0];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('NutritionLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', d);
-      if (error) throw error;
-      return (data || []) as NutritionLog[];
+      try {
+        const { data, error } = await supabase
+          .from('NutritionLogs')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('date', d);
+        if (error) throw error;
+        return (data || []) as NutritionLog[];
+      } catch (err) {
+        console.warn('Supabase getNutritionLogs error, falling back to Local Storage:', err);
+      }
     }
 
     const logs = loadLocal<NutritionLog[]>('nutrition_logs', []);
@@ -782,10 +865,18 @@ export const supabaseService = {
       date: new Date().toISOString().split('T')[0]
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.from('NutritionLogs').insert(newLog);
-      if (error) throw error;
-    } else {
+      try {
+        const { error } = await supabase.from('NutritionLogs').insert(newLog);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase logFood error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const logs = loadLocal<NutritionLog[]>('nutrition_logs', []);
       logs.push(newLog);
       saveLocal('nutrition_logs', logs);
@@ -802,13 +893,17 @@ export const supabaseService = {
     const targetDate = dateStr || new Date().toISOString().split('T')[0];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('WaterLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', targetDate);
-      if (error) throw error;
-      return (data || []) as WaterLog[];
+      try {
+        const { data, error } = await supabase
+          .from('WaterLogs')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('date', targetDate);
+        if (error) throw error;
+        return (data || []) as WaterLog[];
+      } catch (err) {
+        console.warn('Supabase getWaterLogs error, falling back to Local Storage:', err);
+      }
     }
 
     const logs = loadLocal<WaterLog[]>('water_logs', []);
@@ -821,35 +916,40 @@ export const supabaseService = {
 
     const date = new Date().toISOString().split('T')[0];
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      const { data: existing } = await supabase
-        .from('WaterLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', date);
-
-      if (existing && existing.length > 0) {
-        const total = existing[0].amount + amount;
-        const { error } = await supabase
+      try {
+        const { data: existing } = await supabase
           .from('WaterLogs')
-          .update({ amount: total })
-          .eq('id', existing[0].id);
-        if (error) throw error;
-        return { ...existing[0], amount: total };
-      } else {
-        const newLog: WaterLog = {
-          id: generateId(),
-          user_id: user.id,
-          amount,
-          date
-        };
-        const { error } = await supabase.from('WaterLogs').insert(newLog);
-        if (error) throw error;
-        return newLog;
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('date', date);
+
+        if (existing && existing.length > 0) {
+          const total = existing[0].amount + amount;
+          const { error } = await supabase
+            .from('WaterLogs')
+            .update({ amount: total })
+            .eq('id', existing[0].id);
+          if (error) throw error;
+          return { ...existing[0], amount: total };
+        } else {
+          const newLog: WaterLog = {
+            id: generateId(),
+            user_id: user.id,
+            amount,
+            date
+          };
+          const { error } = await supabase.from('WaterLogs').insert(newLog);
+          if (error) throw error;
+          return newLog;
+        }
+      } catch (err) {
+        console.warn('Supabase logWater error, falling back to Local Storage:', err);
       }
     }
 
-    // Local Storage
+    // Local Storage Fallback
     const logs = loadLocal<WaterLog[]>('water_logs', []);
     const index = logs.findIndex(l => l.user_id === user.id && l.date === date);
     
@@ -876,12 +976,17 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
-        .from('StepLogs')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('date', { ascending: true });
-      if (!error && data) return data as StepLog[];
+      try {
+        const { data, error } = await supabase
+          .from('StepLogs')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: true });
+        if (!error && data) return data as StepLog[];
+        if (error) throw error;
+      } catch (err) {
+        console.warn('Supabase getStepLogs error, falling back to Local Storage:', err);
+      }
     }
 
     const logs = loadLocal<StepLog[]>('step_logs', []);
@@ -903,9 +1008,18 @@ export const supabaseService = {
       date
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      await supabase.from('StepLogs').insert(newLog);
-    } else {
+      try {
+        const { error } = await supabase.from('StepLogs').insert(newLog);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase logSteps error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const logs = loadLocal<StepLog[]>('step_logs', []);
       logs.push(newLog);
       saveLocal('step_logs', logs);
@@ -921,11 +1035,16 @@ export const supabaseService = {
   // --- ACHIEVEMENTS ---
   async getAchievements(): Promise<Achievement[]> {
     if (isSupabaseConfigured && supabase) {
-      // In Supabase, can fetch user's unlocked achievements
-      const { data } = await supabase
-        .from('Achievements')
-        .select('*');
-      return (data || []) as Achievement[];
+      try {
+        // In Supabase, can fetch user's unlocked achievements
+        const { data, error } = await supabase
+          .from('Achievements')
+          .select('*');
+        if (error) throw error;
+        return (data || []) as Achievement[];
+      } catch (err) {
+        console.warn('Supabase getAchievements error, falling back to Local Storage:', err);
+      }
     }
 
     return loadLocal<Achievement[]>('achievements', []);
@@ -967,12 +1086,17 @@ export const supabaseService = {
     if (!user) return [];
 
     if (isSupabaseConfigured && supabase) {
-      const { data } = await supabase
-        .from('Notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      return (data || []) as AppNotification[];
+      try {
+        const { data, error } = await supabase
+          .from('Notifications')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        return (data || []) as AppNotification[];
+      } catch (err) {
+        console.warn('Supabase getNotifications error, falling back to Local Storage:', err);
+      }
     }
 
     const notifs = loadLocal<AppNotification[]>('notifications', []);
@@ -995,9 +1119,18 @@ export const supabaseService = {
       read: false
     };
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      await supabase.from('Notifications').insert(newNotif);
-    } else {
+      try {
+        const { error } = await supabase.from('Notifications').insert(newNotif);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase addNotification error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const notifs = loadLocal<AppNotification[]>('notifications', []);
       notifs.unshift(newNotif);
       saveLocal('notifications', notifs);
@@ -1010,12 +1143,21 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return;
 
+    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      await supabase
-        .from('Notifications')
-        .update({ read: true })
-        .eq('user_id', user.id);
-    } else {
+      try {
+        const { error } = await supabase
+          .from('Notifications')
+          .update({ read: true })
+          .eq('user_id', user.id);
+        if (error) throw error;
+        useLocal = false;
+      } catch (err) {
+        console.warn('Supabase markAllNotificationsRead error, falling back to Local Storage:', err);
+      }
+    }
+
+    if (useLocal) {
       const notifs = loadLocal<AppNotification[]>('notifications', []);
       notifs.forEach(n => {
         if (n.user_id === user.id) n.read = true;
