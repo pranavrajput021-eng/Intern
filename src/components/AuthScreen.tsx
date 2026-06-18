@@ -232,20 +232,20 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
               <div className="space-y-1 w-full">
                 <span className="text-xs font-semibold text-blue-300 block">
-                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') !== 'false' 
+                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' 
                     ? '⚡ Offline Sandbox Mode Active' 
                     : 'Supabase Local Preview Mode Active'}
                 </span>
                 <p className="text-[11px] text-neutral-400 leading-normal">
-                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') !== 'false'
+                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true'
                     ? 'Offline Sandbox Mode has been enabled to completely bypass Supabase email limits. Session data is stored securely in Sandbox Local Storage.'
                     : 'No secrets set. We are utilizing the fully reactive LocalStorage Database Engine so you can preview, create custom routines, log macros, and earn badges instantly!'}
                 </p>
-                {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') !== 'false' ? (
+                {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' ? (
                   <button
                     type="button"
                     onClick={() => {
-                      localStorage.setItem('fitness_app_force_local_mode', 'false');
+                      localStorage.removeItem('fitness_app_force_local_mode');
                       window.location.reload();
                     }}
                     className="mt-2 text-[10px] text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 cursor-pointer hover:underline"
@@ -283,6 +283,35 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   >
                     ⚡ Enable Offline Sandbox Mode
                   </button>
+                </div>
+              )}
+              {(error.toLowerCase().includes('credentials') || error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
+                <div className="pt-2 border-t border-red-900/30 space-y-2">
+                  <p className="text-[11px] text-neutral-300 leading-normal">
+                    <strong>Why is this happening?</strong> 
+                    <br />
+                    By default, new Supabase projects require you to confirm your email before logging in. If you didn't click a verification link or if email delivery failed, Supabase blocks sign-in and reports "Invalid login credentials".
+                  </p>
+                  <div className="bg-black/40 p-2.5 rounded-lg border border-red-950/40 space-y-1.5">
+                    <p className="text-[10px] text-neutral-400 font-semibold uppercase tracking-wider">🛠️ How to fix in Supabase:</p>
+                    <ol className="list-decimal list-inside text-[10px] text-neutral-400 space-y-1 pl-1">
+                      <li>Go to your <strong className="text-neutral-300">Supabase Dashboard</strong></li>
+                      <li>Select <strong className="text-neutral-300">Authentication</strong> &gt; <strong className="text-neutral-300">Providers</strong> &gt; <strong className="text-neutral-300">Email</strong></li>
+                      <li>Turn OFF <strong className="text-neutral-300">"Confirm Email"</strong> and save changes</li>
+                    </ol>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        localStorage.setItem('fitness_app_force_local_mode', 'true');
+                        window.location.reload();
+                      }}
+                      className="w-full sm:w-auto px-3 py-1 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-neutral-200 border border-neutral-800 text-[10px] font-semibold rounded-lg transition cursor-pointer text-center"
+                    >
+                      ⚡ Switch to Offline Sandbox Mode
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

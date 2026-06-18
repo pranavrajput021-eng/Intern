@@ -13,7 +13,7 @@ import {
 const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
-const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') !== 'false';
+const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true';
 
 export const isSupabaseConfigured = 
   !!supabaseUrl && 
