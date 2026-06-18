@@ -13,8 +13,20 @@ import {
 const getSupabaseUrl = () => {
   // @ts-ignore - env is injected by Vite during build time
   const envUrl = import.meta.env?.VITE_SUPABASE_URL;
-  if (envUrl && envUrl.trim() !== '' && !envUrl.includes('your-supabase-project')) {
-    return envUrl.trim();
+  if (
+    envUrl && 
+    typeof envUrl === 'string' && 
+    envUrl.trim() !== '' && 
+    envUrl.trim() !== 'undefined' && 
+    envUrl.trim() !== 'null' && 
+    !envUrl.includes('your-supabase-project')
+  ) {
+    try {
+      new URL(envUrl.trim());
+      return envUrl.trim();
+    } catch (_) {
+      // Ignored, fallback to default
+    }
   }
   return 'https://mkyaqacvhigrkkommrjz.supabase.co';
 };
@@ -22,7 +34,14 @@ const getSupabaseUrl = () => {
 const getSupabaseAnonKey = () => {
   // @ts-ignore - env is injected by Vite during build time
   const envKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
-  if (envKey && envKey.trim() !== '' && !envKey.includes('your-supabase-anon-key')) {
+  if (
+    envKey && 
+    typeof envKey === 'string' && 
+    envKey.trim() !== '' && 
+    envKey.trim() !== 'undefined' && 
+    envKey.trim() !== 'null' && 
+    !envKey.includes('your-supabase-anon-key')
+  ) {
     return envKey.trim();
   }
   return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1reWFxYWN2aGlncmtrb21tcmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTc4MjgsImV4cCI6MjA5NzMzMzgyOH0.uaa9xND65hSv3jyLOnfSz1lazVtJ5tKEJxEtEvlg5Ec';
@@ -37,7 +56,18 @@ const getIsConfigured = (): boolean => {
   const urlStr = supabaseUrl.trim();
   const keyStr = supabaseAnonKey.trim();
   
-  if (urlStr.includes('your-supabase-project') || keyStr.includes('your-supabase-anon-key')) return false;
+  if (
+    urlStr === 'undefined' || 
+    urlStr === 'null' || 
+    urlStr === '' ||
+    keyStr === 'undefined' || 
+    keyStr === 'null' || 
+    keyStr === '' ||
+    urlStr.includes('your-supabase-project') || 
+    keyStr.includes('your-supabase-anon-key')
+  ) {
+    return false;
+  }
   
   try {
     new URL(urlStr);
