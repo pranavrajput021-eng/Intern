@@ -10,8 +10,26 @@ import {
 } from './types';
 
 // Check for Supabase configuration
-const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
+const getSupabaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    const localUrl = localStorage.getItem('VITE_SUPABASE_URL');
+    if (localUrl) return localUrl;
+  }
+  // @ts-ignore - env is injected by Vite during build time
+  return import.meta.env?.VITE_SUPABASE_URL || '';
+};
+
+const getSupabaseAnonKey = () => {
+  if (typeof window !== 'undefined') {
+    const localKey = localStorage.getItem('VITE_SUPABASE_ANON_KEY');
+    if (localKey) return localKey;
+  }
+  // @ts-ignore - env is injected by Vite during build time
+  return import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
+};
+
+const supabaseUrl = getSupabaseUrl();
+const supabaseAnonKey = getSupabaseAnonKey();
 
 const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true';
 

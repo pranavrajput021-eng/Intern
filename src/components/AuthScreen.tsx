@@ -43,6 +43,21 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // States for custom Supabase credentials entry
+  const [showKeyForm, setShowKeyForm] = useState(false);
+  const [customUrl, setCustomUrl] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('VITE_SUPABASE_URL') || '' : '';
+  });
+  const [customAnonKey, setCustomAnonKey] = useState(() => {
+    return typeof window !== 'undefined' ? localStorage.getItem('VITE_SUPABASE_ANON_KEY') || '' : '';
+  });
+  const [isBannerDismissed, setIsBannerDismissed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('supabase_banner_dismissed') === 'true';
+    }
+    return false;
+  });
+
   // Validation warnings derived from state
   const isAgeWarn = age !== '' && (age < 10 || age > 100);
   const isHeightWarn = height !== '' && (height < 120 || height > 220);
@@ -226,11 +241,22 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         </div>
 
         {/* Supabase status warning banner (Helpful user guide) */}
-        {!isSupabaseConfigured && (
-          <div className="mb-6 p-4 rounded-xl bg-blue-900/10 border border-blue-800/40 text-left shadow-lg backdrop-blur-md">
+        {!isSupabaseConfigured && !isBannerDismissed && (
+          <div className="mb-6 p-4 rounded-xl bg-blue-900/10 border border-blue-800/40 text-left shadow-lg backdrop-blur-md relative">
+            <button 
+              type="button" 
+              onClick={() => {
+                localStorage.setItem('supabase_banner_dismissed', 'true');
+                setIsBannerDismissed(true);
+              }}
+              className="absolute top-3 right-3 text-neutral-400 hover:text-neutral-200 transition text-[10px] uppercase font-mono px-1 w-5 h-5 rounded hover:bg-white/5 flex items-center justify-center cursor-pointer"
+              title="Dismiss warning"
+            >
+              ✕
+            </button>
             <div className="flex gap-3">
               <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-              <div className="space-y-1 w-full">
+              <div className="space-y-1 w-full pr-4">
                 <span className="text-xs font-semibold text-blue-300 block">
                   {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' 
                     ? '⚡ Offline Sandbox Mode Active' 
@@ -241,7 +267,83 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     ? 'Offline Sandbox Mode has been enabled to completely bypass Supabase email limits. Session data is stored securely in Sandbox Local Storage.'
                     : 'No secrets set. We are utilizing the fully reactive LocalStorage Database Engine so you can preview, create custom routines, log macros, and earn badges instantly!'}
                 </p>
-                {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' ? (
+                
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowKeyForm(!showKeyForm)}
+                    className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 cursor-pointer transition underline"
+                  >
+                    🔑 {showKeyForm ? 'Hide credentials configuration form' : 'Configure custom Supabase keys & database connection'}
+                  </button>
+                </div>
+
+                {showKeyForm && (
+                  <div className="mt-3 p-3 bg-neutral-900/90 border border-neutral-800 rounded-lg space-y-3">
+                    <p className="text-[10px] text-neutral-400">
+                      You can connect your own live Supabase instance by entering your API credentials below. They are saved securely in your browser's LocalStorage.
+                    </p>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase tracking-wider text-neutral-500 font-semibold block">VITE_SUPABASE_URL</label>
+                      <input 
+                        type="text" 
+                        placeholder="e.g. https://xyz.supabase.co" 
+                        value={customUrl}
+                        onChange={(e) => setCustomUrl(e.target.value)}
+                        className="w-full bg-[#050505] border border-neutral-800 focus:border-blue-500 rounded-md p-1.5 text-[11px] text-neutral-100 focus:outline-none transition font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[9px] uppercase tracking-wider text-neutral-500 font-semibold block">VITE_SUPABASE_ANON_KEY</label>
+                      <input 
+                        type="password" 
+                        placeholder="eyJh..." 
+                        value={customAnonKey}
+                        onChange={(e) => setCustomAnonKey(e.target.value)}
+                        className="w-full bg-[#050505] border border-neutral-800 focus:border-blue-500 rounded-md p-1.5 text-[11px] text-neutral-100 focus:outline-none transition font-mono"
+                      />
+                    </div>
+                    <div className="flex gap-2 pt-1 font-sans">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!customUrl.trim() || !customAnonKey.trim()) {
+                            alert('Please enter both Supabase URL and Anon Key.');
+                            return;
+                          }
+                          localStorage.setItem('VITE_SUPABASE_URL', customUrl.trim());
+                          localStorage.setItem('VITE_SUPABASE_ANON_KEY', customAnonKey.trim());
+                          localStorage.removeItem('fitness_app_force_local_mode');
+                          localStorage.removeItem('supabase_banner_dismissed'); // show live status
+                          window.location.reload();
+                        }}
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold px-3 py-1.5 rounded transition cursor-pointer"
+                      >
+                        Save & Connect
+                      </button>
+                      {(localStorage.getItem('VITE_SUPABASE_URL') || localStorage.getItem('VITE_SUPABASE_ANON_KEY')) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            localStorage.removeItem('VITE_SUPABASE_URL');
+                            localStorage.removeItem('VITE_SUPABASE_ANON_KEY');
+                            setCustomUrl('');
+                            setCustomAnonKey('');
+                            window.location.reload();
+                          }}
+                          className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-[10px] font-bold px-3 py-1.5 rounded transition cursor-pointer"
+                        >
+                          Clear custom keys
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[9px] text-neutral-500 leading-normal mt-2 leading-relaxed">
+                      💡 <strong>Where to find keys:</strong> Go to your <strong>Supabase Dashboard</strong> (supabase.com) &rarr; Select your project &rarr; Click <strong>Project Settings</strong> (gear icon) &rarr; Go to <strong>API</strong> &rarr; copy Project URL & Anon public key.
+                    </p>
+                  </div>
+                )}
+
+                {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' && (
                   <button
                     type="button"
                     onClick={() => {
@@ -252,10 +354,6 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   >
                     🔄 Switch back to Live Supabase Cloud Login
                   </button>
-                ) : (
-                  <p className="text-[10px] text-blue-400 font-mono mt-1">
-                    Configure VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY in Secrets for live cloud auth.
-                  </p>
                 )}
               </div>
             </div>
@@ -826,6 +924,23 @@ create policy "Allow step logs control for self" on public."StepLogs"
           )}
 
         </div>
+
+        {/* Dynamic Database settings popup toggle footer */}
+        {!isSupabaseConfigured && isBannerDismissed && (
+          <div className="mt-6 text-center font-sans">
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.removeItem('supabase_banner_dismissed');
+                setIsBannerDismissed(false);
+                setShowKeyForm(true);
+              }}
+              className="text-[10px] text-neutral-500 hover:text-neutral-300 font-medium tracking-wide flex items-center justify-center gap-1.5 mx-auto cursor-pointer select-none transition"
+            >
+              🔑 Database Connection Settings
+            </button>
+          </div>
+        )}
 
       </div>
     </div>
