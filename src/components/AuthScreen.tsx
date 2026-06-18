@@ -240,125 +240,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           </p>
         </div>
 
-        {/* Supabase status warning banner (Helpful user guide) */}
-        {!isSupabaseConfigured && !isBannerDismissed && (
-          <div className="mb-6 p-4 rounded-xl bg-blue-900/10 border border-blue-800/40 text-left shadow-lg backdrop-blur-md relative">
-            <button 
-              type="button" 
-              onClick={() => {
-                localStorage.setItem('supabase_banner_dismissed', 'true');
-                setIsBannerDismissed(true);
-              }}
-              className="absolute top-3 right-3 text-neutral-400 hover:text-neutral-200 transition text-[10px] uppercase font-mono px-1 w-5 h-5 rounded hover:bg-white/5 flex items-center justify-center cursor-pointer"
-              title="Dismiss warning"
-            >
-              ✕
-            </button>
-            <div className="flex gap-3">
-              <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
-              <div className="space-y-1 w-full pr-4">
-                <span className="text-xs font-semibold text-blue-300 block">
-                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' 
-                    ? '⚡ Offline Sandbox Mode Active' 
-                    : 'Supabase Local Preview Mode Active'}
-                </span>
-                <p className="text-[11px] text-neutral-400 leading-normal">
-                  {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true'
-                    ? 'Offline Sandbox Mode has been enabled to completely bypass Supabase email limits. Session data is stored securely in Sandbox Local Storage.'
-                    : 'No secrets set. We are utilizing the fully reactive LocalStorage Database Engine so you can preview, create custom routines, log macros, and earn badges instantly!'}
-                </p>
-                
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowKeyForm(!showKeyForm)}
-                    className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 cursor-pointer transition underline"
-                  >
-                    🔑 {showKeyForm ? 'Hide credentials configuration form' : 'Configure custom Supabase keys & database connection'}
-                  </button>
-                </div>
 
-                {showKeyForm && (
-                  <div className="mt-3 p-3 bg-neutral-900/90 border border-neutral-800 rounded-lg space-y-3">
-                    <p className="text-[10px] text-neutral-400">
-                      You can connect your own live Supabase instance by entering your API credentials below. They are saved securely in your browser's LocalStorage.
-                    </p>
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-wider text-neutral-500 font-semibold block">VITE_SUPABASE_URL</label>
-                      <input 
-                        type="text" 
-                        placeholder="e.g. https://xyz.supabase.co" 
-                        value={customUrl}
-                        onChange={(e) => setCustomUrl(e.target.value)}
-                        className="w-full bg-[#050505] border border-neutral-800 focus:border-blue-500 rounded-md p-1.5 text-[11px] text-neutral-100 focus:outline-none transition font-mono"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[9px] uppercase tracking-wider text-neutral-500 font-semibold block">VITE_SUPABASE_ANON_KEY</label>
-                      <input 
-                        type="password" 
-                        placeholder="eyJh..." 
-                        value={customAnonKey}
-                        onChange={(e) => setCustomAnonKey(e.target.value)}
-                        className="w-full bg-[#050505] border border-neutral-800 focus:border-blue-500 rounded-md p-1.5 text-[11px] text-neutral-100 focus:outline-none transition font-mono"
-                      />
-                    </div>
-                    <div className="flex gap-2 pt-1 font-sans">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!customUrl.trim() || !customAnonKey.trim()) {
-                            alert('Please enter both Supabase URL and Anon Key.');
-                            return;
-                          }
-                          localStorage.setItem('VITE_SUPABASE_URL', customUrl.trim());
-                          localStorage.setItem('VITE_SUPABASE_ANON_KEY', customAnonKey.trim());
-                          localStorage.removeItem('fitness_app_force_local_mode');
-                          localStorage.removeItem('supabase_banner_dismissed'); // show live status
-                          window.location.reload();
-                        }}
-                        className="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold px-3 py-1.5 rounded transition cursor-pointer"
-                      >
-                        Save & Connect
-                      </button>
-                      {(localStorage.getItem('VITE_SUPABASE_URL') || localStorage.getItem('VITE_SUPABASE_ANON_KEY')) && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            localStorage.removeItem('VITE_SUPABASE_URL');
-                            localStorage.removeItem('VITE_SUPABASE_ANON_KEY');
-                            setCustomUrl('');
-                            setCustomAnonKey('');
-                            window.location.reload();
-                          }}
-                          className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-[10px] font-bold px-3 py-1.5 rounded transition cursor-pointer"
-                        >
-                          Clear custom keys
-                        </button>
-                      )}
-                    </div>
-                    <p className="text-[9px] text-neutral-500 leading-normal mt-2 leading-relaxed">
-                      💡 <strong>Where to find keys:</strong> Go to your <strong>Supabase Dashboard</strong> (supabase.com) &rarr; Select your project &rarr; Click <strong>Project Settings</strong> (gear icon) &rarr; Go to <strong>API</strong> &rarr; copy Project URL & Anon public key.
-                    </p>
-                  </div>
-                )}
-
-                {typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true' && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.removeItem('fitness_app_force_local_mode');
-                      window.location.reload();
-                    }}
-                    className="mt-2 text-[10px] text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 cursor-pointer hover:underline"
-                  >
-                    🔄 Switch back to Live Supabase Cloud Login
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Card and Forms */}
         <div id="auth-form-card" className="bg-neutral-950/40 border border-neutral-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative">
@@ -367,20 +249,8 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
             <div className="mb-4 p-4 rounded-xl bg-red-950/20 border border-red-800/35 text-xs text-red-400 text-left space-y-3 shadow-inner">
               <p className="font-medium">💡 {error}</p>
               {(error.toLowerCase().includes('rate limit') || error.toLowerCase().includes('rate_limit')) && (
-                <div className="pt-2 border-t border-red-900/30">
-                  <p className="text-[11px] text-neutral-400 leading-normal mb-2.5">
-                    Supabase free plan allows a maximum of 3 authentication emails per hour. You can completely bypass this limitation and start using the app instantly by enabling Sandbox Mode (stores data locally in your browser).
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.setItem('fitness_app_force_local_mode', 'true');
-                      window.location.reload();
-                    }}
-                    className="w-full sm:w-auto px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-red-300 hover:text-red-200 border border-red-900/40 text-[11px] font-semibold rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    ⚡ Enable Offline Sandbox Mode
-                  </button>
+                <div className="pt-2 border-t border-red-900/30 text-[11px] text-neutral-400 leading-normal">
+                  Supabase free plan allows a maximum of 3 authentication emails per hour. Please wait a bit before requesting another attempt.
                 </div>
               )}
               {(error.toLowerCase().includes('credentials') || error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
@@ -397,18 +267,6 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                       <li>Select <strong className="text-neutral-300">Authentication</strong> &gt; <strong className="text-neutral-300">Providers</strong> &gt; <strong className="text-neutral-300">Email</strong></li>
                       <li>Turn OFF <strong className="text-neutral-300">"Confirm Email"</strong> and save changes</li>
                     </ol>
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        localStorage.setItem('fitness_app_force_local_mode', 'true');
-                        window.location.reload();
-                      }}
-                      className="w-full sm:w-auto px-3 py-1 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-neutral-200 border border-neutral-800 text-[10px] font-semibold rounded-lg transition cursor-pointer text-center"
-                    >
-                      ⚡ Switch to Offline Sandbox Mode
-                    </button>
                   </div>
                 </div>
               )}
@@ -582,21 +440,6 @@ create policy "Allow step logs control for self" on public."StepLogs"
               <div className="block text-center text-[10px] text-neutral-600 mt-2">
                 By tapping continue, you agree to our terms of training.
               </div>
-
-              {isSupabaseConfigured && (
-                <div className="pt-3.5 border-t border-neutral-900/50 flex justify-center mt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.setItem('fitness_app_force_local_mode', 'true');
-                      window.location.reload();
-                    }}
-                    className="text-[10px] text-neutral-400 hover:text-emerald-400 font-medium transition cursor-pointer flex items-center gap-1.5 hover:underline"
-                  >
-                    ⚙️ Skip live cloud auth & run in Offline Sandbox Mode
-                  </button>
-                </div>
-              )}
             </form>
           )}
 
@@ -695,21 +538,6 @@ create policy "Allow step logs control for self" on public."StepLogs"
                 {loading ? 'Creating Athlete Profile...' : 'Begin Onboarding Flow'}
                 <ChevronRight className="w-4 h-4 text-black" />
               </button>
-
-              {isSupabaseConfigured && (
-                <div className="pt-3.5 border-t border-neutral-900/50 flex justify-center mt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.setItem('fitness_app_force_local_mode', 'true');
-                      window.location.reload();
-                    }}
-                    className="text-[10px] text-neutral-400 hover:text-emerald-400 font-medium transition cursor-pointer flex items-center gap-1.5 hover:underline"
-                  >
-                    ⚙️ Use zero-confirmation Offline Sandbox Mode instead
-                  </button>
-                </div>
-              )}
             </form>
           )}
 
