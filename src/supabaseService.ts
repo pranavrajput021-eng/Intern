@@ -12,12 +12,20 @@ import {
 // Check for Supabase configuration
 const getSupabaseUrl = () => {
   // @ts-ignore - env is injected by Vite during build time
-  return import.meta.env?.VITE_SUPABASE_URL || 'https://mkyaqacvhigrkkommrjz.supabase.co';
+  const envUrl = import.meta.env?.VITE_SUPABASE_URL;
+  if (envUrl && envUrl.trim() !== '' && !envUrl.includes('your-supabase-project')) {
+    return envUrl.trim();
+  }
+  return 'https://mkyaqacvhigrkkommrjz.supabase.co';
 };
 
 const getSupabaseAnonKey = () => {
   // @ts-ignore - env is injected by Vite during build time
-  return import.meta.env?.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1reWFxYWN2aGlncmtrb21tcmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTc4MjgsImV4cCI6MjA5NzMzMzgyOH0.uaa9xND65hSv3jyLOnfSz1lazVtJ5tKEJxEtEvlg5Ec';
+  const envKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
+  if (envKey && envKey.trim() !== '' && !envKey.includes('your-supabase-anon-key')) {
+    return envKey.trim();
+  }
+  return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1reWFxYWN2aGlncmtrb21tcmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTc4MjgsImV4cCI6MjA5NzMzMzgyOH0.uaa9xND65hSv3jyLOnfSz1lazVtJ5tKEJxEtEvlg5Ec';
 };
 
 const supabaseUrl = getSupabaseUrl();
