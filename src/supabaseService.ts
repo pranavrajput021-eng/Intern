@@ -33,16 +33,37 @@ const supabaseAnonKey = getSupabaseAnonKey();
 
 const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true';
 
-export const isSupabaseConfigured = 
-  !!supabaseUrl && 
-  !!supabaseAnonKey && 
-  !supabaseUrl.includes('your-supabase-project') &&
-  !supabaseAnonKey.includes('your-supabase-anon-key') &&
-  !isForcedLocal;
+const getIsConfigured = (): boolean => {
+  if (isForcedLocal) return false;
+  if (!supabaseUrl || !supabaseAnonKey) return false;
+  
+  const urlStr = supabaseUrl.trim();
+  const keyStr = supabaseAnonKey.trim();
+  
+  if (urlStr.includes('your-supabase-project') || keyStr.includes('your-supabase-anon-key')) return false;
+  
+  try {
+    new URL(urlStr);
+    return true;
+  } catch (e) {
+    console.warn("Invalid Supabase URL format configured: ", urlStr);
+    return false;
+  }
+};
 
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const isSupabaseConfigured = getIsConfigured();
+
+const createSupabaseClientSafely = () => {
+  if (!isSupabaseConfigured) return null;
+  try {
+    return createClient(supabaseUrl.trim(), supabaseAnonKey.trim());
+  } catch (error) {
+    console.error("Failed to initialize Supabase client safely: ", error);
+    return null;
+  }
+};
+
+export const supabase = createSupabaseClientSafely();
 
 // Clean IDs generator
 const generateId = () => Math.random().toString(36).substring(2, 11);
