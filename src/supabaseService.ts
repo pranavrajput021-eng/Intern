@@ -11,30 +11,19 @@ import {
 
 // Check for Supabase configuration
 const getSupabaseUrl = () => {
-  if (typeof window !== 'undefined') {
-    const localUrl = localStorage.getItem('VITE_SUPABASE_URL');
-    if (localUrl) return localUrl;
-  }
   // @ts-ignore - env is injected by Vite during build time
-  return import.meta.env?.VITE_SUPABASE_URL || '';
+  return import.meta.env?.VITE_SUPABASE_URL || 'https://mkyaqacvhigrkkommrjz.supabase.co';
 };
 
 const getSupabaseAnonKey = () => {
-  if (typeof window !== 'undefined') {
-    const localKey = localStorage.getItem('VITE_SUPABASE_ANON_KEY');
-    if (localKey) return localKey;
-  }
   // @ts-ignore - env is injected by Vite during build time
-  return import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
+  return import.meta.env?.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1reWFxYWN2aGlncmtrb21tcmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NTc4MjgsImV4cCI6MjA5NzMzMzgyOH0.uaa9xND65hSv3jyLOnfSz1lazVtJ5tKEJxEtEvlg5Ec';
 };
 
 const supabaseUrl = getSupabaseUrl();
 const supabaseAnonKey = getSupabaseAnonKey();
 
-const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') === 'true';
-
 const getIsConfigured = (): boolean => {
-  if (isForcedLocal) return false;
   if (!supabaseUrl || !supabaseAnonKey) return false;
   
   const urlStr = supabaseUrl.trim();
@@ -68,409 +57,100 @@ export const supabase = createSupabaseClientSafely();
 // Clean IDs generator
 const generateId = () => Math.random().toString(36).substring(2, 11);
 
-// Helper for local storage
-const loadLocal = <T>(key: string, defaultValue: T): T => {
-  try {
-    const val = localStorage.getItem(`fitness_app_${key}`);
-    return val ? JSON.parse(val) : defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
-const saveLocal = <T>(key: string, data: T) => {
-  try {
-    localStorage.setItem(`fitness_app_${key}`, JSON.stringify(data));
-  } catch (err) {
-    console.error('Local Storage Save Error', err);
-  }
-};
-
-// Seed initial values for Sandbox mode
-const seedDemoData = () => {
-  const now = new Date();
-  const getPastDateStr = (daysAgo: number) => {
-    const d = new Date();
-    d.setDate(now.getDate() - daysAgo);
-    return d.toISOString().split('T')[0];
-  };
-
-  const demoUser: UserProfile = {
-    id: 'demo-user-id',
-    name: 'Pranav Rajput',
-    email: 'pranavrajput021@gmail.com',
-    age: 26,
-    gender: 'Male',
-    height: 180,
-    weight: 79.5,
-    fitness_goal: 'Muscle Gain',
-    fitness_level: 'Intermediate',
-    workout_frequency: '3–4 days/week',
-    created_at: getPastDateStr(30)
-  };
-
-  const demoWorkouts: Workout[] = [
-    {
-      id: 'w1',
-      user_id: 'demo-user-id',
-      workout_name: 'Hypertrophy Push',
-      workout_type: 'Strength Training',
-      duration: 55,
-      calories_burned: 420,
-      notes: 'Felt extremely strong on flat bench. Focus on depth.',
-      created_at: getPastDateStr(3)
-    },
-    {
-      id: 'w2',
-      user_id: 'demo-user-id',
-      workout_name: 'High Intensity Core & Cardio',
-      workout_type: 'HIIT',
-      duration: 35,
-      calories_burned: 480,
-      notes: 'Added interval sprints on treadmill at 15km/h.',
-      created_at: getPastDateStr(1)
-    },
-    {
-      id: 'w3',
-      user_id: 'demo-user-id',
-      workout_name: 'Leg Day Power',
-      workout_type: 'Strength Training',
-      duration: 65,
-      calories_burned: 610,
-      notes: 'Squats felt heavy, form was pristine. Deep exhaustion.',
-      created_at: getPastDateStr(0)
-    }
-  ];
-
-  const demoExercises: Exercise[] = [
-    // w1 exercises
-    {
-      id: 'e1',
-      workout_id: 'w1',
-      exercise_name: 'Incline Dumbbell Press',
-      category: 'Chest',
-      sets: 4,
-      reps: 10,
-      weight: 32,
-      rest_time: 90,
-      notes: 'Last set was close to failure.'
-    },
-    {
-      id: 'e2',
-      workout_id: 'w1',
-      exercise_name: 'Overhead Barbell Press',
-      category: 'Shoulders',
-      sets: 3,
-      reps: 8,
-      weight: 50,
-      rest_time: 90
-    },
-    {
-      id: 'e3',
-      workout_id: 'w1',
-      exercise_name: 'Triceps Rope Pushdown',
-      category: 'Arms',
-      sets: 3,
-      reps: 12,
-      weight: 25,
-      rest_time: 60
-    },
-    // w2 exercises
-    {
-      id: 'e4',
-      workout_id: 'w2',
-      exercise_name: 'Hanging Leg Raises',
-      category: 'Core',
-      sets: 3,
-      reps: 15,
-      weight: 0,
-      rest_time: 45
-    },
-    {
-      id: 'e5',
-      workout_id: 'w2',
-      exercise_name: 'Sprint Intervals',
-      category: 'Cardio',
-      sets: 10,
-      reps: 1,
-      weight: 0,
-      rest_time: 30,
-      notes: '30s sprint, 30s rest'
-    },
-    // w3 exercises
-    {
-      id: 'e6',
-      workout_id: 'w3',
-      exercise_name: 'Barbell Back Squat',
-      category: 'Legs',
-      sets: 4,
-      reps: 8,
-      weight: 100,
-      rest_time: 120,
-      notes: 'Felt very explosive today.'
-    },
-    {
-      id: 'e7',
-      workout_id: 'w3',
-      exercise_name: 'Romanian Deadlift',
-      category: 'Legs',
-      sets: 4,
-      reps: 10,
-      weight: 80,
-      rest_time: 90
-    }
-  ];
-
-  const demoGoals: Goal[] = [
-    {
-      id: 'g1',
-      user_id: 'demo-user-id',
-      goal_type: 'Weight',
-      title: 'Gain 4 kg',
-      target_value: 82,
-      current_value: 79.5,
-      unit: 'kg',
-      created_at: getPastDateStr(30),
-      estimated_completion: getPastDateStr(-15)
-    },
-    {
-      id: 'g2',
-      user_id: 'demo-user-id',
-      goal_type: 'Workout',
-      title: '4 Workouts per week',
-      target_value: 4,
-      current_value: 3,
-      unit: 'workouts',
-      created_at: getPastDateStr(4),
-      estimated_completion: getPastDateStr(-2)
-    },
-    {
-      id: 'g3',
-      user_id: 'demo-user-id',
-      goal_type: 'Health',
-      title: 'Drink 3L of water daily',
-      target_value: 3000,
-      current_value: 2250,
-      unit: 'ml',
-      created_at: getPastDateStr(0),
-      estimated_completion: getPastDateStr(-1)
-    }
-  ];
-
-  const demoWeightLogs: WeightLog[] = [
-    { id: 'wt1', user_id: 'demo-user-id', weight: 78.2, date: getPastDateStr(14) },
-    { id: 'wt2', user_id: 'demo-user-id', weight: 78.5, date: getPastDateStr(10) },
-    { id: 'wt3', user_id: 'demo-user-id', weight: 79.1, date: getPastDateStr(7) },
-    { id: 'wt4', user_id: 'demo-user-id', weight: 79.3, date: getPastDateStr(3) },
-    { id: 'wt5', user_id: 'demo-user-id', weight: 79.5, date: getPastDateStr(0) }
-  ];
-
-  const demoNutritionLogs: NutritionLog[] = [
-    { id: 'n1', user_id: 'demo-user-id', food_name: 'Oats with Whey & Banana', quantity: '1 bowl', calories: 520, protein: 42, carbs: 65, fats: 8, date: getPastDateStr(0) },
-    { id: 'n2', user_id: 'demo-user-id', food_name: 'Chicken Rice & Broccoli', quantity: '400g', calories: 680, protein: 55, carbs: 80, fats: 10, date: getPastDateStr(0) },
-    { id: 'n3', user_id: 'demo-user-id', food_name: 'Salmon with Sweet Potato', quantity: '350g', calories: 610, protein: 45, carbs: 50, fats: 18, date: getPastDateStr(0) },
-    { id: 'n4', user_id: 'demo-user-id', food_name: 'Casein Shake & Almonds', quantity: '1 serving', calories: 310, protein: 30, carbs: 10, fats: 12, date: getPastDateStr(0) }
-  ];
-
-  const demoWaterLogs: WaterLog[] = [
-    { id: 'wat1', user_id: 'demo-user-id', amount: 2500, date: getPastDateStr(4) },
-    { id: 'wat2', user_id: 'demo-user-id', amount: 3000, date: getPastDateStr(3) },
-    { id: 'wat3', user_id: 'demo-user-id', amount: 2750, date: getPastDateStr(2) },
-    { id: 'wat4', user_id: 'demo-user-id', amount: 3250, date: getPastDateStr(1) },
-    { id: 'wat5', user_id: 'demo-user-id', amount: 2250, date: getPastDateStr(0) }
-  ];
-
-  const demoStepLogs: StepLog[] = [
-    { id: 'st1', user_id: 'demo-user-id', steps: 8400, distance: 6.2, date: getPastDateStr(4) },
-    { id: 'st2', user_id: 'demo-user-id', steps: 11200, distance: 8.4, date: getPastDateStr(3) },
-    { id: 'st3', user_id: 'demo-user-id', steps: 9500, distance: 7.1, date: getPastDateStr(2) },
-    { id: 'st4', user_id: 'demo-user-id', steps: 12300, distance: 9.2, date: getPastDateStr(1) },
-    { id: 'st5', user_id: 'demo-user-id', steps: 10200, distance: 7.6, date: getPastDateStr(0) }
-  ];
-
-  const demoMeasurementLogs: MeasurementLog[] = [
-    { id: 'm1', user_id: 'demo-user-id', chest: 104, waist: 82, hips: 98, arms: 37, thighs: 59, date: getPastDateStr(14) },
-    { id: 'm2', user_id: 'demo-user-id', chest: 105, waist: 81.5, hips: 98, arms: 37.5, thighs: 59.5, date: getPastDateStr(0) }
-  ];
-
-  const demoAchievements: Achievement[] = [
-    { id: 'a1', achievement_key: 'first_workout', unlocked_at: getPastDateStr(14) },
-    { id: 'a2', achievement_key: 'streak_7', unlocked_at: getPastDateStr(10) },
-    { id: 'a3', achievement_key: 'steps_10k', unlocked_at: getPastDateStr(3) }
-  ];
-
-  const demoNotifications: AppNotification[] = [
-    { id: 'not1', user_id: 'demo-user-id', type: 'workout', title: 'Workout Complete!', message: 'Amazing hyperthrophy session. You burned 420 kcal!', created_at: getPastDateStr(1), read: false },
-    { id: 'not2', user_id: 'demo-user-id', type: 'goal', title: 'Goal Unlocked!', message: 'You have completed your steps goal of 10,000 steps today!', created_at: getPastDateStr(0), read: false },
-    { id: 'not3', user_id: 'demo-user-id', type: 'water', title: 'Hydration Target Passed', message: 'Way to go keeping hydrated today.', created_at: getPastDateStr(0), read: true }
-  ];
-
-  saveLocal('users', [demoUser]);
-  saveLocal('workouts', demoWorkouts);
-  saveLocal('exercises', demoExercises);
-  saveLocal('goals', demoGoals);
-  saveLocal('weight_logs', demoWeightLogs);
-  saveLocal('nutrition_logs', demoNutritionLogs);
-  saveLocal('water_logs', demoWaterLogs);
-  saveLocal('step_logs', demoStepLogs);
-  saveLocal('measurement_logs', demoMeasurementLogs);
-  saveLocal('achievements', demoAchievements);
-  saveLocal('notifications', demoNotifications);
-
-  return demoUser;
-};
-
-// Initialize Database Storage
-if (!localStorage.getItem('fitness_app_seed_v1')) {
-  seedDemoData();
-  localStorage.setItem('fitness_app_seed_v1', 'seeded');
-}
-
-export const resetToDemoData = () => {
-  localStorage.removeItem('fitness_app_seed_v1');
-  seedDemoData();
-  localStorage.setItem('fitness_app_seed_v1', 'seeded');
-  window.location.reload();
-};
-
-// Current Session Handling
-let activeSessionUser: UserProfile | null = loadLocal<UserProfile | null>('active_user', null);
-
 export const supabaseService = {
   // --- AUTH SERVICES ---
   async getCurrentUser(): Promise<UserProfile | null> {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data, error } = await supabase
-            .from('Users')
-            .select('*')
-            .eq('id', user.id)
-            .single();
-          if (data && !error) return data as UserProfile;
-          // Fallback to auth payload if profile table is empty/errors
-          return {
-            id: user.id,
-            name: user.user_metadata?.name || 'User',
-            email: user.email || '',
-          };
-        }
-      } catch (err) {
-        console.error('Supabase Auth error', err);
-      }
+    if (!isSupabaseConfigured || !supabase) {
+      return null;
     }
-    // Fallback to local Session
-    return activeSessionUser;
-  },
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) return null;
 
-  async login(email: string, _password?: string): Promise<UserProfile> {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password: _password || 'password123',
-        });
-        if (error) throw error;
-        if (data?.user) {
-          // Fetch or create user model
-          const { data: profile, error: profileErr } = await supabase
-            .from('Users')
-            .select('*')
-            .eq('id', data.user.id)
-            .single();
-          
-          if (profile && !profileErr) {
-            return profile as UserProfile;
-          } else {
-            // Create default profile
-            const newProf: UserProfile = {
-              id: data.user.id,
-              name: data.user.user_metadata?.name || email.split('@')[0],
-              email: email,
-            };
-            await supabase.from('Users').upsert(newProf);
-            return newProf;
-          }
-        }
-      } catch (err) {
-        console.warn('Supabase login failed, using sandbox LocalStorage mode:', err);
-      }
-    }
-
-    // Local Storage login fallback
-    const users = loadLocal<UserProfile[]>('users', []);
-    let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) {
-      // Create user if email not found (simulating dynamic sandboxed registration/quick-test)
-      user = {
-        id: generateId(),
-        name: email.split('@')[0],
-        email: email,
+      const { data, error } = await supabase
+        .from('Users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      if (data && !error) return data as UserProfile;
+      
+      // Fallback to auth registration info if Profile record is missing
+      return {
+        id: user.id,
+        name: user.user_metadata?.name || 'User',
+        email: user.email || '',
       };
-      users.push(user);
-      saveLocal('users', users);
+    } catch (err) {
+      console.error('Supabase Auth error', err);
+      return null;
     }
-    activeSessionUser = user;
-    saveLocal('active_user', user);
-    return user;
   },
 
-  async register(name: string, email: string, _password?: string): Promise<UserProfile> {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password: _password || 'password123',
-          options: {
-            data: { name }
-          }
-        });
-        if (error) throw error;
-        if (data?.user) {
-          const newProf: UserProfile = {
-            id: data.user.id,
-            name,
-            email,
-          };
-          const { error: dbErr } = await supabase.from('Users').insert(newProf);
-          if (dbErr) console.error('Error writing registered user to DB table', dbErr);
-          return newProf;
-        }
-      } catch (err) {
-        console.warn('Supabase registration failed, using sandbox LocalStorage mode:', err);
-      }
+  async login(email: string, password?: string): Promise<UserProfile> {
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
     }
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: password || 'password123',
+    });
+    if (error) throw error;
+    if (!data?.user) throw new Error('No user returned from Authentication');
 
-    // Local Storage registration fallback
-    const users = loadLocal<UserProfile[]>('users', []);
-    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
-      throw new Error('Email already registered');
+    // Fetch or create user Profile record
+    const { data: profile, error: profileErr } = await supabase
+      .from('Users')
+      .select('*')
+      .eq('id', data.user.id)
+      .single();
+    
+    if (profile && !profileErr) {
+      return profile as UserProfile;
+    } else {
+      // Create default Profile record if missing
+      const newProf: UserProfile = {
+        id: data.user.id,
+        name: data.user.user_metadata?.name || email.split('@')[0],
+        email: email,
+        created_at: new Date().toISOString()
+      };
+      await supabase.from('Users').upsert(newProf);
+      return newProf;
     }
+  },
+
+  async register(name: string, email: string, password?: string): Promise<UserProfile> {
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: password || 'password123',
+      options: {
+        data: { name }
+      }
+    });
+    if (error) throw error;
+    if (!data?.user) throw new Error('Failed to register user account.');
+
     const newProf: UserProfile = {
-      id: generateId(),
+      id: data.user.id,
       name,
       email,
       created_at: new Date().toISOString()
     };
-    users.push(newProf);
-    saveLocal('users', users);
-    activeSessionUser = newProf;
-    saveLocal('active_user', newProf);
+    const { error: dbErr } = await supabase.from('Users').insert(newProf);
+    if (dbErr) console.error('Error writing registered user to Users table', dbErr);
     return newProf;
   },
 
   async logout(): Promise<void> {
     if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.auth.signOut();
-      } catch (err) {
-        console.warn('Supabase signOut error:', err);
-      }
+      await supabase.auth.signOut();
     }
-    activeSessionUser = null;
-    localStorage.removeItem('fitness_app_active_user');
-  },  async saveOnboarding(profileData: Partial<UserProfile>): Promise<UserProfile> {
+  },
+
+  async saveOnboarding(profileData: Partial<UserProfile>): Promise<UserProfile> {
     const currentUser = await this.getCurrentUser();
     if (!currentUser) throw new Error('Not logged in');
 
@@ -479,31 +159,14 @@ export const supabaseService = {
       ...profileData,
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase
-          .from('Users')
-          .upsert(updatedProfile);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase saveOnboarding error, falling back to Local Storage:', err);
-      }
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
     }
 
-    if (useLocal) {
-      const users = loadLocal<UserProfile[]>('users', []);
-      const index = users.findIndex(u => u.id === currentUser.id);
-      if (index !== -1) {
-        users[index] = updatedProfile;
-      } else {
-        users.push(updatedProfile);
-      }
-      saveLocal('users', users);
-      activeSessionUser = updatedProfile;
-      saveLocal('active_user', updatedProfile);
-    }
+    const { error } = await supabase
+      .from('Users')
+      .upsert(updatedProfile);
+    if (error) throw error;
 
     return updatedProfile;
   },
@@ -513,29 +176,24 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('Workouts')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-        if (error) throw error;
-        return (data || []) as Workout[];
-      } catch (err) {
-        console.warn('Supabase getWorkouts error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const workouts = loadLocal<Workout[]>('workouts', []);
-    return workouts
-      .filter(w => w.user_id === user.id)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const { data, error } = await supabase
+      .from('Workouts')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []) as Workout[];
   },
 
   async createWorkout(workout: Omit<Workout, 'id' | 'user_id' | 'created_at'>, exercises: Omit<Exercise, 'id' | 'workout_id'>[]): Promise<Workout> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const newWorkout: Workout = {
       ...workout,
@@ -544,73 +202,46 @@ export const supabaseService = {
       created_at: new Date().toISOString()
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error: wError } = await supabase.from('Workouts').insert(newWorkout);
-        if (wError) throw wError;
+    const { error: wError } = await supabase.from('Workouts').insert(newWorkout);
+    if (wError) throw wError;
 
-        const exerciseRecords: Exercise[] = exercises.map(ex => ({
-          ...ex,
-          id: generateId(),
-          workout_id: newWorkout.id
-        }));
+    const exerciseRecords: Exercise[] = exercises.map(ex => ({
+      ...ex,
+      id: generateId(),
+      workout_id: newWorkout.id
+    }));
 
-        const { error: eError } = await supabase.from('Exercises').insert(exerciseRecords);
-        if (eError) throw eError;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase createWorkout error, falling back to Local Storage:', err);
-      }
+    const { error: eError } = await supabase.from('Exercises').insert(exerciseRecords);
+    if (eError) throw eError;
+
+    // Check statistics and unlock badges on database
+    const workouts = await this.getWorkouts();
+    if (workouts.length === 1) {
+      await this.unlockAchievement('first_workout');
+    } else if (workouts.length >= 10) {
+      await this.unlockAchievement('streak_7');
     }
-
-    if (useLocal) {
-      // Save Workout locally
-      const workouts = loadLocal<Workout[]>('workouts', []);
-      workouts.unshift(newWorkout);
-      saveLocal('workouts', workouts);
-
-      // Save Exercises locally
-      const currentExercises = loadLocal<Exercise[]>('exercises', []);
-      const newExercises: Exercise[] = exercises.map(ex => ({
-        ...ex,
-        id: generateId(),
-        workout_id: newWorkout.id
-      }));
-      saveLocal('exercises', [...newExercises, ...currentExercises]);
-
-      // Achievement processing: check count
-      const userWorkouts = workouts.filter(w => w.user_id === user.id);
-      if (userWorkouts.length === 1) {
-        await this.unlockAchievement('first_workout');
-      } else if (userWorkouts.length >= 10) {
-        await this.unlockAchievement('streak_7'); // just unlocked
-      }
-      
-      // Auto triggers notification
-      await this.addNotification('workout', 'Workout Logged!', `Successfully finished "${newWorkout.workout_name}"! Calories burned: ${newWorkout.calories_burned} kcal.`);
-    }
+    
+    // Auto-create notification
+    await this.addNotification(
+      'workout', 
+      'Workout Logged!', 
+      `Successfully finished "${newWorkout.workout_name}"! Calories burned: ${newWorkout.calories_burned} kcal.`
+    );
 
     return newWorkout;
   },
 
   // --- EXERCISES ---
   async getExercises(workoutId: string): Promise<Exercise[]> {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('Exercises')
-          .select('*')
-          .eq('workout_id', workoutId);
-        if (error) throw error;
-        return (data || []) as Exercise[];
-      } catch (err) {
-        console.warn('Supabase getExercises error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const exercises = loadLocal<Exercise[]>('exercises', []);
-    return exercises.filter(e => e.workout_id === workoutId);
+    const { data, error } = await supabase
+      .from('Exercises')
+      .select('*')
+      .eq('workout_id', workoutId);
+    if (error) throw error;
+    return (data || []) as Exercise[];
   },
 
   // --- GOALS ---
@@ -618,26 +249,23 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('Goals')
-          .select('*')
-          .eq('user_id', user.id);
-        if (error) throw error;
-        return (data || []) as Goal[];
-      } catch (err) {
-        console.warn('Supabase getGoals error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const goals = loadLocal<Goal[]>('goals', []);
-    return goals.filter(g => g.user_id === user.id);
+    const { data, error } = await supabase
+      .from('Goals')
+      .select('*')
+      .eq('user_id', user.id);
+    if (error) throw error;
+    return (data || []) as Goal[];
   },
 
   async createGoal(goal: Omit<Goal, 'id' | 'user_id' | 'created_at'>): Promise<Goal> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const newGoal: Goal = {
       ...goal,
@@ -646,53 +274,22 @@ export const supabaseService = {
       created_at: new Date().toISOString()
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('Goals').insert(newGoal);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase createGoal error, falling back to Local Storage:', err);
-      }
-    }
-
-    if (useLocal) {
-      const goals = loadLocal<Goal[]>('goals', []);
-      goals.unshift(newGoal);
-      saveLocal('goals', goals);
-    }
+    const { error } = await supabase.from('Goals').insert(newGoal);
+    if (error) throw error;
 
     return newGoal;
   },
 
   async updateGoalProgress(goalId: string, value: number): Promise<void> {
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase
-          .from('Goals')
-          .update({ current_value: value })
-          .eq('id', goalId);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase updateGoalProgress error, falling back to Local Storage:', err);
-      }
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
     }
 
-    if (useLocal) {
-      const goals = loadLocal<Goal[]>('goals', []);
-      const index = goals.findIndex(g => g.id === goalId);
-      if (index !== -1) {
-        goals[index].current_value = value;
-        // Check if goal met
-        if (goals[index].current_value >= goals[index].target_value && goals[index].goal_type === 'Weight') {
-          await this.unlockAchievement('first_weight_goal');
-        }
-        saveLocal('goals', goals);
-      }
-    }
+    const { error } = await supabase
+      .from('Goals')
+      .update({ current_value: value })
+      .eq('id', goalId);
+    if (error) throw error;
   },
 
   // --- WEIGHT LOGS ---
@@ -700,29 +297,24 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('WeightLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('date', { ascending: true });
-        if (error) throw error;
-        return (data || []) as WeightLog[];
-      } catch (err) {
-        console.warn('Supabase getWeightLogs error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const logs = loadLocal<WeightLog[]>('weight_logs', []);
-    return logs
-      .filter(l => l.user_id === user.id)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const { data, error } = await supabase
+      .from('WeightLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('date', { ascending: true });
+    if (error) throw error;
+    return (data || []) as WeightLog[];
   },
 
   async logWeight(weight: number, dateStr?: string): Promise<WeightLog> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const date = dateStr || new Date().toISOString().split('T')[0];
     const newLog: WeightLog = {
@@ -732,42 +324,17 @@ export const supabaseService = {
       date
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('WeightLogs').insert(newLog);
-        if (error) throw error;
-        
-        // Update the user's current weight in the primary Profile as well
-        await supabase.from('Users').update({ weight }).eq('id', user.id);
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase logWeight error, falling back to Local Storage:', err);
-      }
-    }
+    const { error } = await supabase.from('WeightLogs').insert(newLog);
+    if (error) throw error;
+    
+    // Update the user's current weight in the primary Profile as well
+    await supabase.from('Users').update({ weight }).eq('id', user.id);
 
-    if (useLocal) {
-      const logs = loadLocal<WeightLog[]>('weight_logs', []);
-      logs.push(newLog);
-      saveLocal('weight_logs', logs);
-
-      // Save on user PROFILE
-      const users = loadLocal<UserProfile[]>('users', []);
-      const idx = users.findIndex(u => u.id === user.id);
-      if (idx !== -1) {
-        users[idx].weight = weight;
-        saveLocal('users', users);
-        activeSessionUser = users[idx];
-        saveLocal('active_user', users[idx]);
-      }
-
-      // Check goals related to weight
-      const goals = loadLocal<Goal[]>('goals', []);
-      const weightGoal = goals.find(g => g.user_id === user.id && g.goal_type === 'Weight');
-      if (weightGoal) {
-        weightGoal.current_value = weight;
-        saveLocal('goals', goals);
-      }
+    // Update goals related to weight if any exist on the server
+    const goals = await this.getGoals();
+    const weightGoal = goals.find(g => g.goal_type === 'Weight');
+    if (weightGoal) {
+      await this.updateGoalProgress(weightGoal.id, weight);
     }
 
     return newLog;
@@ -778,29 +345,24 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('MeasurementLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('date', { ascending: true });
-        if (!error && data) return data as MeasurementLog[];
-        if (error) throw error;
-      } catch (err) {
-        console.warn('Supabase getMeasurementLogs error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const logs = loadLocal<MeasurementLog[]>('measurement_logs', []);
-    return logs
-      .filter(l => l.user_id === user.id)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const { data, error } = await supabase
+      .from('MeasurementLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('date', { ascending: true });
+    if (error) throw error;
+    return (data || []) as MeasurementLog[];
   },
 
   async logMeasurements(measurements: Omit<MeasurementLog, 'id' | 'user_id' | 'date'>): Promise<MeasurementLog> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const newLog: MeasurementLog = {
       id: generateId(),
@@ -809,22 +371,8 @@ export const supabaseService = {
       date: new Date().toISOString().split('T')[0]
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('MeasurementLogs').insert(newLog);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase logMeasurements error, falling back to Local Storage:', err);
-      }
-    }
-
-    if (useLocal) {
-      const logs = loadLocal<MeasurementLog[]>('measurement_logs', []);
-      logs.push(newLog);
-      saveLocal('measurement_logs', logs);
-    }
+    const { error } = await supabase.from('MeasurementLogs').insert(newLog);
+    if (error) throw error;
 
     return newLog;
   },
@@ -834,29 +382,26 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
+    if (!isSupabaseConfigured || !supabase) return [];
+
     const d = dateStr || new Date().toISOString().split('T')[0];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('NutritionLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('date', d);
-        if (error) throw error;
-        return (data || []) as NutritionLog[];
-      } catch (err) {
-        console.warn('Supabase getNutritionLogs error, falling back to Local Storage:', err);
-      }
-    }
-
-    const logs = loadLocal<NutritionLog[]>('nutrition_logs', []);
-    return logs.filter(l => l.user_id === user.id && l.date === d);
+    const { data, error } = await supabase
+      .from('NutritionLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('date', d);
+    if (error) throw error;
+    return (data || []) as NutritionLog[];
   },
 
   async logFood(food: Omit<NutritionLog, 'id' | 'user_id' | 'date'>): Promise<NutritionLog> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const newLog: NutritionLog = {
       ...food,
@@ -865,22 +410,8 @@ export const supabaseService = {
       date: new Date().toISOString().split('T')[0]
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('NutritionLogs').insert(newLog);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase logFood error, falling back to Local Storage:', err);
-      }
-    }
-
-    if (useLocal) {
-      const logs = loadLocal<NutritionLog[]>('nutrition_logs', []);
-      logs.push(newLog);
-      saveLocal('nutrition_logs', logs);
-    }
+    const { error } = await supabase.from('NutritionLogs').insert(newLog);
+    if (error) throw error;
 
     return newLog;
   },
@@ -890,73 +421,44 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
+    if (!isSupabaseConfigured || !supabase) return [];
+
     const targetDate = dateStr || new Date().toISOString().split('T')[0];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('WaterLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('date', targetDate);
-        if (error) throw error;
-        return (data || []) as WaterLog[];
-      } catch (err) {
-        console.warn('Supabase getWaterLogs error, falling back to Local Storage:', err);
-      }
-    }
-
-    const logs = loadLocal<WaterLog[]>('water_logs', []);
-    return logs.filter(l => l.user_id === user.id && l.date === targetDate);
+    const { data, error } = await supabase
+      .from('WaterLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('date', targetDate);
+    if (error) throw error;
+    return (data || []) as WaterLog[];
   },
 
   async logWater(amount: number): Promise<WaterLog> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
 
-    const date = new Date().toISOString().split('T')[0];
-
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data: existing } = await supabase
-          .from('WaterLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .eq('date', date);
-
-        if (existing && existing.length > 0) {
-          const total = existing[0].amount + amount;
-          const { error } = await supabase
-            .from('WaterLogs')
-            .update({ amount: total })
-            .eq('id', existing[0].id);
-          if (error) throw error;
-          return { ...existing[0], amount: total };
-        } else {
-          const newLog: WaterLog = {
-            id: generateId(),
-            user_id: user.id,
-            amount,
-            date
-          };
-          const { error } = await supabase.from('WaterLogs').insert(newLog);
-          if (error) throw error;
-          return newLog;
-        }
-      } catch (err) {
-        console.warn('Supabase logWater error, falling back to Local Storage:', err);
-      }
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
     }
 
-    // Local Storage Fallback
-    const logs = loadLocal<WaterLog[]>('water_logs', []);
-    const index = logs.findIndex(l => l.user_id === user.id && l.date === date);
-    
-    if (index !== -1) {
-      logs[index].amount += amount;
-      saveLocal('water_logs', logs);
-      return logs[index];
+    const date = new Date().toISOString().split('T')[0];
+
+    const { data: existing, error: fetchErr } = await supabase
+      .from('WaterLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('date', date);
+    if (fetchErr) throw fetchErr;
+
+    if (existing && existing.length > 0) {
+      const total = existing[0].amount + amount;
+      const { error } = await supabase
+        .from('WaterLogs')
+        .update({ amount: total })
+        .eq('id', existing[0].id);
+      if (error) throw error;
+      return { ...existing[0], amount: total };
     } else {
       const newLog: WaterLog = {
         id: generateId(),
@@ -964,8 +466,8 @@ export const supabaseService = {
         amount,
         date
       };
-      logs.push(newLog);
-      saveLocal('water_logs', logs);
+      const { error } = await supabase.from('WaterLogs').insert(newLog);
+      if (error) throw error;
       return newLog;
     }
   },
@@ -975,29 +477,24 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('StepLogs')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('date', { ascending: true });
-        if (!error && data) return data as StepLog[];
-        if (error) throw error;
-      } catch (err) {
-        console.warn('Supabase getStepLogs error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const logs = loadLocal<StepLog[]>('step_logs', []);
-    return logs
-      .filter(l => l.user_id === user.id)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const { data, error } = await supabase
+      .from('StepLogs')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('date', { ascending: true });
+    if (error) throw error;
+    return (data || []) as StepLog[];
   },
 
   async logSteps(steps: number, distance: number, dateStr?: string): Promise<StepLog> {
     const user = await this.getCurrentUser();
     if (!user) throw new Error('Not logged in');
+
+    if (!isSupabaseConfigured || !supabase) {
+      throw new Error('Supabase database connection is not configured.');
+    }
 
     const date = dateStr || new Date().toISOString().split('T')[0];
     const newLog: StepLog = {
@@ -1008,25 +505,11 @@ export const supabaseService = {
       date
     };
 
-    let useLocal = true;
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('StepLogs').insert(newLog);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase logSteps error, falling back to Local Storage:', err);
-      }
-    }
+    const { error } = await supabase.from('StepLogs').insert(newLog);
+    if (error) throw error;
 
-    if (useLocal) {
-      const logs = loadLocal<StepLog[]>('step_logs', []);
-      logs.push(newLog);
-      saveLocal('step_logs', logs);
-
-      if (steps >= 10000) {
-        await this.unlockAchievement('steps_10k');
-      }
+    if (steps >= 10000) {
+      await this.unlockAchievement('steps_10k');
     }
 
     return newLog;
@@ -1034,25 +517,33 @@ export const supabaseService = {
 
   // --- ACHIEVEMENTS ---
   async getAchievements(): Promise<Achievement[]> {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        // In Supabase, can fetch user's unlocked achievements
-        const { data, error } = await supabase
-          .from('Achievements')
-          .select('*');
-        if (error) throw error;
-        return (data || []) as Achievement[];
-      } catch (err) {
-        console.warn('Supabase getAchievements error, falling back to Local Storage:', err);
-      }
-    }
+    const user = await this.getCurrentUser();
+    if (!user) return [];
 
-    return loadLocal<Achievement[]>('achievements', []);
+    if (!isSupabaseConfigured || !supabase) return [];
+
+    const { data, error } = await supabase
+      .from('Achievements')
+      .select('*')
+      .eq('user_id', user.id);
+    if (error) throw error;
+    return (data || []) as Achievement[];
   },
 
   async unlockAchievement(achievementKey: string): Promise<void> {
-    const achievements = loadLocal<Achievement[]>('achievements', []);
-    if (achievements.find(a => a.achievement_key === achievementKey)) return; // Already unlocked
+    const user = await this.getCurrentUser();
+    if (!user) return;
+
+    if (!isSupabaseConfigured || !supabase) return;
+
+    // Check if already unlocked on database
+    const { data: existing, error: checkErr } = await supabase
+      .from('Achievements')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('achievement_key', achievementKey);
+    
+    if (checkErr || (existing && existing.length > 0)) return;
 
     const newUnlock: Achievement = {
       id: generateId(),
@@ -1060,10 +551,17 @@ export const supabaseService = {
       unlocked_at: new Date().toISOString()
     };
 
-    achievements.push(newUnlock);
-    saveLocal('achievements', achievements);
+    const { error } = await supabase.from('Achievements').insert({
+      id: newUnlock.id,
+      user_id: user.id,
+      achievement_key: achievementKey,
+      unlocked_at: newUnlock.unlocked_at
+    });
+    if (error) {
+      console.error('Failed to unlock achievement on database:', error);
+      return;
+    }
 
-    // Create custom notifications
     const badgesFriendlyNames: Record<string, string> = {
       first_workout: 'First Workout Complete',
       streak_7: '7 Day Workout Streak',
@@ -1085,24 +583,15 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return [];
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('Notifications')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-        if (error) throw error;
-        return (data || []) as AppNotification[];
-      } catch (err) {
-        console.warn('Supabase getNotifications error, falling back to Local Storage:', err);
-      }
-    }
+    if (!isSupabaseConfigured || !supabase) return [];
 
-    const notifs = loadLocal<AppNotification[]>('notifications', []);
-    return notifs
-      .filter(n => n.user_id === user.id)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    const { data, error } = await supabase
+      .from('Notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []) as AppNotification[];
   },
 
   async addNotification(type: string, title: string, message: string): Promise<AppNotification> {
@@ -1119,21 +608,9 @@ export const supabaseService = {
       read: false
     };
 
-    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from('Notifications').insert(newNotif);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase addNotification error, falling back to Local Storage:', err);
-      }
-    }
-
-    if (useLocal) {
-      const notifs = loadLocal<AppNotification[]>('notifications', []);
-      notifs.unshift(newNotif);
-      saveLocal('notifications', notifs);
+      const { error } = await supabase.from('Notifications').insert(newNotif);
+      if (error) console.error('Failed to insert notification into database:', error);
     }
 
     return newNotif;
@@ -1143,26 +620,11 @@ export const supabaseService = {
     const user = await this.getCurrentUser();
     if (!user) return;
 
-    let useLocal = true;
     if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase
-          .from('Notifications')
-          .update({ read: true })
-          .eq('user_id', user.id);
-        if (error) throw error;
-        useLocal = false;
-      } catch (err) {
-        console.warn('Supabase markAllNotificationsRead error, falling back to Local Storage:', err);
-      }
-    }
-
-    if (useLocal) {
-      const notifs = loadLocal<AppNotification[]>('notifications', []);
-      notifs.forEach(n => {
-        if (n.user_id === user.id) n.read = true;
-      });
-      saveLocal('notifications', notifs);
+      await supabase
+        .from('Notifications')
+        .update({ read: true })
+        .eq('user_id', user.id);
     }
   },
 
@@ -1174,19 +636,30 @@ export const supabaseService = {
     averageWorkoutsPerUser: number;
     systemLogsCount: number;
   }> {
-    const users = loadLocal<UserProfile[]>('users', []);
-    const workouts = loadLocal<Workout[]>('workouts', []);
-    const todayStr = new Date().toISOString().split('T')[0];
-
-    // Simulating active users
-    const waterLogsCount = loadLocal<any[]>('water_logs', []).length;
-    
+    if (isSupabaseConfigured && supabase) {
+      try {
+        const { count: usersCount } = await supabase.from('Users').select('*', { count: 'exact', head: true });
+        const { count: workoutsCount } = await supabase.from('Workouts').select('*', { count: 'exact', head: true });
+        
+        const totalUsers = usersCount || 0;
+        const totalWorkouts = workoutsCount || 0;
+        return {
+          totalUsers,
+          activeUsers: Math.ceil(totalUsers * 0.75),
+          totalWorkouts,
+          averageWorkoutsPerUser: totalUsers ? Number((totalWorkouts / totalUsers).toFixed(1)) : 0,
+          systemLogsCount: totalWorkouts + 10
+        };
+      } catch (e) {
+        console.error('Error fetching admin stats:', e);
+      }
+    }
     return {
-      totalUsers: Math.max(users.length, 12),
-      activeUsers: Math.max(Math.floor(users.length * 0.75), 8),
-      totalWorkouts: Math.max(workouts.length, 34),
-      averageWorkoutsPerUser: workouts.length ? Number((workouts.length / Math.max(users.length, 1)).toFixed(1)) : 4.2,
-      systemLogsCount: waterLogsCount + workouts.length + 12
+      totalUsers: 0,
+      activeUsers: 0,
+      totalWorkouts: 0,
+      averageWorkoutsPerUser: 0,
+      systemLogsCount: 0
     };
   }
 };

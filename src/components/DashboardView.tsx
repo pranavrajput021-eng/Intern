@@ -226,7 +226,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
         <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="space-y-1.5 z-10">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-500/20">Active Engine Offline Sandbox</span>
+            <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-500/20">Athlete Profile Active</span>
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">

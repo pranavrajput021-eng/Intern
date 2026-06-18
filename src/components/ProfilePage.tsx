@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { supabaseService, resetToDemoData } from '../supabaseService';
+import { supabaseService } from '../supabaseService';
 import { UserProfile } from '../types';
 import { 
   User, ShieldCheck, Bell, Sparkles, RefreshCw, 
@@ -356,22 +356,6 @@ export default function ProfilePage({ user, onLogout, onUpdateSuccess }: Profile
                 />
               </label>
             </div>
-          </div>
-
-          {/* DEVELOPER CONTROLS SEED REFRESHER */}
-          <div className="bg-neutral-950/40 border border-neutral-800/80 p-5 rounded-3xl backdrop-blur-md space-y-3.5">
-            <h3 className="text-sm font-bold text-neutral-100 flex items-center gap-1.5 border-b border-neutral-900 pb-2.5"><Sparkles className="w-4 h-4 text-emerald-400" /> Sandboxed Utilities</h3>
-            <p className="text-[11px] text-neutral-500 leading-normal">
-              Utilize this control point if you wish to reset your sandbox state to clear tests and populate comprehensive preloaded dashboards database instantly.
-            </p>
-            <button 
-              id="reset-demo-database-btn"
-              onClick={resetToDemoData}
-              className="w-full py-2 bg-gradient-to-r from-teal-900/40 to-blue-900/40 border border-teal-800/30 hover:border-emerald-500 text-teal-300 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 cursor-pointer transition active:scale-95"
-            >
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Reset Database to Demo Data
-            </button>
           </div>
 
         </div>

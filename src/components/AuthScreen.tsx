@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { supabaseService, isSupabaseConfigured } from '../supabaseService';
+import { supabaseService } from '../supabaseService';
 import { UserProfile } from '../types';
 import { 
   KeyRound, Mail, User, ShieldCheck, Dumbbell, 
@@ -42,21 +42,6 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // States for custom Supabase credentials entry
-  const [showKeyForm, setShowKeyForm] = useState(false);
-  const [customUrl, setCustomUrl] = useState(() => {
-    return typeof window !== 'undefined' ? localStorage.getItem('VITE_SUPABASE_URL') || '' : '';
-  });
-  const [customAnonKey, setCustomAnonKey] = useState(() => {
-    return typeof window !== 'undefined' ? localStorage.getItem('VITE_SUPABASE_ANON_KEY') || '' : '';
-  });
-  const [isBannerDismissed, setIsBannerDismissed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('supabase_banner_dismissed') === 'true';
-    }
-    return false;
-  });
 
   // Validation warnings derived from state
   const isAgeWarn = age !== '' && (age < 10 || age > 100);
@@ -752,23 +737,6 @@ create policy "Allow step logs control for self" on public."StepLogs"
           )}
 
         </div>
-
-        {/* Dynamic Database settings popup toggle footer */}
-        {!isSupabaseConfigured && isBannerDismissed && (
-          <div className="mt-6 text-center font-sans">
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.removeItem('supabase_banner_dismissed');
-                setIsBannerDismissed(false);
-                setShowKeyForm(true);
-              }}
-              className="text-[10px] text-neutral-500 hover:text-neutral-300 font-medium tracking-wide flex items-center justify-center gap-1.5 mx-auto cursor-pointer select-none transition"
-            >
-              🔑 Database Connection Settings
-            </button>
-          </div>
-        )}
 
       </div>
     </div>
