@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// Supabase configuration and fallback connection service updated June 2026.
+
 import { createClient } from '@supabase/supabase-js';
 import { 
   UserProfile, Workout, Exercise, Goal, WeightLog, 
