@@ -529,7 +529,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                     type="text" 
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Pranav Rajput" 
+                    placeholder="Athlete" 
                     className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-neutral-100 focus:outline-none transition"
                     required
                   />
@@ -546,7 +546,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                     type="email" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="athlete@domain.com" 
+                    placeholder="athlete@gmail.com" 
                     className="w-full bg-[#0D0D0D] border border-neutral-800 focus:border-emerald-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-neutral-100 focus:outline-none transition"
                     required
                   />
