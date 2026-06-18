@@ -314,6 +314,82 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   </div>
                 </div>
               )}
+              {(error.toLowerCase().includes('rls') || error.toLowerCase().includes('row-level') || error.toLowerCase().includes('policy') || error.toLowerCase().includes('violat') || error.toLowerCase().includes('security')) && (
+                <div className="pt-2 border-t border-red-900/30 space-y-2">
+                  <p className="text-[11px] text-neutral-300 leading-normal">
+                    <strong>💥 Row-Level Security (RLS) Policy Issue detected:</strong> 
+                    <br />
+                    In Supabase, having a table isn't enough; you must explicitly define permission policies (like allowing users to insert their own records). Let's fix this in 10 seconds!
+                  </p>
+                  <div className="bg-black/40 p-2.5 rounded-lg border border-red-950/40 space-y-2 text-left">
+                    <p className="text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">📋 Run this SQL in your Supabase SQL Editor:</p>
+                    <textarea 
+                      readOnly 
+                      value={`-- Drop existing broken policies if any
+drop policy if exists "Allow check and upsert for self" on public."Users";
+drop policy if exists "Allow workouts control for self" on public."Workouts";
+drop policy if exists "Allow exercise operations" on public."Exercises";
+drop policy if exists "Allow goals control for self" on public."Goals";
+drop policy if exists "Allow weight logs control for self" on public."WeightLogs";
+drop policy if exists "Allow measurement logs control for self" on public."MeasurementLogs";
+drop policy if exists "Allow nutrition logs control for self" on public."NutritionLogs";
+drop policy if exists "Allow water logs control for self" on public."WaterLogs";
+drop policy if exists "Allow step logs control for self" on public."StepLogs";
+
+-- 1. Setup policies for Users
+alter table public."Users" enable row level security;
+create policy "Allow check and upsert for self" on public."Users"
+  for all using (auth.uid()::text = id) with check (auth.uid()::text = id);
+
+-- 2. Setup policies for Workouts
+alter table public."Workouts" enable row level security;
+create policy "Allow workouts control for self" on public."Workouts"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 3. Setup policies for Exercises
+alter table public."Exercises" enable row level security;
+create policy "Allow exercise operations" on public."Exercises"
+  for all using (true) with check (true);
+
+-- 4. Setup policies for Goals
+alter table public."Goals" enable row level security;
+create policy "Allow goals control for self" on public."Goals"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 5. Setup policies for WeightLogs
+alter table public."WeightLogs" enable row level security;
+create policy "Allow weight logs control for self" on public."WeightLogs"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 6. Setup policies for MeasurementLogs
+alter table public."MeasurementLogs" enable row level security;
+create policy "Allow measurement logs control for self" on public."MeasurementLogs"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 7. Setup policies for NutritionLogs
+alter table public."NutritionLogs" enable row level security;
+create policy "Allow nutrition logs control for self" on public."NutritionLogs"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 8. Setup policies for WaterLogs
+alter table public."WaterLogs" enable row level security;
+create policy "Allow water logs control for self" on public."WaterLogs"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);
+
+-- 9. Setup policies for StepLogs
+alter table public."StepLogs" enable row level security;
+create policy "Allow step logs control for self" on public."StepLogs"
+  for all using (auth.uid()::text = user_id) with check (auth.uid()::text = user_id);`}
+                      onClick={(e) => {
+                        (e.target as HTMLTextAreaElement).select();
+                        navigator.clipboard.writeText((e.target as HTMLTextAreaElement).value);
+                      }}
+                      className="w-full h-32 bg-zinc-950 text-neutral-300 font-mono text-[9px] p-2 rounded border border-zinc-800 focus:outline-none cursor-pointer focus:ring-1 focus:ring-emerald-500"
+                    />
+                    <p className="text-[9px] text-zinc-400">💡 <strong>Tip:</strong> Click inside the text box above to auto-copy the code, open your <span className="text-zinc-200 font-medium">Supabase Console &gt; SQL Editor</span>, paste and run it!</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
