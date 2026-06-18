@@ -13,11 +13,14 @@ import {
 const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 
+const isForcedLocal = typeof window !== 'undefined' && localStorage.getItem('fitness_app_force_local_mode') !== 'false';
+
 export const isSupabaseConfigured = 
   !!supabaseUrl && 
   !!supabaseAnonKey && 
   !supabaseUrl.includes('your-supabase-project') &&
-  !supabaseAnonKey.includes('your-supabase-anon-key');
+  !supabaseAnonKey.includes('your-supabase-anon-key') &&
+  !isForcedLocal;
 
 export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
