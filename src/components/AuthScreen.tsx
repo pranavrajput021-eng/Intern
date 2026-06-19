@@ -25,6 +25,64 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
     window.location.hostname.includes('-dev-')
   );
 
+  const sanitizeErrorMessage = (message: string): string => {
+    if (!message) return 'An unexpected system error occurred. Please try again later.';
+    const msgLower = message.toLowerCase();
+
+    // Standard configurations for live users
+    if (!isDev) {
+      if (
+        msgLower.includes('users_email_key') || 
+        msgLower.includes('unique constraint') || 
+        msgLower.includes('already registered') ||
+        msgLower.includes('email already exists') ||
+        msgLower.includes('already exists')
+      ) {
+        return 'An account with this email address already exists. Please sign in instead.';
+      }
+      if (
+        msgLower.includes('invalid login credentials') || 
+        msgLower.includes('invalid_credentials') ||
+        msgLower.includes('incorrect') ||
+        msgLower.includes('invalid credential')
+      ) {
+        return 'Incorrect email or password.';
+      }
+      if (
+        msgLower.includes('supabase') ||
+        msgLower.includes('connection') ||
+        msgLower.includes('not configured') ||
+        msgLower.includes('rls') ||
+        msgLower.includes('policy') ||
+        msgLower.includes('violat') ||
+        msgLower.includes('security') ||
+        msgLower.includes('database') ||
+        msgLower.includes('failed to fetch') ||
+        msgLower.includes('network')
+      ) {
+        return 'An unexpected system error occurred. Please try again later.';
+      }
+      if (msgLower.includes('password') && msgLower.includes('6 characters')) {
+        return 'Password must be at least 6 characters.';
+      }
+      return 'An unexpected system error occurred. Please try again later.';
+    }
+
+    // Standard configuration for development users to prevent raw DB unique error displays
+    if (
+      msgLower.includes('users_email_key') || 
+      msgLower.includes('unique constraint') || 
+      msgLower.includes('email already exists') ||
+      msgLower.includes('already exists')
+    ) {
+      return 'An account with this email address already exists. Please sign in instead.';
+    }
+    if (msgLower.includes('invalid login credentials') || msgLower.includes('incorrect')) {
+      return 'Incorrect email or password.';
+    }
+    return message;
+  };
+
   // Mode selection
   const [mode, setMode] = useState<AuthMode>('login');
   
@@ -81,27 +139,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
       }
     } catch (err: any) {
       const errMsg = err?.message || 'Login failed. Please double check your credentials.';
-      const errMsgLower = errMsg.toLowerCase();
-      if (
-        errMsgLower.includes('invalid login credentials') || 
-        errMsgLower.includes('invalid_credentials') ||
-        errMsgLower.includes('incorrect')
-      ) {
-        setError('Incorrect email or password.');
-      } else if (
-        errMsgLower.includes('already registered') ||
-        errMsgLower.includes('already exists') ||
-        errMsgLower.includes('email_exists') ||
-        errMsgLower.includes('users_email_key') ||
-        errMsgLower.includes('duplicate key') ||
-        errMsgLower.includes('unique constraint')
-      ) {
-        setError('This email address is already registered.');
-      } else if (!isDev) {
-        setError('An unexpected system error occurred. Please try again later.');
-      } else {
-        setError(errMsg);
-      }
+      setError(sanitizeErrorMessage(errMsg));
     } finally {
       setLoading(false);
     }
@@ -133,21 +171,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
       }, 1500);
     } catch (err: any) {
       const errMsg = err?.message || 'Registration failed. Email might already exist.';
-      const errMsgLower = errMsg.toLowerCase();
-      if (
-        errMsgLower.includes('already registered') ||
-        errMsgLower.includes('already exists') ||
-        errMsgLower.includes('email_exists') ||
-        errMsgLower.includes('users_email_key') ||
-        errMsgLower.includes('duplicate key') ||
-        errMsgLower.includes('unique constraint')
-      ) {
-        setError('This email address is already registered.');
-      } else if (!isDev) {
-        setError('An unexpected system error occurred. Please try again later.');
-      } else {
-        setError(errMsg);
-      }
+      setError(sanitizeErrorMessage(errMsg));
     } finally {
       setLoading(false);
     }
@@ -225,21 +249,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
       }, 1500);
     } catch (err: any) {
       const errMsg = err?.message || 'Failed saving onboarding selections.';
-      const errMsgLower = errMsg.toLowerCase();
-      if (
-        errMsgLower.includes('already registered') ||
-        errMsgLower.includes('already exists') ||
-        errMsgLower.includes('email_exists') ||
-        errMsgLower.includes('users_email_key') ||
-        errMsgLower.includes('duplicate key') ||
-        errMsgLower.includes('unique constraint')
-      ) {
-        setError('This email address is already registered.');
-      } else if (!isDev) {
-        setError('An unexpected system error occurred. Please try again later.');
-      } else {
-        setError(errMsg);
-      }
+      setError(sanitizeErrorMessage(errMsg));
     } finally {
       setLoading(false);
     }

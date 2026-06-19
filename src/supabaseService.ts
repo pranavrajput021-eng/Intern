@@ -134,6 +134,34 @@ export const supabaseService = {
     if (profile && !profileErr) {
       return profile as UserProfile;
     } else {
+      // Check if another profile already has this email to avoid unique constraint violations
+      const { data: existingProfByEmail } = await supabase
+        .from('Users')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (existingProfByEmail) {
+        if (existingProfByEmail.id !== data.user.id) {
+          try {
+            const { error: updateErr } = await supabase
+              .from('Users')
+              .update({ id: data.user.id })
+              .eq('email', email);
+            if (!updateErr) {
+              return {
+                ...existingProfByEmail,
+                id: data.user.id
+              };
+            }
+          } catch (e) {
+            console.error('Failed to update existing user id profile:', e);
+          }
+        } else {
+          return existingProfByEmail as UserProfile;
+        }
+      }
+
       // Create default Profile record if missing
       const newProf: UserProfile = {
         id: data.user.id,
@@ -141,7 +169,15 @@ export const supabaseService = {
         email: email,
         created_at: new Date().toISOString()
       };
-      await supabase.from('Users').upsert(newProf);
+      
+      const { error: upsertErr } = await supabase.from('Users').upsert(newProf);
+      if (upsertErr) {
+        console.error('Error upserting user profile record during login', upsertErr);
+        if (upsertErr.message && upsertErr.message.toLowerCase().includes('unique constraint') && upsertErr.message.toLowerCase().includes('email')) {
+          throw new Error('An account with this email address already exists. Please login with correct credentials.');
+        }
+        throw upsertErr;
+      }
       return newProf;
     }
   },
@@ -151,17 +187,15 @@ export const supabaseService = {
       throw new Error('Supabase database connection is not configured.');
     }
 
-    // Check if email already exists in Users table first
-    const { data: existingUser, error: checkErr } = await supabase
+    // Check if user already exists in public.Users table with this email first
+    const { data: existingUserByEmail } = await supabase
       .from('Users')
-      .select('id')
-      .ilike('email', email.trim())
+      .select('*')
+      .eq('email', email)
       .maybeSingle();
-    
-    if (checkErr) {
-      console.error('Error checking if user email exists:', checkErr);
-    } else if (existingUser) {
-      throw new Error('This email address is already registered.');
+
+    if (existingUserByEmail) {
+      throw new Error('An account with this email address already exists. Please login instead.');
     }
 
     const { data, error } = await supabase.auth.signUp({
@@ -172,9 +206,8 @@ export const supabaseService = {
       }
     });
     if (error) {
-      const errLower = error.message.toLowerCase();
-      if (errLower.includes('already registered') || errLower.includes('already exists') || errLower.includes('email_exists')) {
-        throw new Error('This email address is already registered.');
+      if (error.message && error.message.toLowerCase().includes('already registered')) {
+        throw new Error('An account with this email address already exists. Please login instead.');
       }
       throw error;
     }
@@ -189,9 +222,8 @@ export const supabaseService = {
     const { error: dbErr } = await supabase.from('Users').insert(newProf);
     if (dbErr) {
       console.error('Error writing registered user to Users table', dbErr);
-      const dbErrLower = dbErr.message.toLowerCase();
-      if (dbErrLower.includes('duplicate key') || dbErrLower.includes('unique constraint') || dbErrLower.includes('users_email_key')) {
-        throw new Error('This email address is already registered.');
+      if (dbErr.message && dbErr.message.toLowerCase().includes('unique constraint') && dbErr.message.toLowerCase().includes('email')) {
+        throw new Error('An account with this email address already exists. Please login instead.');
       }
       throw dbErr;
     }
