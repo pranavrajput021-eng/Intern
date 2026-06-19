@@ -118,6 +118,13 @@ export default function App() {
     { key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> },
   ];
 
+  // Dynamically update document title based on currently active tab/view
+  useEffect(() => {
+    const currentTabItem = navItems.find((item) => item.key === activeTab);
+    const tabLabel = currentTabItem ? currentTabItem.label : 'Platform';
+    document.title = `Aesthetic Athlete Platform - ${tabLabel}`;
+  }, [activeTab]);
+
   return (
     <div id="main-frame-layout" className="min-h-screen bg-[#0A0A0A] text-neutral-100 flex font-sans relative overflow-x-hidden antialiased">
       
@@ -195,11 +202,17 @@ export default function App() {
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <div className="flex items-center gap-2 lg:hidden">
-              <Dumbbell className="text-emerald-400 w-5 h-5" />
-              <strong className="text-sm font-black tracking-tight uppercase text-glow">ATHLETE</strong>
+              <Dumbbell className="text-emerald-400 w-4 h-4 animate-pulse" />
+              <strong className="text-xs font-black tracking-wider text-emerald-400 uppercase">
+                {navItems.find(item => item.key === activeTab)?.label.split(' ')[0] || 'ATHLETE'}
+              </strong>
             </div>
-            <div className="hidden lg:flex items-center gap-2 text-xs font-mono text-neutral-500">
-              <span>ACTIVE TRAINING MODE: STANDARD INTENSITY</span>
+            <div className="hidden lg:flex items-center gap-3 text-xs font-mono">
+              <span className="text-neutral-400 font-bold tracking-wider">AESTHETIC ATHLETE PLATFORM</span>
+              <span className="text-neutral-700">/</span>
+              <span className="text-emerald-400 font-extrabold uppercase bg-emerald-950/30 border border-emerald-900/50 px-2.5 py-0.5 rounded-lg tracking-widest">
+                {navItems.find(item => item.key === activeTab)?.label || 'OVERVIEW'}
+              </span>
             </div>
           </div>
 
