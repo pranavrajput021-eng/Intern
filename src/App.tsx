@@ -38,6 +38,24 @@ export default function App() {
   // Mobile sidebar drawer
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
+  // Tab labels mapping for title updates
+  const tabLabels: Record<string, string> = {
+    dashboard: 'Dashboard',
+    workouts: 'Train & Log',
+    nutrition: 'Nutrition Hub',
+    analytics: 'Analytics',
+    goals: 'Goals & Badges',
+    history: 'History Ledger',
+    profile: 'Profile Bio',
+    admin: 'Admin Terminal',
+  };
+
+  // Dynamically update document title based on currently active tab/view
+  useEffect(() => {
+    const tabLabel = tabLabels[activeTab] || 'Platform';
+    document.title = `Aesthetic Athlete Platform - ${tabLabel}`;
+  }, [activeTab]);
+
   useEffect(() => {
     checkCurrentSession();
   }, []);
@@ -117,14 +135,6 @@ export default function App() {
     { key: 'profile', label: 'Profile Bio', icon: <User className="w-5 h-5" /> },
     { key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> },
   ];
-
-  // Dynamically update document title based on currently active tab/view
-  useEffect(() => {
-    const currentTabItem = navItems.find((item) => item.key === activeTab);
-    const tabLabel = currentTabItem ? currentTabItem.label : 'Platform';
-    document.title = `Aesthetic Athlete Platform - ${tabLabel}`;
-  }, [activeTab]);
-
   return (
     <div id="main-frame-layout" className="min-h-screen bg-[#0A0A0A] text-neutral-100 flex font-sans relative overflow-x-hidden antialiased">
       
