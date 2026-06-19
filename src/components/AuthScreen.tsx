@@ -19,6 +19,12 @@ interface AuthScreenProps {
 type AuthMode = 'login' | 'register' | 'onboarding' | 'forgot_password';
 
 export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
+  const isDev = typeof window !== 'undefined' && (
+    window.location.hostname.includes('localhost') || 
+    window.location.hostname.includes('127.0.0.1') || 
+    window.location.hostname.includes('-dev-')
+  );
+
   // Mode selection
   const [mode, setMode] = useState<AuthMode>('login');
   
@@ -75,12 +81,24 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
       }
     } catch (err: any) {
       const errMsg = err?.message || 'Login failed. Please double check your credentials.';
+      const errMsgLower = errMsg.toLowerCase();
       if (
-        errMsg.toLowerCase().includes('invalid login credentials') || 
-        errMsg.toLowerCase().includes('invalid_credentials') ||
-        errMsg.toLowerCase().includes('incorrect')
+        errMsgLower.includes('invalid login credentials') || 
+        errMsgLower.includes('invalid_credentials') ||
+        errMsgLower.includes('incorrect')
       ) {
         setError('Incorrect email or password.');
+      } else if (!isDev && (
+        errMsgLower.includes('supabase') ||
+        errMsgLower.includes('connection') ||
+        errMsgLower.includes('not configured') ||
+        errMsgLower.includes('rls') ||
+        errMsgLower.includes('policy') ||
+        errMsgLower.includes('security') ||
+        errMsgLower.includes('database') ||
+        errMsgLower.includes('failed to fetch')
+      )) {
+        setError('An unexpected system error occurred. Please try again later.');
       } else {
         setError(errMsg);
       }
@@ -114,7 +132,22 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         resetMessages();
       }, 1500);
     } catch (err: any) {
-      setError(err?.message || 'Registration failed. Email might already exist.');
+      const errMsg = err?.message || 'Registration failed. Email might already exist.';
+      const errMsgLower = errMsg.toLowerCase();
+      if (!isDev && (
+        errMsgLower.includes('supabase') ||
+        errMsgLower.includes('connection') ||
+        errMsgLower.includes('not configured') ||
+        errMsgLower.includes('rls') ||
+        errMsgLower.includes('policy') ||
+        errMsgLower.includes('security') ||
+        errMsgLower.includes('database') ||
+        errMsgLower.includes('failed to fetch')
+      )) {
+        setError('An unexpected system error occurred. Please try again later.');
+      } else {
+        setError(errMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -191,7 +224,22 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         onAuthSuccess(onboardedProfile);
       }, 1500);
     } catch (err: any) {
-      setError(err?.message || 'Failed saving onboarding selections.');
+      const errMsg = err?.message || 'Failed saving onboarding selections.';
+      const errMsgLower = errMsg.toLowerCase();
+      if (!isDev && (
+        errMsgLower.includes('supabase') ||
+        errMsgLower.includes('connection') ||
+        errMsgLower.includes('not configured') ||
+        errMsgLower.includes('rls') ||
+        errMsgLower.includes('policy') ||
+        errMsgLower.includes('security') ||
+        errMsgLower.includes('database') ||
+        errMsgLower.includes('failed to fetch')
+      )) {
+        setError('A platform connection error occurred. Please retry in a moment.');
+      } else {
+        setError(errMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -242,12 +290,12 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           {error && (
             <div className="mb-4 p-4 rounded-xl bg-red-950/20 border border-red-800/35 text-xs text-red-400 text-left space-y-3 shadow-inner">
               <p className="font-medium">💡 {error}</p>
-              {(error.toLowerCase().includes('rate limit') || error.toLowerCase().includes('rate_limit')) && (
+              {isDev && (error.toLowerCase().includes('rate limit') || error.toLowerCase().includes('rate_limit')) && (
                 <div className="pt-2 border-t border-red-900/30 text-[11px] text-neutral-400 leading-normal">
                   Supabase free plan allows a maximum of 3 authentication emails per hour. Please wait a bit before requesting another attempt.
                 </div>
               )}
-              {(error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
+              {isDev && (error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
                 <div className="pt-2 border-t border-red-900/30 space-y-2">
                   <p className="text-[11px] text-neutral-300 leading-normal">
                     <strong>Why is this happening?</strong> 
@@ -264,7 +312,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   </div>
                 </div>
               )}
-              {(error.toLowerCase().includes('rls') || error.toLowerCase().includes('row-level') || error.toLowerCase().includes('policy') || error.toLowerCase().includes('violat') || error.toLowerCase().includes('security')) && (
+              {isDev && (error.toLowerCase().includes('rls') || error.toLowerCase().includes('row-level') || error.toLowerCase().includes('policy') || error.toLowerCase().includes('violat') || error.toLowerCase().includes('security')) && (
                 <div className="pt-2 border-t border-red-900/30 space-y-2">
                   <p className="text-[11px] text-neutral-300 leading-normal">
                     <strong>💥 Row-Level Security (RLS) Policy Issue detected:</strong> 

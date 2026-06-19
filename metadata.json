@@ -1,5 +1,5 @@
 {
-  "name": "Fitness & Workout Tracker",
+  "name": "Aesthetic Athlete",
   "description": "A premium, dark-themed responsive fitness & workout tracker featuring workout logs, weight tracking, water charts, nutrition logs, and step tracking, integrated with Supabase.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
