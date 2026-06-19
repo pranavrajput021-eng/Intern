@@ -74,7 +74,16 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         onAuthSuccess(loggedUser);
       }
     } catch (err: any) {
-      setError(err?.message || 'Login failed. Please double check your credentials.');
+      const errMsg = err?.message || 'Login failed. Please double check your credentials.';
+      if (
+        errMsg.toLowerCase().includes('invalid login credentials') || 
+        errMsg.toLowerCase().includes('invalid_credentials') ||
+        errMsg.toLowerCase().includes('incorrect')
+      ) {
+        setError('Incorrect email or password.');
+      } else {
+        setError(errMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -238,7 +247,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   Supabase free plan allows a maximum of 3 authentication emails per hour. Please wait a bit before requesting another attempt.
                 </div>
               )}
-              {(error.toLowerCase().includes('credentials') || error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
+              {(error.toLowerCase().includes('confirm') || error.toLowerCase().includes('verified')) && (
                 <div className="pt-2 border-t border-red-900/30 space-y-2">
                   <p className="text-[11px] text-neutral-300 leading-normal">
                     <strong>Why is this happening?</strong> 
