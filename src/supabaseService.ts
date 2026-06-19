@@ -150,6 +150,20 @@ export const supabaseService = {
     if (!isSupabaseConfigured || !supabase) {
       throw new Error('Supabase database connection is not configured.');
     }
+
+    // Check if email already exists in Users table first
+    const { data: existingUser, error: checkErr } = await supabase
+      .from('Users')
+      .select('id')
+      .ilike('email', email.trim())
+      .maybeSingle();
+    
+    if (checkErr) {
+      console.error('Error checking if user email exists:', checkErr);
+    } else if (existingUser) {
+      throw new Error('This email address is already registered.');
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password: password || 'password123',
@@ -157,7 +171,13 @@ export const supabaseService = {
         data: { name }
       }
     });
-    if (error) throw error;
+    if (error) {
+      const errLower = error.message.toLowerCase();
+      if (errLower.includes('already registered') || errLower.includes('already exists') || errLower.includes('email_exists')) {
+        throw new Error('This email address is already registered.');
+      }
+      throw error;
+    }
     if (!data?.user) throw new Error('Failed to register user account.');
 
     const newProf: UserProfile = {
@@ -167,7 +187,14 @@ export const supabaseService = {
       created_at: new Date().toISOString()
     };
     const { error: dbErr } = await supabase.from('Users').insert(newProf);
-    if (dbErr) console.error('Error writing registered user to Users table', dbErr);
+    if (dbErr) {
+      console.error('Error writing registered user to Users table', dbErr);
+      const dbErrLower = dbErr.message.toLowerCase();
+      if (dbErrLower.includes('duplicate key') || dbErrLower.includes('unique constraint') || dbErrLower.includes('users_email_key')) {
+        throw new Error('This email address is already registered.');
+      }
+      throw dbErr;
+    }
     return newProf;
   },
 
