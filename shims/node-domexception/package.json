@@ -1,0 +1,8 @@
+{
+  "name": "node-domexception",
+  "version": "1.0.0",
+  "description": "Native standard DOMException shim to resolve deprecation warning",
+  "main": "index.js",
+  "type": "commonjs",
+  "license": "MIT"
+}
