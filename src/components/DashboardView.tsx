@@ -718,16 +718,16 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             {/* Steps bar */}
             <div className="space-y-1.5 bg-neutral-950/20 p-3 rounded-2xl border border-neutral-900 duration-200">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-neutral-300"><Footprints className="w-4 h-4 text-blue-400" /> Daily Steps Target</span>
+                <span className="flex items-center gap-1.5 text-neutral-300"><Footprints className="w-4 h-4 text-emerald-400" /> Daily Steps Target</span>
                 <span className="text-[10px] text-neutral-500 font-mono">Limit: 10,000 steps</span>
               </div>
               <div className="flex justify-between items-center text-[11px]">
                 <span className="font-mono text-neutral-300 font-medium font-bold">Logged: {stepsToday.toLocaleString()} steps</span>
-                <span className="font-mono text-blue-400 font-bold">{Math.min(Math.round((stepsToday / 10000) * 100), 100)}% Complete</span>
+                <span className="font-mono text-emerald-400 font-bold">{Math.min(Math.round((stepsToday / 10000) * 100), 100)}% Complete</span>
               </div>
               <div className="w-full h-2 bg-neutral-900/60 border border-neutral-850/55 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-blue-500 to-sky-400 rounded-full transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-emerald-650 to-emerald-400 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min((stepsToday / 10000) * 100, 100)}%` }}
                 />
               </div>
@@ -736,16 +736,16 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             {/* Hydration bar */}
             <div className="space-y-1.5 bg-neutral-950/20 p-3 rounded-2xl border border-neutral-900 duration-200">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-neutral-300"><Droplet className="w-4 h-4 text-sky-400" /> Everyday Hydration Target</span>
+                <span className="flex items-center gap-1.5 text-neutral-300"><Droplet className="w-4 h-4 text-teal-400" /> Everyday Hydration Target</span>
                 <span className="text-[10px] text-neutral-500 font-mono">Limit: 3,000 ml</span>
               </div>
               <div className="flex justify-between items-center text-[11px]">
                 <span className="font-mono text-neutral-300 font-medium font-bold">Logged: {waterAmount} ml</span>
-                <span className="font-mono text-sky-400 font-bold">{Math.min(Math.round((waterAmount / 3000) * 100), 100)}% Complete</span>
+                <span className="font-mono text-teal-400 font-bold">{Math.min(Math.round((waterAmount / 3000) * 100), 100)}% Complete</span>
               </div>
               <div className="w-full h-2 bg-neutral-900/60 border border-neutral-850/55 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-teal-600 to-emerald-400 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min((waterAmount / 3000) * 100, 100)}%` }}
                 />
               </div>
@@ -872,7 +872,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
                   contentStyle={{ backgroundColor: '#0B0B0B', borderColor: '#262626', borderRadius: '12px', fontSize: '12px' }}
                   labelStyle={{ color: '#A3A3A3' }}
                 />
-                <Line type="monotone" dataKey="weight" stroke="#3B82F6" strokeWidth={3} dot={{ fill: '#3B82F6', r: 4 }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="weight" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
