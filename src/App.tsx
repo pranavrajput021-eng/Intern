@@ -241,7 +241,7 @@ export default function App() {
                   </div>
 
                   {/* Label text */}
-                  <span className={`transition-colors duration-300 ${isActive ? 'text-emerald-300 font-black' : 'text-neutral-400 group-hover:text-neutral-100'}`}>
+                  <span className={`transition-colors duration-300 ${isActive ? 'text-emerald-300 font-black' : 'text-neutral-200 font-semibold group-hover:text-neutral-100'}`}>
                     {item.label}
                   </span>
                 </button>
@@ -354,7 +354,7 @@ export default function App() {
             <button 
               id="mobile-drawer-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-              className="p-1.5 rounded-lg border border-emerald-950 hover:bg-[#022c22]/40 text-neutral-400 hover:text-neutral-100 lg:hidden transition cursor-pointer"
+              className="p-1.5 rounded-lg border border-emerald-950 hover:bg-[#022c22]/40 text-neutral-200 hover:text-neutral-100 lg:hidden transition cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -370,7 +370,7 @@ export default function App() {
               )}
             </div>
             <div className="hidden lg:flex items-center gap-3 text-xs font-mono">
-              <span className="text-neutral-400 font-bold tracking-wider">AESTHETIC ATHLETE PLATFORM</span>
+              <span className="text-neutral-100 font-bold tracking-wider">AESTHETIC ATHLETE PLATFORM</span>
               <span className="text-neutral-700">/</span>
               <span className="text-emerald-400 font-extrabold uppercase bg-emerald-950/30 border border-emerald-900/50 px-2.5 py-0.5 rounded-lg tracking-widest">
                 {navItems.find(item => item.key === activeTab)?.label || 'OVERVIEW'}
@@ -386,7 +386,7 @@ export default function App() {
           {/* User profile & Notifications Center Triggers */}
           <div className="flex items-center gap-4 relative">
             <div className="flex items-center gap-3 text-right">
-              <span className="hidden sm:inline-block text-xs text-neutral-400 font-light">Athlete ID: <strong className="text-neutral-200 font-bold">{user.name.split(' ')[0]}</strong></span>
+              <span className="hidden sm:inline-block text-xs text-neutral-200 font-medium">Athlete ID: <strong className="text-neutral-200 font-bold">{user.name.split(' ')[0]}</strong></span>
             </div>
 
             {/* Notification Bell */}
@@ -394,7 +394,7 @@ export default function App() {
               <button 
                 id="bell-dropdown-toggle"
                 onClick={() => setShowNotifications(!showNotifications)} 
-                className="p-2 rounded-xl border border-neutral-850 hover:bg-neutral-900/50 text-neutral-400 hover:text-neutral-100 transition cursor-pointer"
+                className="p-2 rounded-xl border border-neutral-850 hover:bg-neutral-900/50 text-neutral-200 hover:text-neutral-100 transition cursor-pointer"
                 title="Notifications Hub"
               >
                 <Bell className="w-4 h-4 text-neutral-300" />
@@ -489,7 +489,7 @@ export default function App() {
             id={`bottom-nav-${item.key}`}
             onClick={() => handleNavigate(item.key)}
             className={`flex flex-col items-center justify-center px-2 py-1 select-none cursor-pointer transition ${
-              activeTab === item.key ? 'text-emerald-400 scale-105' : 'text-neutral-500 hover:text-neutral-300'
+              activeTab === item.key ? 'text-emerald-400 scale-105' : 'text-neutral-200 hover:text-neutral-100'
             }`}
           >
             {item.icon}
@@ -499,7 +499,7 @@ export default function App() {
         {/* Overflow "More" menu button triggering remaining tabs */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className={`flex flex-col items-center justify-center px-2 py-1 select-none cursor-pointer text-neutral-500`}
+          className={`flex flex-col items-center justify-center px-2 py-1 select-none cursor-pointer text-neutral-200 hover:text-neutral-100`}
         >
           <Menu className="w-5 h-5" />
           <span className="text-[10px] font-semibold mt-0.5">More</span>
@@ -529,7 +529,7 @@ export default function App() {
                     className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center gap-3 transition cursor-pointer ${
                       activeTab === item.key 
                         ? 'bg-emerald-500 text-black font-bold' 
-                        : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-900/40'
+                        : 'text-neutral-200 hover:text-neutral-100 hover:bg-neutral-900/40'
                     }`}
                   >
                     {item.icon}

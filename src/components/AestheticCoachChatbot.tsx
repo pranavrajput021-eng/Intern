@@ -142,7 +142,7 @@ export default function AestheticCoachChatbot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 text-left bg-transparent">
+    <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-50 text-left bg-transparent">
       <AnimatePresence>
         {!isOpen && (
           <div className="flex items-center gap-3 bg-transparent select-none">
@@ -191,10 +191,10 @@ export default function AestheticCoachChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="w-[360px] sm:w-[400px] h-[550px] bg-[#000000] border border-emerald-850/40 rounded-3xl shadow-2xl shadow-emerald-950/40 flex flex-col z-50 overflow-hidden"
+            className="w-[calc(100vw-32px)] sm:w-[400px] h-[450px] sm:h-[550px] bg-[#000000] border border-emerald-850/40 rounded-3xl shadow-2xl shadow-emerald-950/40 flex flex-col z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-[#052316] border-b border-emerald-950/80 px-5 py-4 flex items-center justify-between">
+            <div className="bg-[#052316] border-b border-emerald-950/80 px-4 sm:px-5 py-3 sm:py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
                   <Bot className="w-5 h-5 text-emerald-400" />
@@ -227,21 +227,21 @@ export default function AestheticCoachChatbot() {
             </div>
 
             {/* Conversation Window */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 bg-[#000] custom-scrollbar flex flex-col">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-3 sm:py-4 space-y-3 sm:space-y-4 bg-[#000] custom-scrollbar flex flex-col">
               {messages.map((m) => (
                 <div
                   key={m.id}
                   className={`flex ${m.sender === 'athlete' ? 'justify-end' : 'justify-start'} bg-transparent`}
                 >
-                  <div className={`flex gap-2 max-w-[82%] ${m.sender === 'athlete' ? 'flex-row-reverse' : 'flex-row'} bg-transparent`}>
+                  <div className={`flex gap-2 max-w-[85%] sm:max-w-[82%] ${m.sender === 'athlete' ? 'flex-row-reverse' : 'flex-row'} bg-transparent`}>
                     <div className={`w-6.5 h-6.5 rounded-lg shrink-0 flex items-center justify-center text-[10px] uppercase font-bold font-mono ${
                       m.sender === 'athlete' 
                         ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/40' 
                         : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     }`}>
-                      {m.sender === 'athlete' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+                      {m.sender === 'athlete' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5 text-emerald-400" />}
                     </div>
-                    <div className={`rounded-2xl px-4 py-3 text-xs leading-relaxed ${
+                    <div className={`rounded-2xl px-3 sm:px-4 py-2 sm:py-3 text-xs leading-relaxed ${
                       m.sender === 'athlete'
                         ? 'bg-emerald-950/45 text-emerald-300 border border-emerald-900/55 shadow-sm rounded-tr-none text-right'
                         : 'bg-neutral-900/60 text-neutral-250 border border-emerald-950/40 shadow-inner rounded-tl-none text-left'
@@ -255,7 +255,7 @@ export default function AestheticCoachChatbot() {
                 <div className="flex justify-start bg-transparent">
                   <div className="flex gap-2 bg-transparent">
                     <div className="w-6.5 h-6.5 rounded-lg shrink-0 flex items-center justify-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                      <Bot className="w-3.5 h-3.5" />
+                      <Bot className="w-3.5 h-3.5 text-emerald-400" />
                     </div>
                     <div className="bg-neutral-900/60 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1 text-xs text-neutral-400 border border-emerald-950/40">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -270,7 +270,7 @@ export default function AestheticCoachChatbot() {
 
             {/* Quick Suggestions / Bubbles */}
             {messages.length === 1 && (
-              <div className="px-5 pb-3 flex flex-wrap gap-1.5 bg-[#000]">
+              <div className="px-4 sm:px-5 pb-2.5 sm:pb-3 flex flex-wrap gap-1.5 bg-[#000]">
                 {[
                   "Suggest a 4-day workout split",
                   "Suggest pre-workout meal",
@@ -291,26 +291,26 @@ export default function AestheticCoachChatbot() {
             {/* Input Form */}
             <form
               onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-              className="p-4 bg-emerald-950/10 border-t border-emerald-950/60 flex gap-2 items-center"
+              className="p-3 sm:p-4 bg-emerald-950/10 border-t border-emerald-950/60 flex gap-1.5 sm:gap-2 items-center"
             >
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask your Coach anything on physical fitness..."
-                className="flex-1 bg-black/80 border border-emerald-950 rounded-xl px-3.5 py-2.5 text-xs text-neutral-200 placeholder:text-emerald-700/65 focus:outline-none focus:border-emerald-700 transition shadow-inner"
+                className="flex-1 bg-black/80 border border-emerald-950 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs text-neutral-200 placeholder:text-emerald-700/65 focus:outline-none focus:border-emerald-700 transition shadow-inner"
                 disabled={loading}
               />
               <button
                 type="submit"
                 disabled={!inputValue.trim() || loading}
-                className="w-10 h-10 rounded-xl bg-emerald-700 hover:bg-emerald-600 disabled:bg-[#000000] disabled:text-neutral-750 text-white flex items-center justify-center transition active:scale-95 cursor-pointer shrink-0 shadow-lg border border-emerald-900/40"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-700 hover:bg-emerald-600 disabled:bg-[#000000] disabled:text-neutral-750 text-white flex items-center justify-center transition active:scale-95 cursor-pointer shrink-0 shadow-lg border border-emerald-900/40"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </form>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

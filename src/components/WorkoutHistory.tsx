@@ -55,7 +55,7 @@ export default function WorkoutHistory() {
       {/* HEADER HERO */}
       <div className="bg-neutral-950/20 p-5 border border-neutral-800/60 rounded-3xl backdrop-blur-md">
         <h2 className="text-xl font-extrabold text-white">Your Training Ledger</h2>
-        <p className="text-xs text-neutral-400 mt-1">Review historic sessions, exercise duration records, and calories expenditure.</p>
+        <p className="text-xs text-neutral-200 font-semibold mt-1">Review historic sessions, exercise duration records, and calories expenditure.</p>
       </div>
 
       {/* FILTER CONTROLS BAR */}
@@ -134,12 +134,12 @@ export default function WorkoutHistory() {
                   </span>
                 </div>
                 <h4 className="font-bold text-base text-neutral-100 truncate">{workout.workout_name}</h4>
-                <p className="text-xs text-neutral-400 leading-relaxed max-w-xl truncate">{workout.notes || 'No custom annotations recorded.'}</p>
+                <p className="text-xs text-neutral-200 font-semibold leading-relaxed max-w-xl truncate">{workout.notes || 'No custom annotations recorded.'}</p>
               </div>
 
               {/* STATS BREAKDOWN OR HIGHLIGHTS */}
               <div className="flex items-center gap-5 sm:self-center shrink-0 w-full sm:w-auto justify-between sm:justify-start pt-3 sm:pt-0 border-t border-neutral-900 sm:border-0">
-                <div className="flex gap-4 text-xs font-mono text-neutral-400">
+                <div className="flex gap-4 text-xs font-mono text-neutral-200 font-bold">
                   <div className="text-center sm:text-right">
                     <span className="text-[9px] text-neutral-500 block">MINUTES</span>
                     <span className="font-bold text-neutral-200 flex items-center gap-1 justify-end"><Clock className="w-3.5 h-3.5 text-neutral-500" /> {workout.duration}m</span>

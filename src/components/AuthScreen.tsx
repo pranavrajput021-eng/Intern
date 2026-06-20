@@ -413,7 +413,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neutral-50 via-emerald-450 to-emerald-500 font-sans">
             AESTHETIC ATHLETE
           </h1>
-          <p className="text-sm font-light text-neutral-400 max-w-sm mt-1">
+          <p className="text-sm font-normal text-neutral-200 max-w-sm mt-1">
             Engineered workout tracking & hyper-personalized analytics.
           </p>
         </div>
@@ -552,7 +552,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">Email Address</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Email Address</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                     <Mail className="w-4 h-4" />
@@ -570,7 +570,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
 
               <div className="space-y-1.5">
                 <div className="flex justify-between">
-                  <label className="text-xs text-neutral-400 font-medium">Password</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Password</label>
                   <button 
                     type="button" 
                     onClick={() => { setMode('forgot_password'); resetMessages(); }}
@@ -602,7 +602,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="rounded border-neutral-800 bg-[#0D0D0D] text-emerald-500 focus:ring-0 w-3.5 h-3.5"
                   />
-                  <span className="text-xs text-neutral-400 select-none">Remember my session</span>
+                  <span className="text-xs text-neutral-200 select-none font-semibold">Remember my session</span>
                 </label>
               </div>
 
@@ -639,7 +639,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-neutral-400 font-medium">Full Name</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Full Name</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                     <User className="w-4 h-4" />
@@ -656,7 +656,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-neutral-400 font-medium">Email Address</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Email Address</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                     <Mail className="w-4 h-4" />
@@ -674,7 +674,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs text-neutral-400 font-medium">Password</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Password</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                       <KeyRound className="w-4 h-4" />
@@ -691,7 +691,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs text-neutral-400 font-medium">Confirm Password</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Confirm Password</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                       <ShieldCheck className="w-4 h-4" />
@@ -736,12 +736,12 @@ create policy "Allow step logs control for self" on public."StepLogs"
                 </button>
               </div>
 
-              <p className="text-xs text-neutral-400 leading-relaxed">
+              <p className="text-xs text-neutral-200 font-medium leading-relaxed">
                 Provide your email address and we will forward a secured verification code to change your login credentials.
               </p>
 
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">Registered Email Address</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Registered Email Address</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-neutral-500">
                     <Mail className="w-4 h-4" />
@@ -783,7 +783,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
               {/* Age & Gender */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-neutral-400 font-medium">Age (years)</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Age (years)</label>
                   <input 
                     type="number" 
                     min={10} 
@@ -804,7 +804,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-neutral-400 font-medium">Gender</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Gender</label>
                   <select 
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
@@ -821,7 +821,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
               {/* Height & Weight */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-neutral-400 font-medium">Height (cm)</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Height (cm)</label>
                   <input 
                     type="number" 
                     min={120} 
@@ -842,7 +842,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs text-neutral-400 font-medium">Weight (kg)</label>
+                  <label className="text-xs text-neutral-200 font-semibold tracking-wide">Weight (kg)</label>
                   <input 
                     type="number" 
                     step="0.1"
@@ -867,7 +867,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
 
               {/* Fitness Level */}
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">Your Current Fitness Level</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Your Current Fitness Level</label>
                 <div className="grid grid-cols-3 gap-2">
                   {['Beginner', 'Intermediate', 'Advanced'].map((lvl) => (
                     <button
@@ -888,7 +888,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
 
               {/* Primary Goal */}
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">What is your principal Fitness Goal?</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">What is your principal Fitness Goal?</label>
                 <select 
                   value={primaryGoal}
                   onChange={(e) => setPrimaryGoal(e.target.value)}
@@ -905,7 +905,7 @@ create policy "Allow step logs control for self" on public."StepLogs"
 
               {/* Workout Frequency */}
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">How often do you plan to train?</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">How often do you plan to train?</label>
                 <select 
                   value={workoutFrequency}
                   onChange={(e) => setWorkoutFrequency(e.target.value)}

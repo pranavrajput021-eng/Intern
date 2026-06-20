@@ -389,7 +389,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
               Welcome, <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-300 to-emerald-400 drop-shadow-sm">{formatName(user.name)}</span>
             </h2>
             
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 font-medium">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-200 font-semibold">
               <span className="flex items-center gap-1.5 text-left"><Trophy className="w-4 h-4 text-emerald-400 shrink-0" /> Target: <strong className="text-neutral-200">{user.fitness_goal}</strong></span>
               <span className="text-neutral-600">•</span>
               <span className="flex items-center gap-1.5 text-left"><Calendar className="w-4 h-4 text-emerald-400 shrink-0" /> {new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}</span>
@@ -480,55 +480,55 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
         {/* STAT 1: Weight */}
         <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
           <div className="flex justify-between items-start mb-2">
-            <span className="text-xs text-neutral-400 font-medium">Current Weight</span>
+            <span className="text-xs text-neutral-200 font-semibold tracking-wide">Current Weight</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-emerald-400">
               <Weight className="w-4 h-4 text-emerald-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{currentWeight} <span className="text-xs text-neutral-500 font-sans">kg</span></p>
-          <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-400">
-            <span className={weightChange <= 0 ? 'text-emerald-400' : 'text-amber-500'}>
+          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{currentWeight} <span className="text-xs text-neutral-300 font-sans">kg</span></p>
+          <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-300 font-semibold">
+            <span className={weightChange <= 0 ? 'text-emerald-450 font-bold' : 'text-amber-400 font-bold'}>
               {weightChange > 0 ? `+${weightChange}` : weightChange} kg
             </span>
-            <span className="text-neutral-500">since start</span>
+            <span className="text-neutral-300 font-medium">since start</span>
           </div>
         </div>
 
         {/* STAT 2: Burning Calories */}
         <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
           <div className="flex justify-between items-start mb-2">
-            <span className="text-xs text-neutral-400 font-medium">Calories Burned</span>
+            <span className="text-xs text-neutral-200 font-semibold tracking-wide">Calories Burned</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-red-400">
               <Flame className="w-4 h-4 text-red-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{caloriesThisWeek} <span className="text-xs text-neutral-500 font-sans">kcal</span></p>
-          <p className="text-[11px] text-neutral-500 mt-1">This rolling week</p>
+          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{caloriesThisWeek} <span className="text-xs text-neutral-300 font-sans">kcal</span></p>
+          <p className="text-[11px] text-neutral-300 font-medium mt-1">This rolling week</p>
         </div>
 
         {/* STAT 3: Daily Steps & Distance */}
         <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
           <div className="flex justify-between items-start mb-2">
-            <span className="text-xs text-neutral-400 font-medium">Daily Steps</span>
+            <span className="text-xs text-neutral-200 font-semibold tracking-wide">Daily Steps</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-blue-400">
               <Footprints className="w-4 h-4 text-blue-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{stepsToday.toLocaleString()} <span className="text-[10px] text-neutral-500 font-sans">/ 10k</span></p>
-          <p className="text-[11px] text-neutral-400 mt-1">{distanceToday} km walked today</p>
+          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{stepsToday.toLocaleString()} <span className="text-[10px] text-neutral-300 font-sans font-medium">/ 10k</span></p>
+          <p className="text-[11px] text-neutral-300 font-medium mt-1">{distanceToday} km walked today</p>
         </div>
 
         {/* STAT 4: Streak & score */}
         <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
           <div className="flex justify-between items-start mb-2">
-            <span className="text-xs text-neutral-400 font-medium">Aesthetic Score</span>
+            <span className="text-xs text-neutral-200 font-semibold tracking-wide">Aesthetic Score</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-amber-400">
               <Activity className="w-4 h-4 text-amber-400" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{calcFitnessScore()} <span className="text-[10px] text-amber-400 font-sans">Score</span></p>
-          <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-400">
-            <span className="text-amber-400">🔥 {workoutStreak} Day Streak</span>
+          <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{calcFitnessScore()} <span className="text-[10px] text-amber-300 font-sans font-medium">Score</span></p>
+          <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-300">
+            <span className="text-amber-400 font-bold">🔥 {workoutStreak} Day Streak</span>
           </div>
         </div>
 
@@ -591,7 +591,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
         {showLogWeight && (
           <form onSubmit={handleLogWeightSubmit} className="mt-4 p-4 border border-neutral-850 bg-neutral-950/60 rounded-2xl flex flex-wrap gap-4 items-end animate-in slide-in-from-top-2 duration-200">
             <div className="space-y-1.5 grow">
-              <label className="text-xs text-neutral-400 font-medium">Log Current Weight (kg)</label>
+              <label className="text-xs text-neutral-200 font-semibold tracking-wide">Log Current Weight (kg)</label>
               <input 
                 type="number" 
                 step="0.1"
@@ -626,7 +626,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           <form onSubmit={handleLogStepsSubmit} className="mt-4 p-4 border border-neutral-850 bg-neutral-950/60 rounded-2xl space-y-3 animate-in slide-in-from-top-2 duration-200">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">Steps Counted</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Steps Counted</label>
                 <input 
                   type="number" 
                   placeholder="e.g. 10250" 
@@ -637,7 +637,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 font-medium">Distance (km) (optional)</label>
+                <label className="text-xs text-neutral-200 font-semibold tracking-wide">Distance (km) (optional)</label>
                 <input 
                   type="number" 
                   step="0.01"
@@ -669,7 +669,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
         {showLogWater && (
           <form onSubmit={handleLogWaterSubmit} className="mt-4 p-4 border border-neutral-850 bg-neutral-950/60 rounded-2xl flex flex-wrap gap-4 items-end animate-in slide-in-from-top-2 duration-200">
             <div className="space-y-1.5 grow">
-              <label className="text-xs text-neutral-400 font-medium">Add Water Amount</label>
+              <label className="text-xs text-neutral-200 font-semibold tracking-wide">Add Water Amount</label>
               <select 
                 value={logWaterVal}
                 onChange={(e) => setLogWaterVal(e.target.value)}
