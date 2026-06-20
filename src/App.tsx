@@ -188,18 +188,19 @@ export default function App() {
 
         <div className="space-y-6 p-5 z-10 relative">
           {/* Brand header */}
-          <div className="flex items-center gap-3 border-b border-emerald-950/40 pb-5">
+          <div className="flex items-center gap-3 border-b border-sky-950/40 pb-5">
             <motion.div 
               whileHover={{ scale: 1.05, rotate: -5 }}
-              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-emerald-950 p-[1px] flex items-center justify-center cursor-pointer"
+              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-400 via-sky-450 to-white p-[1px] flex items-center justify-center cursor-pointer relative group"
             >
-              <div className="w-full h-full bg-[#000000] rounded-xl flex items-center justify-center">
-                <Dumbbell className="text-emerald-450 w-5 h-5 animate-pulse" />
+              <div className="absolute inset-0 rounded-xl bg-sky-400/20 blur pointer-events-none group-hover:bg-sky-400/35 transition-all duration-300" />
+              <div className="w-full h-full bg-[#000000] rounded-xl flex items-center justify-center relative z-10">
+                <Dumbbell className="text-sky-400 w-5 h-5 animate-pulse" />
               </div>
             </motion.div>
             <div>
-              <span className="text-[10px] text-emerald-500 tracking-widest font-mono select-none block leading-none font-bold uppercase">AESTHETIC PORTAL</span>
-              <strong className="text-sm font-black text-neutral-50 tracking-tight">ATHLETE CO.</strong>
+              <span className="text-[10px] text-sky-400 tracking-widest font-mono select-none block leading-none font-bold uppercase">AESTHETIC PORTAL</span>
+              <strong className="text-sm font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-200 to-sky-300">ATHLETE CO.</strong>
             </div>
           </div>
 
@@ -280,46 +281,47 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 relative pb-20 lg:pb-0">
         
         {/* Premium Immersive Cyber-Athletic Dashboard Backdrop */}
-        <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#023326]/30 via-neutral-950 to-[#000000]">
-          {/* Soft multi-point ambient glows */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-950/20 blur-[130px]" />
-          <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[140px]" />
-          <div className="absolute top-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/15 blur-[120px]" />
+        <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#01281e]/30 via-[#00101a]/30 to-[#000000]">
+          {/* Soft multi-point ambient glows - beautifully mixing emerald green, sharp white highlights, and cyan */}
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-950/15 blur-[130px]" />
+          <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-sky-500/8 blur-[140px]" />
+          <div className="absolute top-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full bg-white/4 blur-[120px]" />
           <div className="absolute bottom-24 left-[10%] w-72 h-72 rounded-full bg-emerald-900/10 blur-[110px]" />
+          <div className="absolute top-1/4 right-[20%] w-72 h-72 rounded-full bg-sky-950/15 blur-[100px]" />
 
           {/* Fine-line coordinate dynamic matrix grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.035)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.035)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.02)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.02)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
 
           {/* Dot Matrix Fields (adds technical depth) */}
-          <div className="absolute top-36 right-16 w-64 h-32 opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
-               style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
-          <div className="absolute bottom-40 left-12 w-72 h-40 opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
-               style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+          <div className="absolute top-36 right-16 w-64 h-32 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+               style={{ backgroundImage: 'radial-gradient(rgba(56, 189, 248, 0.25) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+          <div className="absolute bottom-40 left-12 w-72 h-40 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+               style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.25) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
 
           {/* Glowing concentric dial/wireframe in top-right */}
-          <div className="absolute -top-32 -right-32 w-[450px] h-[450px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-70">
-            <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_180s_linear_infinite]">
-              <div className="w-[300px] h-[300px] rounded-full border border-emerald-500/15 flex items-center justify-center">
-                <div className="w-4 h-4 border-r border-t border-emerald-500/35" />
+          <div className="absolute -top-32 -right-32 w-[450px] h-[450px] rounded-full border border-emerald-500/10 flex items-center justify-center opacity-70">
+            <div className="w-[380px] h-[380px] rounded-full border border-dashed border-sky-500/15 flex items-center justify-center animate-[spin_180s_linear_infinite]">
+              <div className="w-[300px] h-[300px] rounded-full border border-sky-500/10 flex items-center justify-center">
+                <div className="w-4 h-4 border-r border-t border-emerald-500/20" />
               </div>
             </div>
           </div>
 
           {/* Glowing athletic target/telemetry rings in bottom-left */}
-          <div className="absolute -bottom-40 -left-40 w-[550px] h-[550px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-60">
-            <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_120s_linear_infinite_reverse]">
-              <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/15 flex items-center justify-center">
-                <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/25" />
+          <div className="absolute -bottom-40 -left-40 w-[550px] h-[550px] rounded-full border border-sky-500/10 flex items-center justify-center opacity-60">
+            <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/15 flex items-center justify-center animate-[spin_120s_linear_infinite_reverse]">
+              <div className="w-[390px] h-[390px] rounded-full border border-sky-500/10 flex items-center justify-center">
+                <div className="w-64 h-64 rounded-full border border-dotted border-sky-500/15" />
               </div>
             </div>
           </div>
 
           {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile */}
-          <div className="hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-emerald-500/20 opacity-75">
-            <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-[#10b981]/55">SEC_PORTAL_01</span>
+          <div className="hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-sky-500/10 opacity-75">
+            <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-[#38bdf8]/40">SEC_PORTAL_01</span>
           </div>
-          <div className="hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/20 opacity-75">
-            <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/55">SEC_PORTAL_02</span>
+          <div className="hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/10 opacity-75">
+            <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/40">SEC_PORTAL_02</span>
           </div>
 
           {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
@@ -336,14 +338,14 @@ export default function App() {
           </div>
 
           {/* Ultra-High-End Clean Typography Watermark centered behind content but fully readable */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.16] z-[0] px-4">
-            <span className="text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[13rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_80px_rgba(16,185,129,0.2)]">ATHLETE</span>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.14] z-[0] px-4">
+            <span className="text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[13rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_80px_rgba(16,185,129,0.12)]">ATHLETE</span>
             <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">PORTAL OVERVIEW DEVICE</span>
           </div>
 
           {/* Diagonal Technical Accent Bars across corners */}
-          <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/30 rotate-12 origin-top-right transform scale-150" />
-          <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/30 rotate-12 origin-bottom-left transform scale-150" />
+          <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-sky-500/10 rotate-12 origin-top-right transform scale-150" />
+          <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/10 rotate-12 origin-bottom-left transform scale-150" />
         </div>
         
         {/* TOP ROW RESPONSIVE HEADER */}
@@ -354,17 +356,17 @@ export default function App() {
             <button 
               id="mobile-drawer-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-              className="p-1.5 rounded-lg border border-emerald-950 hover:bg-[#022c22]/40 text-neutral-200 hover:text-neutral-100 lg:hidden transition cursor-pointer"
+              className="p-1.5 rounded-lg border border-sky-950 hover:bg-[#021d2c]/40 text-neutral-200 hover:text-neutral-100 lg:hidden transition cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
             <div className="flex items-center gap-2 lg:hidden">
-              <Dumbbell className="text-emerald-400 w-4 h-4 animate-pulse" />
-              <strong className="text-xs font-black tracking-wider text-emerald-400 uppercase">
+              <Dumbbell className="text-sky-400 w-4 h-4 animate-pulse" />
+              <strong className="text-xs font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-400 to-sky-450 uppercase">
                 {navItems.find(item => item.key === activeTab)?.label.split(' ')[0] || 'ATHLETE'}
               </strong>
               {isLocalModeActive() && (
-                <span className="text-amber-400 font-semibold bg-amber-950/30 border border-amber-900/50 px-1.5 py-0.5 rounded text-[8px] tracking-tight animate-pulse ml-1">
+                <span className="text-amber-400 font-semibold bg-amber-955/30 border border-amber-900/50 px-1.5 py-0.5 rounded text-[8px] tracking-tight animate-pulse ml-1">
                   OFFLINE
                 </span>
               )}
@@ -372,7 +374,7 @@ export default function App() {
             <div className="hidden lg:flex items-center gap-3 text-xs font-mono">
               <span className="text-neutral-100 font-bold tracking-wider">AESTHETIC ATHLETE PLATFORM</span>
               <span className="text-neutral-700">/</span>
-              <span className="text-emerald-400 font-extrabold uppercase bg-emerald-950/30 border border-emerald-900/50 px-2.5 py-0.5 rounded-lg tracking-widest">
+              <span className="text-sky-400 font-extrabold uppercase bg-sky-950/30 border border-sky-900/50 px-2.5 py-0.5 rounded-lg tracking-widest">
                 {navItems.find(item => item.key === activeTab)?.label || 'OVERVIEW'}
               </span>
               {isLocalModeActive() && (
