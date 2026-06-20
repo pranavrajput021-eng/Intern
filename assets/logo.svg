@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Premium Gradient for Aesthetic Athlete theme -->
+    <linearGradient id="emeraldGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#047857" stop-opacity="1" />
+      <stop offset="50%" stop-color="#10b981" stop-opacity="1" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="1" />
+    </linearGradient>
+    <linearGradient id="darkIntel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.6" />
+    </linearGradient>
+    <!-- Radial Shadow for Depth -->
+    <radialGradient id="centerCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Outer Ambient Radial Depth Glow -->
+  <circle cx="256" cy="256" r="220" fill="url(#centerCore)" />
+
+  <!-- Outer Cyber-Biometric Ring Structure -->
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#064e3b" stroke-width="1" stroke-opacity="0.4" />
+  <circle cx="256" cy="256" r="180" fill="none" stroke="url(#emeraldGlow)" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="12 8 4 8" />
+  <circle cx="256" cy="256" r="172" fill="none" stroke="#10b981" stroke-width="1" stroke-opacity="0.1" />
+
+  <!-- Calibration Tick Marks for Technical Architecture Feel -->
+  <g stroke="#047857" stroke-width="1" stroke-opacity="0.4">
+    <line x1="256" y1="48" x2="256" y2="58" />
+    <line x1="256" y1="454" x2="256" y2="464" />
+    <line x1="48" y1="256" x2="58" y2="256" />
+    <line x1="454" y1="256" x2="464" y2="256" />
+  </g>
+
+  <!-- Corner Crosshairs -->
+  <path d="M 120 120 L 140 120 M 120 120 L 120 140" fill="none" stroke="#047857" stroke-width="1" stroke-opacity="0.3" />
+  <path d="M 392 120 L 372 120 M 392 120 L 392 140" fill="none" stroke="#047857" stroke-width="1" stroke-opacity="0.3" />
+  <path d="M 120 392 L 140 392 M 120 392 L 120 372" fill="none" stroke="#047857" stroke-width="1" stroke-opacity="0.3" />
+  <path d="M 392 392 L 372 392 M 392 392 L 392 372" fill="none" stroke="#047857" stroke-width="1" stroke-opacity="0.3" />
+
+  <!-- Inner Dynamic Shield Graphic -->
+  <polygon points="256,92 376,162 376,302 256,382 136,302 136,162" fill="url(#darkIntel)" stroke="#064e3b" stroke-width="1.5" stroke-opacity="0.4" />
+
+  <!-- Intersecting Kinetic "Delta" Athletes Triangle - A Symbolic Peak A logo -->
+  <!-- Back Layer Accent Shadow -->
+  <path d="M 256 120 L 350 310 L 162 310 Z" fill="none" stroke="#064e3b" stroke-width="4" stroke-opacity="0.2" />
+  
+  <!-- Main Glowing Active Logo Mark (Futuristic "A" Representing Strength & Elevation) -->
+  <g transform="translate(0, -5)">
+    <!-- Right heavy strut -->
+    <path d="M 256 125 L 342 295 M 256 125 L 290 295" stroke="url(#emeraldGlow)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+    <!-- Left light strut -->
+    <path d="M 256 125 L 170 295" stroke="#10b981" stroke-width="2" stroke-opacity="0.8" stroke-linecap="round" />
+    
+    <!-- Heavy Horizontal Isometric Crossbar - Dumbbell Symbolism -->
+    <path d="M 200 240 L 312 240" stroke="url(#emeraldGlow)" stroke-width="6" stroke-linecap="round" />
+    <circle cx="200" cy="240" r="5" fill="#34d399" />
+    <circle cx="312" cy="240" r="5" fill="#34d399" />
+    
+    <!-- Concentric core indicator -->
+    <circle cx="256" cy="195" r="16" fill="none" stroke="#10b981" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="3 3" />
+    <circle cx="256" cy="195" r="4" fill="#34d399" />
+  </g>
+
+  <!-- Typography: Clean Gothic Core -->
+  <text x="256" y="415" font-family="'Inter', 'Space Grotesk', sans-serif" font-size="28" font-weight="900" letter-spacing="10" fill="#ffffff" text-anchor="middle" opacity="0.95">
+    ATHLETE
+  </text>
+  <text x="256" y="435" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" letter-spacing="4" fill="#10b981" text-anchor="middle" opacity="0.7">
+    STRENGTH SYSTEM
+  </text>
+</svg>
