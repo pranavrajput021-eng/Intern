@@ -20,7 +20,7 @@ function generateAestheticCoachResponse(message: string): string {
     msg.includes("mathematics") || msg.includes("math") || msg.includes("equation") || msg.includes("solve") || msg.includes("essay") || msg.includes("literature") ||
     msg.includes("weather") || msg.includes("news") || msg.includes("hotel") || msg.includes("flight") || msg.includes("booking")
   ) {
-    return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant. Let's get back to optimizing your physique!\n\n_— Powered by Local Backup Engine_";
+    return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant. Let's get back to optimizing your physique!";
   }
 
   // 2. Training structures & splits
@@ -52,7 +52,7 @@ function generateAestheticCoachResponse(message: string): string {
              "#### **Day 5: Lower Body & Posterior Chain**\n" +
              "- **Bulgarian Split Squats**: 3 sets x 10-12 reps per leg\n" +
              "- **Lying Leg Curls**: 3 sets x 12-15 reps\n\n" +
-             "*Progressive Overload Rule: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*\n\n_— Powered by Local Backup Engine_";
+             "*Progressive Overload Rule: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*";
     }
 
     if (msg.includes("chest") || msg.includes("push") || msg.includes("bench")) {
@@ -64,7 +64,7 @@ function generateAestheticCoachResponse(message: string): string {
              "4. **High-to-Low Cable Crossovers**: 3 sets x 15 reps (Targets lower pectorals)\n" +
              "5. **Overhead Dumbbell Press**: 3 sets x 8-10 reps (Deltoid compound)\n" +
              "6. **Rope Overhead Tricep Extension**: 3 sets x 12 reps\n\n" +
-             "*Coach Tip: Do not ego-lift! Focus on the muscular connection, control the eccentric phase, and squeeze hard at peak contraction.*\n\n_— Powered by Local Backup Engine_";
+             "*Coach Tip: Do not ego-lift! Focus on the muscular connection, control the eccentric phase, and squeeze hard at peak contraction.*";
     }
 
     if (msg.includes("leg") || msg.includes("squat") || msg.includes("quad") || msg.includes("hamstring")) {
@@ -75,7 +75,7 @@ function generateAestheticCoachResponse(message: string): string {
              "3. **Bulgarian Split Squats**: 3 sets x 10-12 reps per leg (Absolute quad builder)\n" +
              "4. **Unilateral Leg Extensions**: 3 sets x 12-15 reps (Concentrated quad squeeze, slow negative)\n" +
              "5. **Standing Calf Raises**: 4 sets x 15-20 reps (2-sec stretch at bottom)\n\n" +
-             "*Coach Tip: Take 2-3 minutes of rest between compound squat sets. Recovery index starts during your training.*\n\n_— Powered by Local Backup Engine_";
+             "*Coach Tip: Take 2-3 minutes of rest between compound squat sets. Recovery index starts during your training.*";
     }
 
     if (msg.includes("back") || msg.includes("pull") || msg.includes("deadlift") || msg.includes("row")) {
@@ -87,7 +87,7 @@ function generateAestheticCoachResponse(message: string): string {
              "4. **Straight Arm Cable Pullovers**: 3 sets x 12-15 reps (Long-head lat isolation)\n" +
              "5. **Incline Alternating Dumbbell Curls**: 3 sets x 10-12 reps\n" +
              "6. **Hammer Curls**: 3 sets x 12 reps\n\n" +
-             "*Coach Tip: Pull with your elbows, not with your hands, to fully engage your lat muscles.*\n\n_— Powered by Local Backup Engine_";
+             "*Coach Tip: Pull with your elbows, not with your hands, to fully engage your lat muscles.*";
     }
 
     return "### The Aesthetic Athlete Workout Framework\n\n" +
@@ -95,7 +95,7 @@ function generateAestheticCoachResponse(message: string): string {
            "1. **Resistance Training**: Train 4-5 times a week, dedicating sets to specific muscle groups to allow 48-72 hours of recovery.\n" +
            "2. **Set Intensity**: Focus on 3-4 working sets per exercise with 0-2 RIR (Reps in Reserve).\n" +
            "3. **Form First**: Control the weight through full range of motion. Mind-muscle connection is the key to hypertrophy.\n\n" +
-           "Tell me about your scheduling (e.g. 3, 4, 5-day Push/Pull/Legs option) and let's structure the set!\n\n_— Powered by Local Backup Engine_";
+           "Tell me about your scheduling (e.g. 3, 4, 5-day Push/Pull/Legs option) and let's structure the set!";
   }
 
   // 3. Nutrition & Meal plans
@@ -116,7 +116,7 @@ function generateAestheticCoachResponse(message: string): string {
              "- **Meal 2**: 150g grilled chicken + 250g jasmine rice + steamed asparagus.\n" +
              "- **Meal 3**: 1.5 scoops whey isolate + 1 large banana + 1 Rice Krispie treat (fast acting post-workout carbs).\n" +
              "- **Meal 4**: 180g lean steak + 250g baked sweet potato + spinach salad.\n\n" +
-             "*Consistency Tip: Use our built-in Nutrition & Hydration tab here to track your daily goals!*\n\n_— Powered by Local Backup Engine_";
+             "*Consistency Tip: Use our built-in Nutrition & Hydration tab here to track your daily goals!*";
     }
 
     if (msg.includes("cut") || msg.includes("lose") || msg.includes("fat")) {
@@ -130,7 +130,7 @@ function generateAestheticCoachResponse(message: string): string {
              "- **Meal 2**: 150g white fish (cod, tilapia) or chicken breast + 150g steamed broccoli + 100g cooked sweet potato.\n" +
              "- **Meal 3**: 150g lean turkey breast + 150g jasmine rice.\n" +
              "- **Meal 4**: 170g grilled salmon + massive cucumber-and-lettuce salad.\n\n" +
-             "*Coach Tip: Track your weight checks consistently in the 'Current Weight' panel on our Overview Dashboard.*\n\n_— Powered by Local Backup Engine_";
+             "*Coach Tip: Track your weight checks consistently in the 'Current Weight' panel on our Overview Dashboard.*";
     }
 
     return "### Aesthetic Athlete Nutrition Ledger\n\n" +
@@ -138,7 +138,7 @@ function generateAestheticCoachResponse(message: string): string {
            "1. **Protein Consistency**: Consume protein every 3-4 hours (30-50g per meal) to maximize Muscle Protein Synthesis (MPS).\n" +
            "2. **Pre-Workout Fuel**: Consume high-glycemic carbohydrates 60-90 minutes before your workout to top off glycogen stores.\n" +
            "3. **Hydration**: Drink at least 3-4 liters of pure water daily. Muscular volume is 70%+ water!\n\n" +
-           "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique?\n\n_— Powered by Local Backup Engine_";
+           "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique?";
   }
 
   // 4. Recovery & Supplements
@@ -152,14 +152,14 @@ function generateAestheticCoachResponse(message: string): string {
              "1. **Creatine Monohydrate**: 5g daily, taken consistently at any hour to raise cellular ATP.\n" +
              "2. **Whey Isolate Protein**: Post-workout or between meals to easily satisfy your daily protein thresholds.\n" +
              "3. **Pre-Workout Compound**: Look for formula ingredients containing L-Citrulline (6-8g for pumps), Beta-Alanine (3.2g for endurance), and Caffeine (150-300mg).\n" +
-             "4. **Vitamin D3 & Omega-3**: Crucial for natural joint recovery, general safety, and cardiovascular integrity.\n\n_— Powered by Local Backup Engine_";
+             "4. **Vitamin D3 & Omega-3**: Crucial for natural joint recovery, general safety, and cardiovascular integrity.";
     }
 
     return "### Athlete Recovery & Sleep Optimization\n\n" +
            "Muscle hypertrophy occurs during rest, not during training. To build a premium physique, your recovery must match your hard work:\n\n" +
            "- **Sleep Targets**: Secure 7.5 to 8.5 hours of high-quality sleep. The majority of growth hormone discharges happen during deep stages.\n" +
            "- **Cell Hydration**: Active cells require water. Track your water input (aim for 3-4 liters daily) using our hydration tracker on the Overview tab.\n" +
-           "- **Active Stretching**: Spend 10 minutes at night doing passive stretches. Focus on hip flexors and thoracic extension.\n\n_— Powered by Local Backup Engine_";
+           "- **Active Stretching**: Spend 10 minutes at night doing passive stretches. Focus on hip flexors and thoracic extension.";
   }
 
   // 5. General / Default response
@@ -168,7 +168,7 @@ function generateAestheticCoachResponse(message: string): string {
          "1. **Continuous Progressive Overload**: If you bench pressed 80kg for 8 reps last week, aim for 80kg for 9 reps or 82.5kg for 8 reps today. Continuous effort leads to certain growth.\n" +
          "2. **Autoregulation Focus**: If you feel fatigue spikes or joint pain, downscale your set loads. Listen to your body and adjust dynamically.\n" +
          "3. **Mind-Muscle Connection**: Perfect your range of motion. Squeeze hard at peak contraction and control the eccentric downphase.\n\n" +
-         "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique? Let's dial in your training!\n\n_— Powered by Local Backup Engine_";
+         "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique? Let's dial in your training!";
 }
 
 export default function AestheticCoachChatbot() {
