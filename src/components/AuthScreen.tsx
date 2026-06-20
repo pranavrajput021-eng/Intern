@@ -270,77 +270,132 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
 
   return (
     <div id="auth-screen-layout" className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
-      {/* Premium Minimal Backdrop with Clean Motivational Architectural Design */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        {/* Soft elegant ambient glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-950/25 blur-[140px]" />
-        <div className="absolute top-[-50px] right-[-50px] w-96 h-96 rounded-full bg-emerald-500/10 blur-[120px]" />
-        <div className="absolute bottom-[-100px] left-[-100px] w-96 h-96 rounded-full bg-emerald-950/20 blur-[130px]" />
+      {/* Premium Immersive Cyber-Athletic Backdrop */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#022c22]/35 via-neutral-950 to-[#000000]">
+        {/* Soft elegant deep multi-point ambient glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-emerald-950/20 blur-[150px]" />
+        <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/5 blur-[130px]" />
+        <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/15 blur-[140px]" />
+        <div className="absolute top-1/4 right-[10%] w-80 h-80 rounded-full bg-emerald-900/5 blur-[100px]" />
         
-        {/* Fine-line coordinate training grid - ultra low opacity */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.015)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.015)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-70" />
+        {/* Fine-line coordinate training grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.015)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.015)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
+        
+        {/* Dot Matrix Fields (adds technical depth) */}
+        <div className="absolute top-24 left-12 w-64 h-32 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
+             style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.25) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+        <div className="absolute bottom-28 right-12 w-72 h-40 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
+             style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.25) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
 
-        {/* High-end decorative vector designs around the sides to prevent blankness */}
+        {/* High-end decorative vector designs around the sides */}
         {/* Glowing concentric dial/wireframe in top-left */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full border border-emerald-500/5 flex items-center justify-center opacity-40">
-          <div className="w-80 h-80 rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_100s_linear_infinite]">
-            <div className="w-64 h-64 rounded-full border border-emerald-500/5" />
+        <div className="absolute -top-32 -left-32 w-[450px] h-[450px] rounded-full border border-emerald-500/5 flex items-center justify-center opacity-50">
+          <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_120s_linear_infinite]">
+            <div className="w-[300px] h-[300px] rounded-full border border-emerald-500/5 flex items-center justify-center">
+              <div className="w-4 h-4 border-l border-t border-emerald-500/20" />
+            </div>
           </div>
         </div>
 
         {/* Glowing athletic target/telemetry rings in bottom-right */}
-        <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full border border-emerald-500/5 flex items-center justify-center opacity-30">
-          <div className="w-[420px] h-[420px] rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_80s_linear_infinite_reverse]">
-            <div className="w-[340px] h-[340px] rounded-full border border-emerald-500/5" />
+        <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full border border-emerald-500/5 flex items-center justify-center opacity-40">
+          <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_90s_linear_infinite_reverse]">
+            <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/5 flex items-center justify-center">
+              <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/10" />
+            </div>
           </div>
         </div>
 
-        {/* Vector technical calibration crosshairs */}
-        <div className="absolute top-1/4 left-10 w-24 h-24 border-l border-t border-emerald-500/5 opacity-40" />
-        <div className="absolute bottom-1/4 right-10 w-24 h-24 border-r border-b border-emerald-500/5 opacity-40" />
-
-        {/* High-end clean typography watermark - Centered and made highly readable with transparent card */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.08] z-[0]">
-          <span className="text-[12vw] font-black tracking-[0.2em] uppercase font-sans text-neutral-100 block leading-none select-none">ATHLETE</span>
-          <span className="text-xs sm:text-sm font-mono tracking-[0.6em] uppercase text-emerald-400 block mt-2 select-none">DEDICATED TO STRENGTH AND ELEVATION</span>
+        {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile to avoid overlapping the central form */}
+        <div className="hidden md:block absolute top-[10%] left-10 w-32 h-32 border-l border-t border-emerald-500/10 opacity-50">
+          <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-[#10b981]/40">SYS_SEC_01</span>
         </div>
-
-        {/* Minimal status bar cues in corners for immersive training hub feel */}
-        <div className="absolute top-6 left-6 sm:top-10 sm:left-10 flex items-center gap-2 select-none opacity-30">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[9px] font-bold font-mono tracking-[0.2em] text-neutral-300">SYSTEM.ONLINE</span>
+        <div className="hidden md:block absolute bottom-[10%] right-10 w-32 h-32 border-r border-b border-emerald-500/10 opacity-50">
+          <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/40">SYS_SEC_02</span>
         </div>
         
-        <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 flex items-center gap-3 select-none opacity-30 text-[9px] font-mono tracking-widest text-neutral-300">
-          <span>MOTIVATION_FEED: ACTIVE</span>
-          <span className="text-neutral-800">|</span>
-          <span>EST. 2026</span>
+        {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
+        <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.06] pointer-events-none select-none z-0">
+          <svg className="w-full h-full" viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
+            <path 
+              d="M0,50 L200,50 L220,50 L230,30 L240,70 L250,50 L260,50 L400,50 L420,50 L430,20 L440,85 L450,45 L460,55 L470,50 L700,50 L720,10 L730,90 L745,45 L755,55 L765,50 L1000,50 L1020,40 L1028,25 L1035,75 L1042,50 L1200,50 L1440,50" 
+              stroke="#10b981" 
+              strokeWidth="2" 
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
 
-        {/* Additional sidebar scientific aesthetics to fill empty spaces */}
-        <div className="absolute left-6 top-32 hidden md:flex flex-col gap-5 text-left opacity-15 select-none font-mono text-[9px] text-neutral-400 tracking-wide">
+        {/* Ultra-High-End Clean Typography Watermark centered behind the card but fully readable. Controlled font size bounds prevent giant/tiny distortions */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.14] z-[0] px-4">
+          <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_80px_rgba(16,185,129,0.15)]">ATHLETE</span>
+          <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">DEDICATED TO STRENGTH AND ELEVATION</span>
+        </div>
+
+        {/* Diagonal Technical Accent Bars across corners */}
+        <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/20 rotate-12 origin-top-right transform scale-150" />
+        <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/20 rotate-12 origin-bottom-left transform scale-150" />
+
+        {/* Immersive System Cues in Corners (Control Panel Style) - Hidden on extra small mobile screens to save screen height */}
+        <div className="hidden sm:flex absolute top-6 left-6 sm:top-10 sm:left-10 items-center gap-3 select-none opacity-40">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <div className="flex flex-col">
+            <span className="text-[9px] font-bold font-mono tracking-[0.2em] text-neutral-200 uppercase">SYSTEM.ONLINE</span>
+            <span className="text-[7px] font-mono text-emerald-400/60 tracking-wider">LATENCY: 12MS | ID_NODE: 9D5FA</span>
+          </div>
+        </div>
+        
+        <div className="hidden sm:flex absolute bottom-6 right-6 sm:bottom-10 sm:right-10 flex-col items-end select-none opacity-40 text-[9px] font-mono tracking-widest text-neutral-200">
+          <div className="flex items-center gap-3">
+            <span>MOTIVATION_FEED: ACTIVE</span>
+            <span className="text-neutral-800">|</span>
+            <span>EST. 2026</span>
+          </div>
+          <span className="text-[7px] text-emerald-400/50 mt-1 tracking-wider uppercase">DESIGN_PROTOCOL: ALPHA-95</span>
+        </div>
+
+        {/* Expanded athletic telemetry side panels - highly detailed */}
+        <div className="absolute left-6 top-32 hidden lg:flex flex-col gap-6 text-left opacity-35 select-none font-mono text-[9px] text-neutral-300 tracking-wide border-l border-emerald-500/10 pl-4 py-2">
           <div>
-            <p className="text-emerald-400 font-bold">PERFORMANCE PROTOCOLS</p>
-            <p>VO2 MAX: SUPREME RANGE</p>
-            <p>STRENGTH FACTOR: ACTIVE</p>
+            <p className="text-emerald-400 font-bold mb-1 tracking-widest">PERFORMANCE SECTOR</p>
+            <p className="text-neutral-400 text-[8px]">VO2 MAX: SUPREME RANGE</p>
+            <p className="text-neutral-400 text-[8px]">ANAEROBIC THRESHOLD: 172BPM</p>
+            <p className="text-neutral-400 text-[8px]">STRENGTH FACTOR: 1.84X ACTIVE</p>
           </div>
           <div>
-            <p className="text-emerald-400 font-bold">NUTRITION SYNCHRONY</p>
-            <p>MACRO RATIO: OPTIMAL</p>
-            <p>ENERGY DYNAMICS: CALIBRATED</p>
+            <p className="text-emerald-400 font-bold mb-1 tracking-widest">NUTRITION SYNCHRONY</p>
+            <p className="text-neutral-400 text-[8px]">MACRO RATIO: 40/30/30 OPTIMAL</p>
+            <p className="text-neutral-400 text-[8px]">ENERGY DYNAMICS: CALIBRATED</p>
+            <p className="text-neutral-400 text-[8px]">HYDRATION INDEX: EXCELLENT</p>
+          </div>
+          <div>
+            <p className="text-emerald-400 font-bold mb-1 tracking-widest">BIOMETRIC FEED</p>
+            <p className="text-neutral-400 text-[8px]">HRV STATUS: 89MS HIGH</p>
+            <p className="text-neutral-400 text-[8px]">RECOVERY PROFILE: OPTIMAL</p>
           </div>
         </div>
 
-        <div className="absolute right-6 top-32 hidden md:flex flex-col gap-5 text-right opacity-15 select-none font-mono text-[9px] text-neutral-400 tracking-wide">
+        <div className="absolute right-6 top-32 hidden lg:flex flex-col gap-6 text-right opacity-35 select-none font-mono text-[9px] text-neutral-300 tracking-wide border-r border-emerald-500/10 pr-4 py-2">
           <div>
-            <p className="text-emerald-400 font-bold text-right">CYBERNETIC COACHING</p>
-            <p>INTELLIGENT WEIGHT PROGRESSION</p>
-            <p>BIOMETRIC PATTERN ALIGNMENT</p>
+            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">CYBERNETIC COACHING</p>
+            <p className="text-neutral-400 text-[8px]">INTELLIGENT WEIGHT PROGRESSION</p>
+            <p className="text-neutral-400 text-[8px]">BIOMETRIC PATTERN ALIGNMENT</p>
+            <p className="text-neutral-400 text-[8px]">AUTOREGULATION ENGAGED</p>
           </div>
           <div>
-            <p className="text-emerald-400 font-bold text-right">VOLUME DYNAMICS</p>
-            <p>HYPERTROPHY ZONE: 82.5%</p>
-            <p>REST COEFFICIENT: ADAPTIVE</p>
+            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">VOLUME DYNAMICS</p>
+            <p className="text-neutral-400 text-[8px]">HYPERTROPHY ZONE: 82.5% EFF</p>
+            <p className="text-neutral-400 text-[8px]">REST COEFFICIENT: ADAPTIVE</p>
+            <p className="text-neutral-400 text-[8px]">FATIGUE INDEX: LOW (22%)</p>
+          </div>
+          <div>
+            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">CHRONO-CALENDAR</p>
+            <p className="text-neutral-400 text-[8px]">CURRENT HOUR: 2026.06.20</p>
+            <p className="text-neutral-400 text-[8px]">SESSION BLOCK: AM-POWER</p>
           </div>
         </div>
       </div>
