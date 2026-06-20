@@ -367,7 +367,7 @@ export default function AnalyticsView({ user, triggerRefreshSignal }: AnalyticsV
               const delta = latestVal && priorVal ? Number((latestVal as number) - (priorVal as number)) : 0;
 
               return (
-                <div key={vital.label} className="bg-[#0A0A0A] border border-neutral-800 rounded-2xl p-4 flex flex-col justify-between">
+                <div key={vital.label} className="bg-[#000000] border border-emerald-950 rounded-2xl p-4 flex flex-col justify-between">
                   <span className="text-[10px] text-neutral-500 uppercase font-black tracking-wider">{vital.label}</span>
                   <div className="my-2">
                     <span className={`text-2xl font-mono font-bold text-neutral-100`}>{latestVal || '--'} <span className="text-xs text-neutral-500">cm</span></span>

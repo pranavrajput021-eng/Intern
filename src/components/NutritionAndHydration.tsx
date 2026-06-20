@@ -343,7 +343,7 @@ export default function NutritionAndHydration({ user, onRefreshDashboard, trigge
                 </div>
               ) : (
                 foodsLogged.map((food) => (
-                  <div key={food.id} className="p-3 bg-[#0A0A0A] border border-neutral-850 rounded-xl flex justify-between items-center text-xs">
+                  <div key={food.id} className="p-3 bg-black border border-emerald-950 rounded-xl flex justify-between items-center text-xs">
                     <div>
                       <p className="font-bold text-neutral-200">{food.food_name}</p>
                       <p className="text-[10px] text-neutral-500">
@@ -354,7 +354,7 @@ export default function NutritionAndHydration({ user, onRefreshDashboard, trigge
                       <span className="font-mono font-bold text-emerald-400">{food.calories} kcal</span>
                       <button 
                         onClick={() => removeFoodItem(food.id)} 
-                        className="p-1 text-neutral-600 hover:text-red-400 cursor-pointer transition hover:bg-neutral-900 rounded-md"
+                        className="p-1 text-neutral-400 hover:text-red-400 cursor-pointer transition hover:bg-neutral-905 rounded-md"
                         title="Delete food log"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -366,20 +366,20 @@ export default function NutritionAndHydration({ user, onRefreshDashboard, trigge
             </div>
           </div>
 
-          <div className="pt-4 border-t border-neutral-900 grid grid-cols-4 gap-2 text-center font-mono text-[10px] text-neutral-400">
-            <div className="p-1 bg-[#0A0A0A] rounded border border-neutral-850">
+          <div className="pt-4 border-t border-neutral-900 grid grid-cols-4 gap-2 text-center font-mono text-[10px] text-neutral-450">
+            <div className="p-1 bg-[#000000] rounded border border-emerald-950/80">
               <span className="font-bold text-emerald-400 block">{totalCalsConsumed}</span>
               <span>CALORIES</span>
             </div>
-            <div className="p-1 bg-[#0A0A0A] rounded border border-neutral-850">
+            <div className="p-1 bg-[#000000] rounded border border-emerald-950/80">
               <span className="font-bold text-pink-400 block">{totalProteinConsumed}g</span>
               <span>PROTEIN</span>
             </div>
-            <div className="p-1 bg-[#0A0A0A] rounded border border-neutral-850">
+            <div className="p-1 bg-[#000000] rounded border border-emerald-950/80">
               <span className="font-bold text-sky-400 block">{totalCarbsConsumed}g</span>
               <span>CARBS</span>
             </div>
-            <div className="p-1 bg-[#0A0A0A] rounded border border-neutral-850">
+            <div className="p-1 bg-[#000000] rounded border border-emerald-950/80">
               <span className="font-bold text-amber-500 block">{totalFatsConsumed}g</span>
               <span>FATS</span>
             </div>

@@ -9,12 +9,15 @@ import { UserProfile, Workout, Goal, WeightLog, WaterLog, StepLog } from '../typ
 import { 
   Flame, Droplet, Footprints, Clock, Calendar, 
   Weight, TrendingUp, Sparkles, Plus, ArrowUpRight, 
-  Trophy, Dumbbell, Activity, CheckCircle2, ListFilter
+  Trophy, Dumbbell, Activity, CheckCircle2, ListFilter,
+  Cpu, HeartHandshake, Zap, ShieldAlert, Sparkle, Heart
 } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, Tooltip, 
-  ResponsiveContainer, BarChart, Bar, LineChart, Line 
+  ResponsiveContainer, BarChart, Bar, LineChart, Line, CartesianGrid
 } from 'recharts';
+import { motion, AnimatePresence } from 'motion/react';
+import AestheticCoachChatbot from './AestheticCoachChatbot';
 
 interface DashboardViewProps {
   user: UserProfile;
@@ -42,6 +45,33 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
   const [showLogWater, setShowLogWater] = useState(false);
   const [logWaterVal, setLogWaterVal] = useState<string>('250');
 
+  // Interactive Premium Feature States
+  const [isGeneratingMantra, setIsGeneratingMantra] = useState(false);
+  const [mantraText, setMantraText] = useState('');
+  const [physiologicalScanActive, setPhysiologicalScanActive] = useState(false);
+  const [waterEffectActive, setWaterEffectActive] = useState(false);
+  const [activeAdmitNotice, setActiveAdmitNotice] = useState<string | null>(null);
+
+  // Motivational Tickers for the glowing animated hero
+  const MOTIVATIONAL_QUOTES = [
+    "NO LIMITS • ONLY PLATEAUS",
+    "AESTHETIC IS THE ULTIMATE CONQUEST",
+    "THE PERFORMANCE ENGINE NEVER RESTS",
+    "PROGRESSIVE OVERLOAD IN MIND & BODY",
+    "SWEAT IS THE FUTURISTIC FUEL OF GLORY",
+    "EACH WEIGHT IS A BUILDING BLOCK OF ART"
+  ];
+  const [quoteIdx, setQuoteIdx] = useState(0);
+
+  useEffect(() => {
+    const quoteInterval = setInterval(() => {
+      setQuoteIdx((prev) => (prev + 1) % MOTIVATIONAL_QUOTES.length);
+    }, 4500);
+    return () => clearInterval(quoteInterval);
+  }, []);
+
+  // Premium CNS & Biometric interactive states removed per user intent
+  
   useEffect(() => {
     loadDashboardData();
   }, [triggerRefreshSignal]);
@@ -213,42 +243,236 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
   };
 
   const quickAddWater = async (ml: number) => {
+    setWaterEffectActive(true);
+    setTimeout(() => setWaterEffectActive(false), 1200);
     await supabaseService.logWater(ml);
     await supabaseService.addNotification('water', 'Hydrated!', `Successfully added ${ml}ml of water! Total today is ${waterAmount + ml}ml.`);
     loadDashboardData();
   };
 
+  const handleMantraTrigger = () => {
+    setPhysiologicalScanActive(true);
+    setIsGeneratingMantra(true);
+    setMantraText('');
+    
+    setTimeout(() => {
+      setPhysiologicalScanActive(false);
+      const goalLower = (user.fitness_goal || '').toLowerCase();
+      let advice = '';
+      if (goalLower.includes('muscle') || goalLower.includes('gain') || goalLower.includes('bulk')) {
+        advice = `[BIO-DYNAMIC ANALYSIS] Anabolic index high (current weight ${currentWeight} kg). Based on your target goal of "${user.fitness_goal}", dynamic myofibrillar split optimization is recommended. Ensure +350g complex carbohydrates. Progressive load targets set: 85% 1-Rep-Max. Focus on the eccentric motion phase.`;
+      } else if (goalLower.includes('fat') || goalLower.includes('lose') || goalLower.includes('cut') || goalLower.includes('lean')) {
+        advice = `[BIO-DYNAMIC ANALYSIS] Lipolysis efficiency high. Hydration state: ${waterAmount}ml. Steadied metabolic baseline registered. To secure optimum definition: Schedule a high-intensity intervals split of 25 mins. Rest boundaries must stay strict at 45s.`;
+      } else {
+        advice = `[BIO-DYNAMIC ANALYSIS] Cardiovascular homeostatic index is superb. Aesthetic Score is currently ${calcFitnessScore()}/100. Maximize central nervous system stability by emphasizing time-under-tension. Target high-concentric control output today.`;
+      }
+      setMantraText(advice);
+      setIsGeneratingMantra(false);
+    }, 1400);
+  };
+
+  const formatName = (nameString: string) => {
+    if (!nameString) return 'Athlete';
+    let name = nameString.split('@')[0];
+    name = name.replace(/\d+/g, '').replace(/_/g, ' ').replace(/\./g, ' ').trim();
+    if (!name) return 'Athlete';
+    return name.split(/\s+/).map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } }
+  };
+
   return (
-    <div id="dashboard-view-layout" className="space-y-8 animate-in fade-in duration-300">
+    <motion.div 
+      id="dashboard-view-layout" 
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 text-left"
+    >
       
       {/* 1. HERO / HEADER SECTION */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-950/20 via-neutral-950 to-neutral-950 border border-neutral-800/60 p-6 sm:p-8 rounded-3xl backdrop-blur-md shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="space-y-1.5 z-10">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-500/20">Athlete Profile Active</span>
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            Welcome Back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-300 to-emerald-400">{user.name}</span>
-          </h2>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 font-light">
-            <span className="flex items-center gap-1.5"><Trophy className="w-4 h-4 text-emerald-400" /> Target: <strong className="text-neutral-200">{user.fitness_goal}</strong></span>
-            <span className="text-neutral-600">•</span>
-            <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-neutral-400" /> {new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}</span>
+      <motion.div 
+        variants={itemVariants}
+        className="relative overflow-hidden bg-black border border-emerald-950/80 p-6 sm:p-8 rounded-3xl backdrop-blur-md shadow-2xl shadow-emerald-950/15 flex flex-col justify-between gap-6"
+      >
+        {/* Floating Motivating Green Energy Nodes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <motion.div
+            animate={{
+              x: [0, 80, -40, 0],
+              y: [0, -50, 70, 0],
+              scale: [1, 1.2, 0.9, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-1/4 left-1/3 w-64 h-64 rounded-full bg-emerald-950/25 blur-[75px]"
+          />
+          <motion.div
+            animate={{
+              x: [0, -60, 50, 0],
+              y: [0, 80, -40, 0],
+              scale: [1, 0.85, 1.15, 1],
+            }}
+            transition={{
+              duration: 24,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+            className="absolute -bottom-20 right-10 w-80 h-80 rounded-full bg-emerald-900/15 blur-[90px]"
+          />
+          <motion.div
+            animate={{
+              opacity: [0.35, 0.65, 0.35],
+              scale: [1, 1.12, 1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute -top-10 -left-10 w-72 h-72 rounded-full bg-emerald-500/5 blur-[80px]"
+          />
+          
+          {/* Ambient Grid Backdrop */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.012)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)] opacity-70" />
+          
+          {/* Faint elegant motivational overlay text */}
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-[0.03] select-none text-9xl font-black font-mono tracking-widest text-emerald-400">
+            AESTHETIC
           </div>
         </div>
-        <div className="flex gap-2">
-          <button 
-            id="start-workout-action"
-            onClick={() => onNavigate('workouts')} 
-            className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-black text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/10 cursor-pointer flex items-center gap-1.5 transition active:scale-95"
-          >
-            <Dumbbell className="w-4 h-4 text-black" />
-            Start Workout
-          </button>
+        
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 z-10 w-full relative">
+          <div className="space-y-1.5 text-left bg-transparent">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20 flex items-center gap-1.5 align-middle">
+                <Cpu className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+                Athlete Engine Active
+              </span>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+              
+              {/* Dynamic Futuristic Motivational Ticker */}
+              <div className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-950/20 border border-emerald-900/30 rounded text-[9px] font-mono text-emerald-400 font-bold tracking-tight">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={quoteIdx}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {MOTIVATIONAL_QUOTES[quoteIdx]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
+            
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+              Welcome, <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-300 to-emerald-400 drop-shadow-sm">{formatName(user.name)}</span>
+            </h2>
+            
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 font-medium">
+              <span className="flex items-center gap-1.5 text-left"><Trophy className="w-4 h-4 text-emerald-400 shrink-0" /> Target: <strong className="text-neutral-200">{user.fitness_goal}</strong></span>
+              <span className="text-neutral-600">•</span>
+              <span className="flex items-center gap-1.5 text-left"><Calendar className="w-4 h-4 text-emerald-400 shrink-0" /> {new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-2 z-10">
+            <button 
+              id="elite-advice-action"
+              onClick={handleMantraTrigger}
+              disabled={isGeneratingMantra}
+              className="px-4 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-xl flex items-center gap-2 transition hover:border-emerald-400/60 disabled:opacity-50 select-none cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              {isGeneratingMantra ? 'Scanning Physiology...' : 'Generate Athletic Mantra'}
+            </button>
+            <button 
+              id="start-workout-action"
+              onClick={() => onNavigate('workouts')} 
+              className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-850 hover:from-emerald-400 hover:to-emerald-750 text-white border border-emerald-800/40 text-xs font-bold rounded-xl shadow-lg shadow-emerald-900/20 cursor-pointer flex items-center gap-1.5 transition active:scale-95"
+            >
+              <Dumbbell className="w-4 h-4 text-white shrink-0" />
+              Start Workout
+            </button>
+          </div>
         </div>
-      </div>
+
+        {/* Bio-scanner visual interactive display */}
+        <AnimatePresence>
+          {(physiologicalScanActive || mantraText) && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full overflow-hidden border-t border-neutral-800 pt-4 mt-2"
+            >
+              {physiologicalScanActive ? (
+                <div className="space-y-2 py-2">
+                  <div className="flex justify-between items-center text-xs font-mono text-emerald-400">
+                    <span className="flex items-center gap-2">
+                      <span className="inline-block w-20 h-1.5 bg-emerald-400 animate-pulse rounded" />
+                      COGNITIVE SYNAPTIC METRIC INTERPRETATION IN PROGRESS
+                    </span>
+                    <span>91%</span>
+                  </div>
+                  {/* Scanner lines bar */}
+                  <div className="w-full h-1 bg-neutral-900 rounded-full overflow-hidden relative">
+                    <motion.div 
+                      className="absolute top-0 bottom-0 left-0 bg-emerald-500"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 1.4, ease: 'easeInOut' }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-emerald-950/20 border border-emerald-500/10 rounded-2xl p-4 flex gap-3.5 items-start relative overflow-hidden text-left"
+                >
+                  <div className="absolute right-0 bottom-0 opacity-[0.02] text-9xl font-black select-none pointer-events-none text-emerald-500 font-mono">
+                    AI
+                  </div>
+                  <div className="p-2 bg-emerald-400/10 rounded-xl text-emerald-400 shrink-0 border border-emerald-500/20 mt-0.5 animate-pulse">
+                    <Cpu className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <div className="space-y-1 text-left">
+                    <span className="text-[10px] text-emerald-400 font-mono font-bold tracking-widest uppercase flex items-center gap-1.5">
+                      <Sparkle className="w-3 h-3 text-emerald-400 animate-spin" />
+                      Aesthetic Coach Intelligence
+                    </span>
+                    <p className="text-xs text-neutral-350 leading-relaxed font-mono font-medium">
+                      {mantraText}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {/* 2. STATS ROW GRID */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -490,14 +714,18 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             <p className="text-xs text-neutral-400 mb-6 font-light">Real-time parameters updated with every custom logged entry.</p>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 bg-transparent">
             {/* Steps bar */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 bg-neutral-950/20 p-3 rounded-2xl border border-neutral-900 duration-200">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-neutral-300"><Footprints className="w-4 h-4 text-blue-400" /> Daily Steps</span>
-                <span className="font-mono text-neutral-200">{stepsToday} / 10,000 steps ({Math.min(Math.round((stepsToday/10000)*100), 100)}%)</span>
+                <span className="flex items-center gap-1.5 text-neutral-300"><Footprints className="w-4 h-4 text-blue-400" /> Daily Steps Target</span>
+                <span className="text-[10px] text-neutral-500 font-mono">Limit: 10,000 steps</span>
               </div>
-              <div className="w-full h-2 bg-neutral-900 border border-neutral-850 rounded-full overflow-hidden">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="font-mono text-neutral-300 font-medium font-bold">Logged: {stepsToday.toLocaleString()} steps</span>
+                <span className="font-mono text-blue-400 font-bold">{Math.min(Math.round((stepsToday / 10000) * 100), 100)}% Complete</span>
+              </div>
+              <div className="w-full h-2 bg-neutral-900/60 border border-neutral-850/55 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-blue-500 to-sky-400 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min((stepsToday / 10000) * 100, 100)}%` }}
@@ -506,12 +734,16 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             </div>
 
             {/* Hydration bar */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 bg-neutral-950/20 p-3 rounded-2xl border border-neutral-900 duration-200">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-neutral-300"><Droplet className="w-4 h-4 text-sky-400" /> Everyday Hydration</span>
-                <span className="font-mono text-neutral-200">{waterAmount} / 3,000 ml ({Math.min(Math.round((waterAmount/3000)*100), 100)}%)</span>
+                <span className="flex items-center gap-1.5 text-neutral-300"><Droplet className="w-4 h-4 text-sky-400" /> Everyday Hydration Target</span>
+                <span className="text-[10px] text-neutral-500 font-mono">Limit: 3,000 ml</span>
               </div>
-              <div className="w-full h-2 bg-neutral-900 border border-neutral-850 rounded-full overflow-hidden">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="font-mono text-neutral-300 font-medium font-bold">Logged: {waterAmount} ml</span>
+                <span className="font-mono text-sky-400 font-bold">{Math.min(Math.round((waterAmount / 3000) * 100), 100)}% Complete</span>
+              </div>
+              <div className="w-full h-2 bg-neutral-900/60 border border-neutral-850/55 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min((waterAmount / 3000) * 100, 100)}%` }}
@@ -520,12 +752,16 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             </div>
 
             {/* Workout session calories burned bar */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 bg-neutral-950/20 p-3 rounded-2xl border border-neutral-900 duration-200">
               <div className="flex justify-between items-center text-xs">
-                <span className="flex items-center gap-1.5 text-neutral-300"><Flame className="w-4 h-4 text-red-500" /> Target Workout Calories</span>
-                <span className="font-mono text-neutral-200">{caloriesThisWeek} / 3,000 kcal ({Math.min(Math.round((caloriesThisWeek/3000)*100), 100)}%)</span>
+                <span className="flex items-center gap-1.5 text-neutral-300"><Flame className="w-4 h-4 text-red-500" /> Workout Calories Target</span>
+                <span className="text-[10px] text-neutral-500 font-mono">Limit: 3,000 kcal</span>
               </div>
-              <div className="w-full h-2 bg-neutral-900 border border-neutral-850 rounded-full overflow-hidden">
+              <div className="flex justify-between items-center text-[11px]">
+                <span className="font-mono text-neutral-300 font-medium font-bold">Logged: {caloriesThisWeek} kcal</span>
+                <span className="font-mono text-red-400 font-bold">{Math.min(Math.round((caloriesThisWeek / 3000) * 100), 100)}% Complete</span>
+              </div>
+              <div className="w-full h-2 bg-neutral-900/60 border border-neutral-850/55 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-red-500 to-pink-500 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min((caloriesThisWeek / 3000) * 100, 100)}%` }}
@@ -644,6 +880,9 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
 
       </div>
 
-    </div>
+      {/* Floating Aesthetic Coach AI Chatbot Assistant */}
+      <AestheticCoachChatbot />
+
+    </motion.div>
   );
 }

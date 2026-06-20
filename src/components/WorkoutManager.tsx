@@ -588,7 +588,7 @@ export default function WorkoutManager({ onRefreshDashboard }: WorkoutManagerPro
           </div>
 
           {/* ACTIVE EXERCISE VIEW CARD */}
-          <div className="bg-[#0A0A0A] border border-neutral-800 rounded-2xl p-5 space-y-4 text-center">
+          <div className="bg-[#000000] border border-emerald-950 rounded-2xl p-5 space-y-4 text-center shadow-lg shadow-emerald-950/10">
             <div>
               <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 text-[10px] font-mono font-bold uppercase">
                 {currentEx.category} TARGET

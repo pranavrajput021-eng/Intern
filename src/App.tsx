@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { supabaseService } from './supabaseService';
+import { supabaseService, isLocalModeActive } from './supabaseService';
 import { UserProfile, AppNotification } from './types';
 
 // Page Views
@@ -24,6 +24,7 @@ import {
   LayoutDashboard, Dumbbell, Apple, TrendingUp, Trophy, 
   History, User, ShieldCheck, Bell, Sparkles, Menu, X, LogOut, Info 
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -112,7 +113,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div id="loading-page" className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center text-center">
+      <div id="loading-page" className="min-h-screen bg-[#000000] flex flex-col items-center justify-center text-center">
         <div className="w-12 h-12 rounded-full border-4 border-emerald-500/10 border-t-emerald-400 animate-spin mb-4" />
         <h3 className="text-sm font-bold text-neutral-300 font-mono animate-pulse">AESTHETIC ENGINE COMMENCING...</h3>
       </div>
@@ -136,62 +137,141 @@ export default function App() {
     { key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> },
   ];
   return (
-    <div id="main-frame-layout" className="min-h-screen bg-[#0A0A0A] text-neutral-100 flex font-sans relative overflow-x-hidden antialiased">
+    <div id="main-frame-layout" className="min-h-screen bg-[#000000] text-neutral-100 flex font-sans relative overflow-x-hidden antialiased">
       
       {/* 1. SIDEBAR NAVIGATION FOR DESKTOP */}
-      <aside className="hidden lg:flex flex-col justify-between w-64 bg-neutral-950 border-r border-neutral-900 shrink-0">
-        <div className="space-y-6 p-5">
+      <aside className="hidden lg:flex flex-col justify-between w-64 bg-black border-r border-[#032215]/80 shrink-0 relative overflow-hidden">
+        
+        {/* Animated Cyber Bio-Matrix Background Glows (Motivating Energy Flow) */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Subtle vertical moving indicator streams represent biometric signals */}
+          <motion.div
+            animate={{
+              y: ["0%", "100%"],
+              opacity: [0.15, 0.45, 0.15],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute top-0 left-4 w-[1px] h-32 bg-gradient-to-b from-transparent via-emerald-500/45 to-transparent"
+          />
+          <motion.div
+            animate={{
+              y: ["100%", "0%"],
+              opacity: [0.1, 0.35, 0.1],
+            }}
+            transition={{
+              duration: 16,
+              repeat: Infinity,
+              ease: "linear",
+              delay: 2,
+            }}
+            className="absolute top-0 right-8 w-[1px] h-48 bg-gradient-to-b from-transparent via-emerald-800/30 to-transparent"
+          />
+          {/* Subtle slow spinning ambient focal point */}
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.03, 0.08, 0.03]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-emerald-550/15 blur-2xl"
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0)_60%,rgba(6,78,59,0.06)_100%)]" />
+        </div>
+
+        <div className="space-y-6 p-5 z-10 relative">
           {/* Brand header */}
-          <div className="flex items-center gap-3 border-b border-neutral-900 pb-5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-blue-500 p-[1px] flex items-center justify-center">
-              <div className="w-full h-full bg-neutral-950 rounded-xl flex items-center justify-center">
-                <Dumbbell className="text-emerald-400 w-5 h-5" />
+          <div className="flex items-center gap-3 border-b border-emerald-950/40 pb-5">
+            <motion.div 
+              whileHover={{ scale: 1.05, rotate: -5 }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-emerald-950 p-[1px] flex items-center justify-center cursor-pointer"
+            >
+              <div className="w-full h-full bg-[#000000] rounded-xl flex items-center justify-center">
+                <Dumbbell className="text-emerald-450 w-5 h-5 animate-pulse" />
               </div>
-            </div>
+            </motion.div>
             <div>
-              <span className="text-xs text-neutral-500 tracking-wider font-mono select-none block leading-none">AESTHETIC PORTAL</span>
+              <span className="text-[10px] text-emerald-500 tracking-widest font-mono select-none block leading-none font-bold uppercase">AESTHETIC PORTAL</span>
               <strong className="text-sm font-black text-neutral-50 tracking-tight">ATHLETE CO.</strong>
             </div>
           </div>
 
           {/* Nav groups */}
-          <nav className="space-y-1.5 text-left">
-            {navItems.map((item) => (
-              <button
-                key={item.key}
-                id={`nav-${item.key}`}
-                onClick={() => handleNavigate(item.key)}
-                className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center gap-3 cursor-pointer transition ${
-                  activeTab === item.key 
-                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/15' 
-                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-900/40'
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </button>
-            ))}
+          <nav className="space-y-2 text-left">
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
+              return (
+                <button
+                  key={item.key}
+                  id={`nav-${item.key}`}
+                  onClick={() => handleNavigate(item.key)}
+                  className="w-full relative py-2.5 px-4 rounded-xl text-xs font-bold font-mono tracking-tight flex items-center gap-3 cursor-pointer transition-all duration-300 group overflow-hidden select-none"
+                >
+                  {/* Sliding glow background behind active items */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebarActiveBackground"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      className="absolute inset-0 bg-gradient-to-r from-emerald-950/40 to-emerald-900/10 border border-emerald-900/60 rounded-xl -z-10 shadow-inner"
+                    />
+                  )}
+
+                  {/* Laser indicator tag */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebarActiveIndicator"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                    />
+                  )}
+
+                  {/* Left dot dynamic feedback */}
+                  <span className={`transition-all duration-300 w-1.5 h-1.5 rounded-full ${isActive ? 'bg-emerald-400 scale-110' : 'bg-neutral-800 scale-75 group-hover:bg-emerald-600/60'}`} />
+
+                  {/* Icon with spin/bounce effect */}
+                  <div className={`transition-transform duration-300 ${isActive ? 'text-emerald-300 scale-110' : 'text-neutral-500 group-hover:text-emerald-400 group-hover:scale-105'}`}>
+                    {item.icon}
+                  </div>
+
+                  {/* Label text */}
+                  <span className={`transition-colors duration-300 ${isActive ? 'text-emerald-300 font-black' : 'text-neutral-400 group-hover:text-neutral-100'}`}>
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
           </nav>
         </div>
 
-        {/* Footer/Signout box */}
-        <div className="p-4 border-t border-neutral-900">
+        {/* Footer/Signout box with motivating stats / bio sync status */}
+        <div className="p-4 border-t border-emerald-950/60 z-10 relative bg-black/60 backdrop-blur-sm">
+
           <div className="flex items-center gap-3 mb-3 p-1">
-            <div className="w-8 h-8 rounded-full border border-neutral-850 bg-neutral-900 flex items-center justify-center text-xs font-bold uppercase text-emerald-400">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="w-8 h-8 rounded-full border border-emerald-900 bg-[#000] flex items-center justify-center text-xs font-bold uppercase text-emerald-400"
+            >
               {user.name.substring(0, 2)}
-            </div>
+            </motion.div>
             <div className="min-w-0 text-left">
               <p className="font-semibold text-xs text-neutral-200 truncate leading-tight">{user.name}</p>
-              <p className="text-[10px] text-neutral-500 truncate leading-none">{user.email}</p>
+              <p className="text-[10px] text-neutral-550 truncate leading-none font-mono">{user.email}</p>
             </div>
           </div>
           <button 
             id="sidebar-logout"
             onClick={handleLogout} 
-            className="w-full py-2 bg-neutral-900/50 hover:bg-neutral-900 border border-neutral-800 hover:text-red-400 text-neutral-400 rounded-xl text-xs font-semibold flex items-center gap-2 justify-center transition cursor-pointer"
+            className="w-full py-2 bg-neutral-950/50 hover:bg-neutral-950 border border-emerald-950 hover:border-red-950 hover:text-red-400 text-neutral-500 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
-            Sign Out
+            Log Out
           </button>
         </div>
       </aside>
@@ -200,14 +280,14 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 relative pb-20 lg:pb-0">
         
         {/* TOP ROW RESPONSIVE HEADER */}
-        <header className="h-16 bg-neutral-950/80 border-b border-neutral-900 backdrop-blur-xl flex items-center justify-between px-4 sm:px-8 z-30 sticky top-0">
+        <header className="h-16 bg-black/80 border-b border-emerald-950/60 backdrop-blur-xl flex items-center justify-between px-4 sm:px-8 z-30 sticky top-0">
           
           {/* Brand/Hamburger triggers */}
           <div className="flex items-center gap-3">
             <button 
               id="mobile-drawer-toggle"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-              className="p-1.5 rounded-lg border border-neutral-850 hover:bg-neutral-900 text-neutral-400 hover:text-neutral-100 lg:hidden transition cursor-pointer"
+              className="p-1.5 rounded-lg border border-emerald-950 hover:bg-[#022c22]/40 text-neutral-400 hover:text-neutral-100 lg:hidden transition cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -216,6 +296,11 @@ export default function App() {
               <strong className="text-xs font-black tracking-wider text-emerald-400 uppercase">
                 {navItems.find(item => item.key === activeTab)?.label.split(' ')[0] || 'ATHLETE'}
               </strong>
+              {isLocalModeActive() && (
+                <span className="text-amber-400 font-semibold bg-amber-950/30 border border-amber-900/50 px-1.5 py-0.5 rounded text-[8px] tracking-tight animate-pulse ml-1">
+                  OFFLINE
+                </span>
+              )}
             </div>
             <div className="hidden lg:flex items-center gap-3 text-xs font-mono">
               <span className="text-neutral-400 font-bold tracking-wider">AESTHETIC ATHLETE PLATFORM</span>
@@ -223,6 +308,11 @@ export default function App() {
               <span className="text-emerald-400 font-extrabold uppercase bg-emerald-950/30 border border-emerald-900/50 px-2.5 py-0.5 rounded-lg tracking-widest">
                 {navItems.find(item => item.key === activeTab)?.label || 'OVERVIEW'}
               </span>
+              {isLocalModeActive() && (
+                <span className="text-amber-450 font-semibold bg-amber-955/30 border border-amber-900/50 px-2.5 py-0.5 rounded-lg tracking-wider text-[10px] animate-pulse">
+                  OFFLINE DEV SANDBOX
+                </span>
+              )}
             </div>
           </div>
 
@@ -387,7 +477,7 @@ export default function App() {
                 onClick={handleLogout}
                 className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 text-red-400 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
               >
-                <LogOut className="w-4 h-4" /> Disconnect athlete
+                <LogOut className="w-4 h-4" /> Log Out
               </button>
             </div>
           </div>

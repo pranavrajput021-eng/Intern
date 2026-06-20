@@ -4,7 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { supabaseService } from '../supabaseService';
+import { motion, AnimatePresence } from 'motion/react';
+import { supabaseService, setLocalModeActive } from '../supabaseService';
 import { UserProfile } from '../types';
 import { 
   KeyRound, Mail, User, ShieldCheck, Dumbbell, 
@@ -130,6 +131,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
     resetMessages();
     try {
       const loggedUser = await supabaseService.login(email, password);
+      localStorage.setItem('athlete_current_passcode', password);
       // If user does not have onboarding set yet, guide them to Onboarding
       if (!loggedUser.fitness_goal) {
         setTempUser(loggedUser);
@@ -163,6 +165,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
     resetMessages();
     try {
       const newUser = await supabaseService.register(name, email, password);
+      localStorage.setItem('athlete_current_passcode', password);
       setTempUser(newUser);
       setSuccessMsg('Account created successfully! Let\'s setup your fitness goals.');
       setTimeout(() => {
@@ -266,25 +269,93 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   };
 
   return (
-    <div id="auth-screen-layout" className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
-      {/* Premium Cyber Aesthetic Background Accent */}
-      <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] rounded-full bg-emerald-500/10 blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[80%] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none" />
-      
-      {/* Clean Grid Backdrop */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+    <div id="auth-screen-layout" className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
+      {/* Premium Minimal Backdrop with Clean Motivational Architectural Design */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Soft elegant ambient glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-950/25 blur-[140px]" />
+        <div className="absolute top-[-50px] right-[-50px] w-96 h-96 rounded-full bg-emerald-500/10 blur-[120px]" />
+        <div className="absolute bottom-[-100px] left-[-100px] w-96 h-96 rounded-full bg-emerald-950/20 blur-[130px]" />
+        
+        {/* Fine-line coordinate training grid - ultra low opacity */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.015)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.015)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-70" />
+
+        {/* High-end decorative vector designs around the sides to prevent blankness */}
+        {/* Glowing concentric dial/wireframe in top-left */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full border border-emerald-500/5 flex items-center justify-center opacity-40">
+          <div className="w-80 h-80 rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_100s_linear_infinite]">
+            <div className="w-64 h-64 rounded-full border border-emerald-500/5" />
+          </div>
+        </div>
+
+        {/* Glowing athletic target/telemetry rings in bottom-right */}
+        <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full border border-emerald-500/5 flex items-center justify-center opacity-30">
+          <div className="w-[420px] h-[420px] rounded-full border border-dashed border-emerald-500/10 flex items-center justify-center animate-[spin_80s_linear_infinite_reverse]">
+            <div className="w-[340px] h-[340px] rounded-full border border-emerald-500/5" />
+          </div>
+        </div>
+
+        {/* Vector technical calibration crosshairs */}
+        <div className="absolute top-1/4 left-10 w-24 h-24 border-l border-t border-emerald-500/5 opacity-40" />
+        <div className="absolute bottom-1/4 right-10 w-24 h-24 border-r border-b border-emerald-500/5 opacity-40" />
+
+        {/* High-end clean typography watermark - Centered and made highly readable with transparent card */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.08] z-[0]">
+          <span className="text-[12vw] font-black tracking-[0.2em] uppercase font-sans text-neutral-100 block leading-none select-none">ATHLETE</span>
+          <span className="text-xs sm:text-sm font-mono tracking-[0.6em] uppercase text-emerald-400 block mt-2 select-none">DEDICATED TO STRENGTH AND ELEVATION</span>
+        </div>
+
+        {/* Minimal status bar cues in corners for immersive training hub feel */}
+        <div className="absolute top-6 left-6 sm:top-10 sm:left-10 flex items-center gap-2 select-none opacity-30">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[9px] font-bold font-mono tracking-[0.2em] text-neutral-300">SYSTEM.ONLINE</span>
+        </div>
+        
+        <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 flex items-center gap-3 select-none opacity-30 text-[9px] font-mono tracking-widest text-neutral-300">
+          <span>MOTIVATION_FEED: ACTIVE</span>
+          <span className="text-neutral-800">|</span>
+          <span>EST. 2026</span>
+        </div>
+
+        {/* Additional sidebar scientific aesthetics to fill empty spaces */}
+        <div className="absolute left-6 top-32 hidden md:flex flex-col gap-5 text-left opacity-15 select-none font-mono text-[9px] text-neutral-400 tracking-wide">
+          <div>
+            <p className="text-emerald-400 font-bold">PERFORMANCE PROTOCOLS</p>
+            <p>VO2 MAX: SUPREME RANGE</p>
+            <p>STRENGTH FACTOR: ACTIVE</p>
+          </div>
+          <div>
+            <p className="text-emerald-400 font-bold">NUTRITION SYNCHRONY</p>
+            <p>MACRO RATIO: OPTIMAL</p>
+            <p>ENERGY DYNAMICS: CALIBRATED</p>
+          </div>
+        </div>
+
+        <div className="absolute right-6 top-32 hidden md:flex flex-col gap-5 text-right opacity-15 select-none font-mono text-[9px] text-neutral-400 tracking-wide">
+          <div>
+            <p className="text-emerald-400 font-bold text-right">CYBERNETIC COACHING</p>
+            <p>INTELLIGENT WEIGHT PROGRESSION</p>
+            <p>BIOMETRIC PATTERN ALIGNMENT</p>
+          </div>
+          <div>
+            <p className="text-emerald-400 font-bold text-right">VOLUME DYNAMICS</p>
+            <p>HYPERTROPHY ZONE: 82.5%</p>
+            <p>REST COEFFICIENT: ADAPTIVE</p>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content Wrapper */}
-      <div className="w-full max-w-lg z-10 transition duration-300">
+      <div className="w-full max-w-lg z-10 transition duration-300 relative">
         
         {/* Brand Logo Header */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-505 via-emerald-400 to-blue-500 p-[1.5px] shadow-lg shadow-emerald-500/20 mb-3 flex items-center justify-center">
-            <div className="w-full h-full bg-[#0A0A0A] rounded-2xl flex items-center justify-center">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 via-emerald-400 to-emerald-950 p-[1.5px] shadow-lg shadow-emerald-550/20 mb-3 flex items-center justify-center">
+            <div className="w-full h-full bg-[#000000] rounded-2xl flex items-center justify-center">
               <Dumbbell className="w-7 h-7 text-emerald-400 animate-pulse" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neutral-50 via-emerald-400 to-blue-400 font-sans">
+          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neutral-50 via-emerald-450 to-emerald-500 font-sans">
             AESTHETIC ATHLETE
           </h1>
           <p className="text-sm font-light text-neutral-400 max-w-sm mt-1">
@@ -295,7 +366,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
 
 
         {/* Card and Forms */}
-        <div id="auth-form-card" className="bg-neutral-950/40 border border-neutral-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative">
+        <div id="auth-form-card" className="bg-black/5 sm:bg-black/5 border border-emerald-500/10 rounded-3xl p-6 sm:p-8 backdrop-blur-[2px] shadow-2xl relative">
           
           {error && (
             <div className="mb-4 p-4 rounded-xl bg-red-950/20 border border-red-800/35 text-xs text-red-400 text-left space-y-3 shadow-inner">
