@@ -623,10 +623,10 @@ create policy "Allow step logs control for self" on public."StepLogs"
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full h-11 bg-gradient-to-r from-emerald-500 via-white to-sky-450 hover:from-emerald-400 hover:via-white hover:to-sky-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 transition-all duration-300"
+                className="w-full h-11 bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-neutral-950 font-black text-xs rounded-xl shadow-lg shadow-sky-500/10 hover:shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 transition-all duration-300"
               >
                 {loading ? 'Securing Link...' : 'Access Dashboard'}
-                <ChevronRight className="w-4 h-4 text-black" />
+                <ChevronRight className="w-4 h-4 text-neutral-950" />
               </button>
 
               <div className="block text-center text-[10px] text-neutral-600 mt-2">
