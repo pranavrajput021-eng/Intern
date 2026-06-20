@@ -271,37 +271,38 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   return (
     <div id="auth-screen-layout" className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
       {/* Premium Immersive Cyber-Athletic Backdrop */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#023326]/45 via-neutral-950 to-[#000000]">
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#023326]/75 sm:from-[#023326]/45 via-neutral-950 to-[#000000]">
         {/* Soft elegant deep multi-point ambient glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-emerald-900/25 blur-[150px]" />
-        <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/15 blur-[130px]" />
-        <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/25 blur-[140px]" />
-        <div className="absolute top-1/4 right-[10%] w-80 h-80 rounded-full bg-emerald-900/12 blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-emerald-900/40 sm:bg-emerald-900/25 blur-[120px] sm:blur-[150px]" />
+        <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/25 sm:bg-emerald-500/15 blur-[100px] sm:blur-[130px]" />
+        <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/40 sm:bg-emerald-950/25 blur-[110px] sm:blur-[140px]" />
+        <div className="absolute top-1/4 right-[10%] w-80 h-80 rounded-full bg-emerald-900/20 sm:bg-emerald-900/12 blur-[80px] sm:blur-[100px]" />
         
         {/* Fine-line coordinate training grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.045)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.045)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.1)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.1)_1.5px,transparent_1.5px)] bg-[size:48px_48px] sm:hidden pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.045)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.045)_1.5px,transparent_1.5px)] bg-[size:48px_48px] hidden sm:block pointer-events-none" />
         
         {/* Dot Matrix Fields (adds technical depth) */}
-        <div className="absolute top-24 left-12 w-64 h-32 opacity-45 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
-             style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
-        <div className="absolute bottom-28 right-12 w-72 h-40 opacity-45 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 sm:left-12 sm:translate-x-0 w-64 h-32 opacity-70 sm:opacity-45 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
+             style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.65) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+        <div className="absolute bottom-28 right-12 w-72 h-40 opacity-45 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden sm:block" 
              style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
 
         {/* High-end decorative vector designs around the sides */}
         {/* Glowing concentric dial/wireframe in top-left */}
-        <div className="absolute -top-32 -left-32 w-[450px] h-[450px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-70">
-          <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_120s_linear_infinite]">
-            <div className="w-[300px] h-[300px] rounded-full border border-emerald-500/15 flex items-center justify-center">
-              <div className="w-4 h-4 border-l border-t border-emerald-500/40" />
+        <div className="absolute -top-32 -left-32 w-[450px] h-[450px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center opacity-85 sm:opacity-70">
+          <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/35 sm:border-emerald-500/25 flex items-center justify-center animate-[spin_120s_linear_infinite]">
+            <div className="w-[300px] h-[300px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center">
+              <div className="w-4 h-4 border-l border-t border-emerald-500/50 sm:border-emerald-500/40" />
             </div>
           </div>
         </div>
 
         {/* Glowing athletic target/telemetry rings in bottom-right */}
-        <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-65">
-          <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_90s_linear_infinite_reverse]">
-            <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/15 flex items-center justify-center">
-              <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/25" />
+        <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center opacity-80 sm:opacity-65">
+          <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/35 sm:border-emerald-500/25 flex items-center justify-center animate-[spin_90s_linear_infinite_reverse]">
+            <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center">
+              <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/35 sm:border-emerald-500/25" />
             </div>
           </div>
         </div>
@@ -315,7 +316,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         </div>
         
         {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
-        <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.16] pointer-events-none select-none z-0">
+        <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.35] sm:opacity-[0.16] pointer-events-none select-none z-0">
           <svg className="w-full h-full" viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
             <path 
               d="M0,50 L200,50 L220,50 L230,30 L240,70 L250,50 L260,50 L400,50 L420,50 L430,20 L440,85 L450,45 L460,55 L470,50 L700,50 L720,10 L730,90 L745,45 L755,55 L765,50 L1000,50 L1020,40 L1028,25 L1035,75 L1042,50 L1200,50 L1440,50" 
@@ -328,8 +329,8 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         </div>
 
         {/* Ultra-High-End Clean Typography Watermark centered behind the card but fully readable. Controlled font size bounds prevent giant/tiny distortions */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.25] z-[0] px-4">
-          <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_85px_rgba(16,185,129,0.25)]">ATHLETE</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.45] sm:opacity-[0.25] z-[0] px-4">
+          <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_85px_rgba(16,185,129,0.35)] sm:drop-shadow-[0_0_85px_rgba(16,185,129,0.25)]">ATHLETE</span>
           <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">DEDICATED TO STRENGTH AND ELEVATION</span>
         </div>
 
