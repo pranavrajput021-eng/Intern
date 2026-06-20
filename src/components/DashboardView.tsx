@@ -353,8 +353,8 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           {/* Ambient Grid Backdrop */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.012)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)] opacity-70" />
           
-          {/* Faint elegant motivational overlay text */}
-          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-[0.03] select-none text-9xl font-black font-mono tracking-widest text-emerald-400">
+          {/* Faint elegant motivational overlay text with safe responsive bounds */}
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-[0.03] select-none text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black font-mono tracking-widest text-emerald-400">
             AESTHETIC
           </div>
         </div>

@@ -279,6 +279,73 @@ export default function App() {
       {/* 2. MAIN CONTAINER WITH INNER BODY SCROLLER */}
       <div className="flex-1 flex flex-col min-w-0 relative pb-20 lg:pb-0">
         
+        {/* Premium Immersive Cyber-Athletic Dashboard Backdrop */}
+        <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#023326]/30 via-neutral-950 to-[#000000]">
+          {/* Soft multi-point ambient glows */}
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-950/20 blur-[130px]" />
+          <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/10 blur-[140px]" />
+          <div className="absolute top-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/15 blur-[120px]" />
+          <div className="absolute bottom-24 left-[10%] w-72 h-72 rounded-full bg-emerald-900/10 blur-[110px]" />
+
+          {/* Fine-line coordinate dynamic matrix grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.035)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.035)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
+
+          {/* Dot Matrix Fields (adds technical depth) */}
+          <div className="absolute top-36 right-16 w-64 h-32 opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+               style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+          <div className="absolute bottom-40 left-12 w-72 h-40 opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+               style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
+
+          {/* Glowing concentric dial/wireframe in top-right */}
+          <div className="absolute -top-32 -right-32 w-[450px] h-[450px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-70">
+            <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_180s_linear_infinite]">
+              <div className="w-[300px] h-[300px] rounded-full border border-emerald-500/15 flex items-center justify-center">
+                <div className="w-4 h-4 border-r border-t border-emerald-500/35" />
+              </div>
+            </div>
+          </div>
+
+          {/* Glowing athletic target/telemetry rings in bottom-left */}
+          <div className="absolute -bottom-40 -left-40 w-[550px] h-[550px] rounded-full border border-emerald-500/15 flex items-center justify-center opacity-60">
+            <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/25 flex items-center justify-center animate-[spin_120s_linear_infinite_reverse]">
+              <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/15 flex items-center justify-center">
+                <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/25" />
+              </div>
+            </div>
+          </div>
+
+          {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile */}
+          <div className="hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-emerald-500/20 opacity-75">
+            <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-[#10b981]/55">SEC_PORTAL_01</span>
+          </div>
+          <div className="hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/20 opacity-75">
+            <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/55">SEC_PORTAL_02</span>
+          </div>
+
+          {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
+          <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.12] pointer-events-none select-none z-0">
+            <svg className="w-full h-full" viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
+              <path 
+                d="M0,50 L200,50 L220,50 L230,30 L240,70 L250,50 L260,50 L400,50 L420,50 L430,20 L440,85 L450,45 L460,55 L470,50 L700,50 L720,10 L730,90 L745,45 L755,55 L765,50 L1000,50 L1020,40 L1028,25 L1035,75 L1042,50 L1200,50 L1440,50" 
+                stroke="#10b981" 
+                strokeWidth="2.5" 
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          {/* Ultra-High-End Clean Typography Watermark centered behind content but fully readable */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.16] z-[0] px-4">
+            <span className="text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[13rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_80px_rgba(16,185,129,0.2)]">ATHLETE</span>
+            <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">PORTAL OVERVIEW DEVICE</span>
+          </div>
+
+          {/* Diagonal Technical Accent Bars across corners */}
+          <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/30 rotate-12 origin-top-right transform scale-150" />
+          <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/30 rotate-12 origin-bottom-left transform scale-150" />
+        </div>
+        
         {/* TOP ROW RESPONSIVE HEADER */}
         <header className="h-16 bg-black/80 border-b border-emerald-950/60 backdrop-blur-xl flex items-center justify-between px-4 sm:px-8 z-30 sticky top-0">
           
@@ -354,7 +421,7 @@ export default function App() {
         </header>
 
         {/* INNER SCROLLING VIEW CONTAINER */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-8 max-w-7xl mx-auto w-full relative">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 max-w-7xl mx-auto w-full relative z-10">
           
           {activeTab === 'dashboard' && (
             <DashboardView 
