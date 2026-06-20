@@ -269,140 +269,40 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   };
 
   return (
-    <div id="auth-screen-layout" className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
-      {/* Premium Immersive Cyber-Athletic Backdrop */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#023326]/65 via-[#01141f]/50 to-[#000000]">
-        {/* Soft elegant deep multi-point ambient glows - beautifully balancing Green, Blue, and White */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-emerald-950/20 sm:bg-emerald-900/15 blur-[140px] sm:blur-[170px]" />
+    <div id="auth-screen-layout" className="min-h-screen bg-[#07070a] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
+      {/* Modern Premium Minimalist Backdrop with elegant, balanced visual gradients and subtle professional details */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-black select-none">
+        {/* Soft, professional, blurred radiant ambient glows (blue & green) */}
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-emerald-500/[0.04] blur-[150px]" />
+        <div className="absolute bottom-[15%] left-1/3 w-[800px] h-[800px] rounded-full bg-sky-500/[0.04] blur-[180px]" />
         
-        {/* Bright blue accent glow balanced with green */}
-        <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] rounded-full bg-sky-500/15 sm:bg-sky-500/8 blur-[100px] sm:blur-[130px]" />
-        <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-950/30 sm:bg-emerald-950/15 blur-[110px] sm:blur-[140px]" />
+        {/* Ultra-subtle professional digital grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(16,185,129,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(16,185,129,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
         
-        {/* Crisp white/silver ambient balance */}
-        <div className="absolute top-1/4 right-[10%] w-80 h-80 rounded-full bg-white/5 sm:bg-white/3 blur-[80px] sm:blur-[100px]" />
-        <div className="absolute bottom-1/3 left-1/3 w-[600px] h-[600px] rounded-full bg-sky-950/20 sm:bg-sky-900/10 blur-[150px]" />
-        
-        {/* Fine-line coordinate training grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.06)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(14,165,233,0.06)_1.5px,transparent_1.5px)] bg-[size:48px_48px] sm:hidden pointer-events-none" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.045)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.045)_1.5px,transparent_1.5px)] bg-[size:48px_48px] hidden sm:block pointer-events-none" />
-        
-        {/* Dot Matrix Fields (adds technical depth) */}
-        <div className="absolute top-24 left-1/2 -translate-x-1/2 sm:left-12 sm:translate-x-0 w-64 h-32 opacity-50 sm:opacity-35 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)]" 
-             style={{ backgroundImage: 'radial-gradient(rgba(56, 189, 248, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
-        <div className="absolute bottom-28 right-12 w-72 h-40 opacity-30 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden sm:block" 
-             style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
-
-        {/* High-end decorative vector designs around the sides */}
-        {/* Glowing concentric dial/wireframe in top-left */}
-        <div className="absolute -top-32 -left-32 w-[450px] h-[450px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center opacity-85 sm:opacity-70">
-          <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/35 sm:border-emerald-500/25 flex items-center justify-center animate-[spin_120s_linear_infinite]">
-            <div className="w-[300px] h-[300px] rounded-full border border-sky-500/20 sm:border-sky-500/10 flex items-center justify-center">
-              <div className="w-4 h-4 border-l border-t border-emerald-500/50 sm:border-emerald-500/40" />
-            </div>
+        {/* Beautiful atmospheric thin rings that give depth to the background */}
+        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full border border-emerald-500/[0.03] flex items-center justify-center">
+          <div className="w-[450px] h-[450px] rounded-full border border-sky-500/[0.02] flex items-center justify-center">
+            <div className="w-[300px] h-[300px] rounded-full border border-zinc-800/[0.1]" />
           </div>
         </div>
 
-        {/* Glowing athletic target/telemetry rings in bottom-right */}
-        <div className="absolute -bottom-40 -right-40 w-[550px] h-[550px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center opacity-80 sm:opacity-65">
-          <div className="w-[470px] h-[470px] rounded-full border border-dashed border-sky-500/30 sm:border-sky-500/20 flex items-center justify-center animate-[spin_90s_linear_infinite_reverse]">
-            <div className="w-[390px] h-[390px] rounded-full border border-emerald-500/25 sm:border-emerald-500/15 flex items-center justify-center">
-              <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/35 sm:border-emerald-500/25" />
-            </div>
+        <div className="absolute -bottom-60 -right-60 w-[700px] h-[700px] rounded-full border border-sky-500/[0.03] flex items-center justify-center">
+          <div className="w-[500px] h-[500px] rounded-full border border-emerald-500/[0.02] flex items-center justify-center">
+            <div className="w-[350px] h-[350px] rounded-full border border-zinc-800/[0.1]" />
           </div>
         </div>
 
-        {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile to avoid overlapping the central form */}
-        <div className="hidden md:block absolute top-[10%] left-10 w-32 h-32 border-l border-t border-emerald-500/25 opacity-75">
-          <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-[#10b981]/65">SYS_SEC_01</span>
+        {/* Minimalist corner alignment guidelines for high-end professional feel */}
+        <div className="hidden md:block absolute top-12 left-12 w-20 h-20 border-l border-t border-zinc-800/40 opacity-60">
+          <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-neutral-600 uppercase">SYS_INIT_01</span>
         </div>
-        <div className="hidden md:block absolute bottom-[10%] right-10 w-32 h-32 border-r border-b border-sky-500/25 opacity-75">
-          <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#38bdf8]/65">SYS_SEC_02</span>
-        </div>
-        
-        {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
-        <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.25] sm:opacity-[0.16] pointer-events-none select-none z-0">
-          <svg className="w-full h-full" viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
-            <path 
-              d="M0,50 L200,50 L220,50 L230,30 L240,70 L250,50 L260,50 L400,50 L420,50 L430,20 L440,85 L450,45 L460,55 L470,50 L700,50 L720,10 L730,90 L745,45 L755,55 L765,50 L1000,50 L1020,40 L1028,25 L1035,75 L1042,50 L1200,50 L1440,50" 
-              stroke="#10b981" 
-              strokeWidth="2.5" 
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <div className="hidden md:block absolute bottom-12 right-12 w-20 h-20 border-r border-b border-zinc-800/40 opacity-60">
+          <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-neutral-600 uppercase">AESTHETIC_V2</span>
         </div>
 
-        {/* Ultra-High-End Clean Typography Watermark centered behind the card but fully readable. Controlled font size bounds prevent giant/tiny distortions */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.45] sm:opacity-[0.25] z-[0] px-4">
-          <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_85px_rgba(16,185,129,0.35)] sm:drop-shadow-[0_0_85px_rgba(16,185,129,0.25)]">ATHLETE</span>
-          <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">DEDICATED TO STRENGTH AND ELEVATION</span>
-        </div>
-
-        {/* Diagonal Technical Accent Bars across corners */}
-        <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/35 rotate-12 origin-top-right transform scale-150" />
-        <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/35 rotate-12 origin-bottom-left transform scale-150" />
-
-        {/* Immersive System Cues in Corners (Control Panel Style) - Hidden on extra small mobile screens to save screen height */}
-        <div className="hidden sm:flex absolute top-6 left-6 sm:top-10 sm:left-10 items-center gap-3 select-none opacity-75">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <div className="flex flex-col">
-            <span className="text-[9px] font-bold font-mono tracking-[0.2em] text-neutral-100 uppercase">SYSTEM.ONLINE</span>
-            <span className="text-[7px] font-mono text-emerald-400/80 tracking-wider">LATENCY: 12MS | ID_NODE: 9D5FA</span>
-          </div>
-        </div>
-        
-        <div className="hidden sm:flex absolute bottom-6 right-6 sm:bottom-10 sm:right-10 flex-col items-end select-none opacity-75 text-[9px] font-mono tracking-widest text-neutral-100">
-          <div className="flex items-center gap-3">
-            <span>MOTIVATION_FEED: ACTIVE</span>
-            <span className="text-neutral-800">|</span>
-            <span>EST. 2026</span>
-          </div>
-          <span className="text-[7px] text-emerald-400/70 mt-1 tracking-wider uppercase">DESIGN_PROTOCOL: ALPHA-95</span>
-        </div>
-
-        {/* Expanded athletic telemetry side panels - highly detailed */}
-        <div className="absolute left-6 top-32 hidden lg:flex flex-col gap-6 text-left opacity-65 select-none font-mono text-[9px] text-neutral-200 tracking-wide border-l border-emerald-500/25 pl-4 py-2">
-          <div>
-            <p className="text-emerald-400 font-bold mb-1 tracking-widest">PERFORMANCE SECTOR</p>
-            <p className="text-neutral-400 text-[8px]">VO2 MAX: SUPREME RANGE</p>
-            <p className="text-neutral-400 text-[8px]">ANAEROBIC THRESHOLD: 172BPM</p>
-            <p className="text-neutral-400 text-[8px]">STRENGTH FACTOR: 1.84X ACTIVE</p>
-          </div>
-          <div>
-            <p className="text-emerald-400 font-bold mb-1 tracking-widest">NUTRITION SYNCHRONY</p>
-            <p className="text-neutral-400 text-[8px]">MACRO RATIO: 40/30/30 OPTIMAL</p>
-            <p className="text-neutral-400 text-[8px]">ENERGY DYNAMICS: CALIBRATED</p>
-            <p className="text-neutral-400 text-[8px]">HYDRATION INDEX: EXCELLENT</p>
-          </div>
-          <div>
-            <p className="text-emerald-400 font-bold mb-1 tracking-widest">BIOMETRIC FEED</p>
-            <p className="text-neutral-400 text-[8px]">HRV STATUS: 89MS HIGH</p>
-            <p className="text-neutral-400 text-[8px]">RECOVERY PROFILE: OPTIMAL</p>
-          </div>
-        </div>
-
-        <div className="absolute right-6 top-32 hidden lg:flex flex-col gap-6 text-right opacity-65 select-none font-mono text-[9px] text-neutral-200 tracking-wide border-r border-emerald-500/25 pr-4 py-2">
-          <div>
-            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">CYBERNETIC COACHING</p>
-            <p className="text-neutral-400 text-[8px]">INTELLIGENT WEIGHT PROGRESSION</p>
-            <p className="text-neutral-400 text-[8px]">BIOMETRIC PATTERN ALIGNMENT</p>
-            <p className="text-neutral-400 text-[8px]">AUTOREGULATION ENGAGED</p>
-          </div>
-          <div>
-            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">VOLUME DYNAMICS</p>
-            <p className="text-neutral-400 text-[8px]">HYPERTROPHY ZONE: 82.5% EFF</p>
-            <p className="text-neutral-400 text-[8px]">REST COEFFICIENT: ADAPTIVE</p>
-            <p className="text-neutral-400 text-[8px]">FATIGUE INDEX: LOW (22%)</p>
-          </div>
-          <div>
-            <p className="text-emerald-400 font-bold text-right mb-1 tracking-widest">CHRONO-CALENDAR</p>
-            <p className="text-neutral-400 text-[8px]">CURRENT HOUR: 2026.06.20</p>
-            <p className="text-neutral-400 text-[8px]">SESSION BLOCK: AM-POWER</p>
-          </div>
+        {/* Elegant typography watermark in deep gray, styled optimally to blend with the night background */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.025] select-none z-[0]">
+          <span className="text-8xl sm:text-[12rem] font-black tracking-[0.2em] font-sans text-white block select-none">ATHLETE</span>
         </div>
       </div>
 
@@ -411,34 +311,32 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         
         {/* Brand Logo Header */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-400 via-white to-sky-450 p-[1.5px] shadow-lg shadow-emerald-500/20 hover:shadow-sky-500/20 transition-all duration-300 mb-3 flex items-center justify-center relative group">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-sky-500 p-[1.5px] shadow-lg shadow-sky-500/10 hover:shadow-sky-500/20 transition-all duration-300 mb-3 flex items-center justify-center relative group">
             {/* Pulsing balance back-light around the logo */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/25 via-white/5 to-sky-500/25 blur-md pointer-events-none group-hover:opacity-100 transition-all duration-300 animate-pulse" />
-            <div className="w-full h-full bg-[#000000] rounded-2xl flex items-center justify-center relative z-10">
-              <Dumbbell className="w-7 h-7 text-neutral-100 group-hover:text-emerald-400 transition-colors duration-500" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/15 to-sky-500/15 blur-md pointer-events-none group-hover:opacity-100 transition-all duration-300 animate-pulse" />
+            <div className="w-full h-full bg-[#0a0a0d] rounded-2xl flex items-center justify-center relative z-10">
+              <Dumbbell className="w-7 h-7 text-neutral-100 group-hover:text-sky-400 transition-colors duration-500" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-400 to-sky-400 font-sans">
+          <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-sky-400 font-sans">
             AESTHETIC ATHLETE
           </h1>
-          <p className="text-sm font-normal text-neutral-300 max-w-sm mt-1">
+          <p className="text-sm font-normal text-neutral-400 max-w-sm mt-1">
             Engineered workout tracking & hyper-personalized analytics.
           </p>
         </div>
 
-
-
         {/* Card and Forms */}
-        <div id="auth-form-card" className="bg-gradient-to-b from-[#031d24]/95 via-[#032014]/90 to-zinc-950/98 border border-emerald-500/20 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div id="auth-form-card" className="bg-[#0b0c10]/85 backdrop-blur-2xl border border-zinc-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
           {/* Subtle top reflection simulating white/light flare */}
-          <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+          <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
           
           {/* Subtle balanced color glows inside the card corners to anchor the visual style */}
-          <div className="absolute -top-12 -left-12 w-28 h-28 rounded-full bg-sky-500/10 blur-xl pointer-events-none" />
-          <div className="absolute -bottom-12 -right-12 w-28 h-28 rounded-full bg-emerald-500/10 blur-xl pointer-events-none" />
+          <div className="absolute -top-12 -left-12 w-28 h-28 rounded-full bg-sky-500/5 blur-xl pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-28 h-28 rounded-full bg-emerald-500/5 blur-xl pointer-events-none" />
           
           {error && (
-            <div className="mb-4 p-4 rounded-xl bg-red-950/20 border border-red-800/35 text-xs text-red-400 text-left space-y-3 shadow-inner">
+            <div className="mb-4 p-4 rounded-xl bg-red-950/25 border border-red-900/30 text-xs text-red-400 text-left space-y-3 shadow-inner">
               <p className="font-medium">💡 {error}</p>
               {isDev && (error.toLowerCase().includes('rate limit') || error.toLowerCase().includes('rate_limit')) && (
                 <div className="pt-2 border-t border-red-900/30 text-[11px] text-neutral-400 leading-normal">
@@ -725,10 +623,10 @@ create policy "Allow step logs control for self" on public."StepLogs"
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full h-11 bg-gradient-to-r from-emerald-500 via-white to-sky-450 hover:from-emerald-400 hover:via-white hover:to-sky-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 mt-4 transition-all duration-300"
+                className="w-full h-11 bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-neutral-950 font-black text-xs rounded-xl shadow-lg shadow-sky-500/10 hover:shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 mt-4 transition-all duration-300"
               >
                 {loading ? 'Creating Athlete Profile...' : 'Begin Onboarding Flow'}
-                <ChevronRight className="w-4 h-4 text-black" />
+                <ChevronRight className="w-4 h-4 text-neutral-950" />
               </button>
             </form>
           )}
@@ -935,10 +833,10 @@ create policy "Allow step logs control for self" on public."StepLogs"
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full h-11 bg-gradient-to-r from-emerald-500 via-white to-sky-450 hover:from-emerald-400 hover:via-white hover:to-sky-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 mt-4 transition-all duration-300"
+                className="w-full h-11 bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-neutral-950 font-black text-xs rounded-xl shadow-lg shadow-sky-500/10 hover:shadow-sky-500/20 cursor-pointer flex items-center justify-center gap-2 mt-4 transition-all duration-300"
               >
                 {loading ? 'Assembling Training Plans...' : 'Power On Dashboard'}
-                <Gauge className="w-4 h-4 text-black" />
+                <Gauge className="w-4 h-4 text-neutral-950" />
               </button>
             </form>
           )}
