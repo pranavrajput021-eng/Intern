@@ -380,33 +380,66 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
     if (!textToSend) setInputValue('');
     setLoading(true);
 
-    try {
-      const response = await fetch('/api/coach-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: rawText.trim(),
-          history: messages.map(m => ({
-            role: m.sender === 'coach' ? 'model' : 'user',
-            text: m.text
-          }))
-        })
-      });
+    const startTime = Date.now();
+    const targetedResponseTimeMs = 6000;
+    let responseText = "";
 
-      if (!response.ok) {
-        throw new Error('Service communication failed');
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, targetedResponseTimeMs);
+
+      try {
+        const response = await fetch('/api/coach-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            message: rawText.trim(),
+            history: messages.map(m => ({
+              role: m.sender === 'coach' ? 'model' : 'user',
+              text: m.text
+            }))
+          })
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error('Service communication failed');
+        }
+
+        const data = await response.json();
+        responseText = data.reply || "I am experiencing structural communication gaps. Let's resume physical training.";
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        console.warn("API was slow, timed out, or connection failed. Calling high-perf local fallback:", err);
+        responseText = generateAestheticCoachResponse(rawText);
       }
 
-      const data = await response.json();
+      // Enforce EXACTLY 6 seconds total response time by checking elapsed duration
+      const elapsed = Date.now() - startTime;
+      const remainingDelay = targetedResponseTimeMs - elapsed;
+      if (remainingDelay > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingDelay));
+      }
+
       const coachMsg: Message = {
         id: Math.random().toString(36).substring(7),
         sender: 'coach',
-        text: data.reply || "I am experiencing structural communication gaps. Let's resume physical training.",
+        text: responseText,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, coachMsg]);
     } catch (e) {
-      console.warn("Server connection drop - calling high-perf client fallback:", e);
+      // In case of any unhandled errors, guarantee we wait up to 6 seconds before finishing
+      const elapsed = Date.now() - startTime;
+      const remainingDelay = targetedResponseTimeMs - elapsed;
+      if (remainingDelay > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingDelay));
+      }
+
       const coachMsg: Message = {
         id: Math.random().toString(36).substring(7),
         sender: 'coach',

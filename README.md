@@ -95,11 +95,11 @@ npm install
 Create a `.env` file in the root folder and configure your third-party API credentials:
 ```env
 # Gemini API secret key. Never prefix with VITE_ to keep it invisible to the browser.
-GEMINI_API_KEY=AIzaSy...
+GEMINI_API_KEY=your_gemini_api_key
 
 # Relational storage configuration (if manual setup)
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5...
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### 4. Launch Development Environment
