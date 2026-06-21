@@ -20,19 +20,55 @@ const ai = new GoogleGenAI({
   }
 });
 
+function isMessageWithinPolicy(message: string): boolean {
+  const msg = message.toLowerCase().trim();
+  
+  if (msg.length < 2) return true;
+
+  const allowedStems = [
+    "hi", "hello", "hey", "coach", "greetings", "welcome", "help", "physique", "athlete", "athletic",
+    "split", "routine", "workout", "program", "exercise", "schedule", "chest", "shoulder", "arm", "leg",
+    "back", "push", "pull", "squat", "bench", "deadlift", "cardio", "training", "running", "lift", "gym",
+    "hypertrophy", "rep", "set", "abs", "bicep", "tricep", "glute", "quad", "hamstring", "muscle", 
+    "dumbbell", "barbell", "cable", "pulldown", "row", "press", "curl", "extension", "raise", "calf", 
+    "calves", "deltoid", "delt", "pec", "lats", "nutrition", "diet", "eat", "food", "protein", "carb", 
+    "fat", "macro", "calorie", "meal", "bulk", "cut", "weight", "bmi", "chicken", "salmon", "rice", 
+    "oat", "caloric", "shake", "supp", "creatine", "vitamin", "egg", "mass", "nutritionist", "deficit", 
+    "surplus", "water", "recover", "sleep", "sore", "rest", "hydrate", "hydration", "fluid", "stretch", 
+    "soreness", "steps", "bodyweight", "height", "age", "bmr", "who are you", "what are you", "fitness",
+    "bodybuilding", "metronome", "tracker", "analytics", "physical", "performance"
+  ];
+
+  const isMatch = allowedStems.some(stem => msg.includes(stem));
+  if (!isMatch) {
+    return false;
+  }
+
+  const bannedKeywords = [
+    "javascript", "typescript", "python", "java", "coding", "programming", "code a", 
+    "write a function", "write code", "react component", "mathematics", "calculus", "algebra", "geometry", 
+    "solve equation", "essay", "poetry", "write a story", "write a poem", "write a song", "write an essay",
+    "weather today", "news today", "hotel booking", "flight booking", "rent a car", "capital of", 
+    "who wrote", "president of", "prime minister", "movie industry", "finance advice", "stock market", 
+    "crypto coin", "bitcoin price", "investment tips"
+  ];
+
+  const hasBannedWord = bannedKeywords.some(keyword => msg.includes(keyword));
+  if (hasBannedWord) {
+    return false;
+  }
+
+  return true;
+}
+
 // A highly realistic, high-quality, professional fallback response generator
 // in cases where the Gemini API key is unconfigured, mock, or fails at runtime.
 function generateAestheticCoachResponse(message: string): string {
-  const msg = message.toLowerCase();
-
-  // 1. Strictly block/decline non-fitness queries if they ask about coding, math, general help (as requested by systemic instructions)
-  if (
-    msg.includes("code") || msg.includes("programming") || msg.includes("javascript") || msg.includes("typescript") || msg.includes("python") || msg.includes("react") ||
-    msg.includes("mathematics") || msg.includes("math") || msg.includes("equation") || msg.includes("solve") || msg.includes("essay") || msg.includes("literature") ||
-    msg.includes("weather") || msg.includes("news") || msg.includes("hotel") || msg.includes("flight") || msg.includes("booking")
-  ) {
-    return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant. Let's get back to optimizing your physique!";
+  if (!isMessageWithinPolicy(message)) {
+    return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant.";
   }
+
+  const msg = message.toLowerCase();
 
   // 2. Bodybuilding splits / routines / workout
   if (
@@ -220,6 +256,13 @@ app.post("/api/coach-chat", async (req, res) => {
     
     if (!message || typeof message !== "string") {
       return res.status(400).json({ error: "Message string is required." });
+    }
+
+    // Intercept anything different from our policies, returning the exact specified message
+    if (!isMessageWithinPolicy(message)) {
+      return res.json({
+        reply: "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant."
+      });
     }
 
     const isMockKey = !process.env.GEMINI_API_KEY || 
