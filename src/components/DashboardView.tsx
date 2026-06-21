@@ -881,7 +881,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
       </div>
 
       {/* Floating Aesthetic Coach AI Chatbot Assistant */}
-      <AestheticCoachChatbot />
+      <AestheticCoachChatbot user={user} />
 
     </motion.div>
   );

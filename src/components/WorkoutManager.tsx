@@ -50,6 +50,10 @@ export default function WorkoutManager({ onRefreshDashboard }: WorkoutManagerPro
   const workoutTimerRef = useRef<NodeJS.Timeout | null>(null);
   const restTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Custom premium interactive dialog states to replace standard alerts/confirms
+  const [modalType, setModalType] = useState<'none' | 'draft-error' | 'terminate-confirm' | 'victory'>('none');
+  const [victoryDetails, setVictoryDetails] = useState<{ duration: number; calories: number } | null>(null);
+
   useEffect(() => {
     loadWorkouts();
   }, []);
@@ -108,7 +112,7 @@ export default function WorkoutManager({ onRefreshDashboard }: WorkoutManagerPro
   const saveCustomWorkout = async () => {
     if (!name) return;
     if (draftExercises.length === 0) {
-      alert('Please add at least one exercise to your custom routine!');
+      setModalType('draft-error');
       return;
     }
 
@@ -264,21 +268,22 @@ export default function WorkoutManager({ onRefreshDashboard }: WorkoutManagerPro
 
     playBeep(1200, 500); // Massive victory cheer synth buzzer!
 
-    alert(`💪 Workout Absolute Victory!\nDuration: ${calculatedDuration} minutes\nEstimated Calories Burned: ${computedBurn} kcal.`);
+    setVictoryDetails({ duration: calculatedDuration, calories: computedBurn });
+    setModalType('victory');
 
-    setView('list');
-    setActiveWorkout(null);
-    loadWorkouts();
-    onRefreshDashboard();
+    setWorkouts([]); // reload after closure
   };
 
   const terminateWorkoutSession = () => {
-    if (confirm('Are you sure you want to stop this training session? No progress will be logged.')) {
-      if (workoutTimerRef.current) clearInterval(workoutTimerRef.current);
-      if (restTimerRef.current) clearInterval(restTimerRef.current);
-      setView('list');
-      setActiveWorkout(null);
-    }
+    setModalType('terminate-confirm');
+  };
+
+  const confirmTermination = () => {
+    if (workoutTimerRef.current) clearInterval(workoutTimerRef.current);
+    if (restTimerRef.current) clearInterval(restTimerRef.current);
+    setView('list');
+    setActiveWorkout(null);
+    setModalType('none');
   };
 
   // Format Helper
@@ -663,6 +668,111 @@ export default function WorkoutManager({ onRefreshDashboard }: WorkoutManagerPro
             🏁 END SESSION AND COMPILE ENERGY BURN NOW
           </button>
 
+        </div>
+      )}
+
+      {/* --- ELITE BRANDED CUSTOM MODAL PORTAL --- */}
+      {modalType !== 'none' && (
+        <div className="fixed inset-0 bg-[#000000]/85 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-neutral-950 border border-emerald-900/60 rounded-3xl p-6 shadow-2xl shadow-emerald-950/50 text-left relative overflow-hidden">
+            {/* Watermark in bg */}
+            <div className="absolute top-0 right-0 -mr-12 -mt-12 w-32 h-32 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+
+            {/* Modal: Draft Error */}
+            {modalType === 'draft-error' && (
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
+                  <Star className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-white uppercase tracking-tight">Empty Routine Blocked</h3>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    Build parameters require at least **one specific physical activity** before storing coordinates. Add sets, load loads, and define an exercise.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setModalType('none')}
+                  className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-neutral-200 hover:text-white rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                  Confirm & Back to Draft
+                </button>
+              </div>
+            )}
+
+            {/* Modal: Terminate Confirm */}
+            {modalType === 'terminate-confirm' && (
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+                  <X className="w-6 h-6 animate-bounce" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-white uppercase tracking-tight">Decommission Active Session?</h3>
+                  <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">
+                    Caution! Are you absolutely certain you want to terminate this fitness split? Ongoing biometric parameters and duration history will be wiped.
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setModalType('none')}
+                    className="py-2.5 bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-neutral-300 rounded-xl text-xs font-bold transition cursor-pointer"
+                  >
+                    Keep Training
+                  </button>
+                  <button
+                    type="button"
+                    onClick={confirmTermination}
+                    className="py-2.5 bg-red-600/20 hover:bg-red-650/40 text-red-200 border border-red-950 rounded-xl text-xs font-bold transition cursor-pointer"
+                  >
+                    Shed Progress
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Modal: Victory Summary */}
+            {modalType === 'victory' && victoryDetails && (
+              <div className="space-y-4 text-center">
+                <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto relative text-center">
+                  <div className="absolute inset-0 rounded-3xl bg-emerald-500/5 blur-md animate-ping pointer-events-none" />
+                  <Sparkles className="w-8 h-8" />
+                </div>
+                <div className="text-center">
+                  <span className="text-[10px] text-emerald-400 tracking-widest font-mono uppercase font-black block leading-none">Victory Concluded</span>
+                  <h3 className="text-xl font-black text-neutral-100 uppercase tracking-tight mt-1.5">Hypertrophy Achieved</h3>
+                  <p className="text-xs text-neutral-450 mt-1">Biometrics synthesized successfully. Your logs have been reinforced.</p>
+                </div>
+
+                {/* Scorecard */}
+                <div className="grid grid-cols-2 gap-2 bg-neutral-900/40 border border-neutral-900 p-3 rounded-2xl">
+                  <div className="p-2 border-r border-neutral-900 text-center">
+                    <span className="text-[9px] text-neutral-500 font-bold block uppercase">DURATION</span>
+                    <strong className="text-lg font-mono text-emerald-400">{victoryDetails.duration} <span className="text-xs font-sans text-neutral-450">mins</span></strong>
+                  </div>
+                  <div className="p-2 text-center">
+                    <span className="text-[9px] text-neutral-500 font-bold block uppercase font-mono">ENERGY SPENT</span>
+                    <strong className="text-lg font-mono text-teal-400">~{victoryDetails.calories} <span className="text-xs font-sans text-neutral-450">kcal</span></strong>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModalType('none');
+                    setVictoryDetails(null);
+                    setView('list');
+                    setActiveWorkout(null);
+                    loadWorkouts();
+                    onRefreshDashboard();
+                  }}
+                  className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition cursor-pointer"
+                >
+                  Acknowledge Victory & Cool Down
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

@@ -6,7 +6,7 @@ interface Message {
   id: string;
   sender: 'coach' | 'athlete';
   text: string;
-  timestamp: Date;
+  timestamp: Date | string;
 }
 
 // Highly realistic, professional fallback response generator
@@ -171,19 +171,150 @@ function generateAestheticCoachResponse(message: string): string {
          "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique? Let's dial in your training!";
 }
 
-export default function AestheticCoachChatbot() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome',
-      sender: 'coach',
-      text: "Greetings, Athlete. I am your dedicated Aesthetic Athlete Coach. Ask me anything about workout plans, bodybuilding splits, nutritional protocols, or performance optimization. I focus exclusively on athletic excellence.",
-      timestamp: new Date()
+// Custom, lightweight, fast, ultra-premium markdown renderer that formats headers, lists, and bold text.
+function parseInlineElements(text: string): React.ReactNode[] | string {
+  const regex = /\*\*(.*?)\*\*/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
     }
-  ]);
+    parts.push(
+      <strong key={match.index} className="font-extrabold text-emerald-400">
+        {match[1]}
+      </strong>
+    );
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
+function parseCustomMarkdown(text: string): React.ReactNode {
+  const lines = text.split('\n');
+  return (
+    <div className="space-y-1 bg-transparent">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        
+        // Headers starting with ### or ####
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h4 key={idx} className="text-[12px] font-black text-emerald-300 mt-2.5 mb-1.5 uppercase tracking-wider font-sans text-left border-b border-emerald-950/20 pb-0.5">
+              {trimmed.substring(4)}
+            </h4>
+          );
+        }
+        if (trimmed.startsWith('#### ')) {
+          return (
+            <h5 key={idx} className="text-[11px] font-bold text-teal-400 mt-2 mb-1 uppercase tracking-wide font-sans text-left">
+              {trimmed.substring(5)}
+            </h5>
+          );
+        }
+
+        // Unordered lists starting with "- "
+        if (trimmed.startsWith('- ')) {
+          return (
+            <div key={idx} className="pl-4 relative text-[11px] text-neutral-300 leading-relaxed my-0.5 text-left">
+              <span className="absolute left-0 text-emerald-500 font-bold">•</span>
+              {parseInlineElements(trimmed.substring(2))}
+            </div>
+          );
+        }
+
+        // Ordered lists starting with a number e.g. "1. "
+        const numMatch = trimmed.match(/^(\d+)\.\s(.*)$/);
+        if (numMatch) {
+          return (
+            <div key={idx} className="pl-4 relative text-[11px] text-neutral-300 leading-relaxed my-0.5 text-left">
+              <span className="absolute left-0 text-emerald-500 font-mono text-[10px]">{numMatch[1]}.</span>
+              {parseInlineElements(numMatch[2])}
+            </div>
+          );
+        }
+
+        // Empty paragraphs
+        if (trimmed === '') {
+          return <div key={idx} className="h-1 bg-transparent" />;
+        }
+
+        // Plain line
+        return (
+          <p key={idx} className="text-[11px] text-neutral-250 leading-relaxed my-0.5 text-left">
+            {parseInlineElements(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
+const DEFAULT_WELCOME_TEXT = "Greetings, Athlete. I am your dedicated Aesthetic Athlete Coach. Ask me anything about workout plans, bodybuilding splits, nutritional protocols, or performance optimization. I focus exclusively on athletic excellence.";
+
+export default function AestheticCoachChatbot({ user }: { user?: any }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [hasLoadedHistory, setHasLoadedHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load message history for specific user when user context changes
+  useEffect(() => {
+    const storageKey = user?.id ? `athlete_chat_history_${user.id}` : 'athlete_chat_history_anonymous';
+    const savedData = localStorage.getItem(storageKey);
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+        } else {
+          setMessages([
+            {
+              id: 'welcome',
+              sender: 'coach',
+              text: DEFAULT_WELCOME_TEXT,
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        }
+      } catch (e) {
+        setMessages([
+          {
+            id: 'welcome',
+            sender: 'coach',
+            text: DEFAULT_WELCOME_TEXT,
+            timestamp: new Date().toISOString()
+          }
+        ]);
+      }
+    } else {
+      setMessages([
+        {
+          id: 'welcome',
+          sender: 'coach',
+          text: DEFAULT_WELCOME_TEXT,
+          timestamp: new Date().toISOString()
+        }
+      ]);
+    }
+    setHasLoadedHistory(true);
+  }, [user]);
+
+  // Persist messages of current user whenever they change
+  useEffect(() => {
+    if (!hasLoadedHistory) return;
+    const storageKey = user?.id ? `athlete_chat_history_${user.id}` : 'athlete_chat_history_anonymous';
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  }, [messages, user, hasLoadedHistory]);
 
   // Typewriter effect state
   const phrases = [
@@ -293,14 +424,15 @@ export default function AestheticCoachChatbot() {
   };
 
   const clearChat = () => {
-    setMessages([
-      {
-        id: 'welcome',
-        sender: 'coach',
-        text: "Greetings, Athlete. I am your dedicated Aesthetic Athlete Coach. Ask me anything about workout plans, bodybuilding splits, nutritional protocols, or performance optimization. I focus exclusively on athletic excellence.",
-        timestamp: new Date()
-      }
-    ]);
+    const defaultMsg: Message = {
+      id: 'welcome',
+      sender: 'coach',
+      text: DEFAULT_WELCOME_TEXT,
+      timestamp: new Date().toISOString()
+    };
+    setMessages([defaultMsg]);
+    const storageKey = user?.id ? `athlete_chat_history_${user.id}` : 'athlete_chat_history_anonymous';
+    localStorage.setItem(storageKey, JSON.stringify([defaultMsg]));
   };
 
   return (
@@ -407,8 +539,8 @@ export default function AestheticCoachChatbot() {
                       m.sender === 'athlete'
                         ? 'bg-emerald-950/45 text-emerald-300 border border-emerald-900/55 shadow-sm rounded-tr-none text-right'
                         : 'bg-neutral-900/60 text-neutral-250 border border-emerald-950/40 shadow-inner rounded-tl-none text-left'
-                    } whitespace-pre-wrap`}>
-                      {m.text}
+                    }`}>
+                      {parseCustomMarkdown(m.text)}
                     </div>
                   </div>
                 </div>
