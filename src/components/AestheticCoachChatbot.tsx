@@ -25,7 +25,7 @@ function isMessageWithinPolicy(message: string): boolean {
     "oat", "caloric", "shake", "supp", "creatine", "vitamin", "egg", "mass", "nutritionist", "deficit", 
     "surplus", "water", "recover", "sleep", "sore", "rest", "hydrate", "hydration", "fluid", "stretch", 
     "soreness", "steps", "bodyweight", "height", "age", "bmr", "who are you", "what are you", "fitness",
-    "bodybuilding", "metronome", "tracker", "analytics", "physical", "performance"
+    "bodybuilding", "metronome", "tracker", "analytics", "physical", "performance", "progressive", "overload"
   ];
 
   const isMatch = allowedStems.some(stem => msg.includes(stem));
@@ -637,7 +637,7 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
                 {[
                   "Suggest a 4-day workout split",
                   "Suggest pre-workout meal",
-                  "Explain Progressive Overload"
+                  "Tips for faster recovery"
                 ].map((suggest, idx) => (
                   <button
                     key={idx}
