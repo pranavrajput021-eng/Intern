@@ -1,6 +1,6 @@
 # Aesthetic Athlete: Workout and Nutrition Platform
 
-A full-stack application for logging physical workouts, tracking daily macronutrients, saving body circumferences, and interacting with a responsive LLM-powered physical health chatbot. Built on a React + Node.js (Express) stack, with support for PostgreSQL relational storage backend syncing.
+Aesthetic Athlete is a full-stack fitness tracking platform built with React, TypeScript, Express, Supabase, and PostgreSQL. The platform enables users to track workouts, nutrition, hydration, body measurements, and fitness goals while providing AI-assisted workout and nutrition guidance through an integrated coaching chatbot.
 
 ---
 
