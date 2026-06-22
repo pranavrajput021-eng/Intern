@@ -63,12 +63,19 @@ function isMessageWithinPolicy(message: string): boolean {
 
 // A highly realistic, high-quality, professional fallback response generator
 // in cases where the Gemini API key is unconfigured, mock, or fails at runtime.
-function generateAestheticCoachResponse(message: string): string {
+function generateAestheticCoachResponse(message: string, userProfile?: any): string {
   if (!isMessageWithinPolicy(message)) {
     return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant.";
   }
 
   const msg = message.toLowerCase();
+  
+  // Extract user parameters for inline personalization
+  const name = userProfile?.name || "Athlete";
+  const goal = userProfile?.fitness_goal || "sculpt a lean, aesthetic physique";
+  const weight = userProfile?.weight ? Number(userProfile.weight) : 75;
+  const height = userProfile?.height ? Number(userProfile.height) : 178;
+  const level = userProfile?.fitness_level || "Intermediate";
 
   // 2. Bodybuilding splits / routines / workout
   if (
@@ -77,8 +84,8 @@ function generateAestheticCoachResponse(message: string): string {
     msg.includes("squat") || msg.includes("bench") || msg.includes("deadlift") || msg.includes("cardio")
   ) {
     if (msg.includes("split") || msg.includes("4-day") || msg.includes("4 day")) {
-      return "### The Aesthetic Athlete Elite 4-Day Split\n\n" +
-             "Optimize micro-cycle frequency and maximize hypertrophic tension with this structured 4-Day Upper/Lower split:\n\n" +
+      return `### The Aesthetic Athlete Elite 4-Day Split for ${name}\n\n` +
+             `Optimize micro-cycle frequency and maximize hypertrophic tension with this structured 4-Day Upper/Lower split, calibrated for your **${level}** level and goal of **${goal}**:\n\n` +
              "#### **Day 1: Upper Body (Hypertrophy Focused)**\n" +
              "- **Incline Dumbbell Bench Press**: 4 sets x 8-10 reps (3-sec eccentric phase)\n" +
              "- **Seated Cable Lat Row (Neutral grip)**: 4 sets x 10-12 reps (Focus on squeeze)\n" +
@@ -105,12 +112,12 @@ function generateAestheticCoachResponse(message: string): string {
              "- **Lying Leg Curls**: 3 sets x 12-15 reps\n" +
              "- **Barbell Hip Thrusts**: 3 sets x 8-10 reps\n" +
              "- **Seated Calf Raises**: 4 sets x 12-15 reps\n\n" +
-             "*Progressive Overload Rule: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*";
+             `*Progressive Overload Rule for ${name}: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*`;
     }
 
     if (msg.includes("chest") || msg.includes("push") || msg.includes("bench")) {
-      return "### Chest & Push Day Hypertrophy Protocol\n\n" +
-             "To carve aesthetic pectoral density and shoulder symmetry, focus on direct vertical and horizontal tension:\n\n" +
+      return `### Chest & Push Day Hypertrophy Protocol for ${name}\n\n` +
+             `To carve aesthetic pectoral density and shoulder symmetry, focus on direct vertical and horizontal tension. Configured for your ${weight} kg frame:\n\n` +
              "1. **Incline Barbell Bench Press**: 4 sets x 6-8 reps (Primary strength compound - targets clavicular head)\n" +
              "2. **Flat Dumbbell Press**: 3 sets x 8-10 reps (Decline chest stretch with convergent squeeze)\n" +
              "3. **Incline Dumbbell Flyes (30-degree incline)**: 3 sets x 12 reps (Focus on deep eccentric stretch)\n" +
@@ -122,8 +129,8 @@ function generateAestheticCoachResponse(message: string): string {
     }
 
     if (msg.includes("leg") || msg.includes("squat") || msg.includes("quad") || msg.includes("hamstring")) {
-      return "### Leg Day Absolute Destruction Protocol\n\n" +
-             "Carving an aesthetic lower body requires balanced quad-to-posterior ratios. Focus on range of motion and depth:\n\n" +
+      return `### Leg Day Absolute Destruction Protocol for ${name}\n\n` +
+             `Carving an aesthetic lower body requires balanced quad-to-posterior ratios. Focus on range of motion and depth. Recommended for your **${level}** track:\n\n` +
              "1. **Barbell Back Squats (A-Stance)**: 4 sets x 6-8 reps (Control the eccentric down to parallel or below)\n" +
              "2. **Romanian Deadlifts (RDLs)**: 3 sets x 8-10 reps (Focus on pushing hips back, feel hamstring stretch)\n" +
              "3. **Bulgarian Split Squats**: 3 sets x 10-12 reps per leg (Absolute quad builder - hold dumbbells)\n" +
@@ -134,8 +141,8 @@ function generateAestheticCoachResponse(message: string): string {
     }
 
     if (msg.includes("back") || msg.includes("pull") || msg.includes("deadlift") || msg.includes("row")) {
-      return "### Back & Pull Day Athletic Protocol\n\n" +
-             "A wide V-taper frame creates the ultimate aesthetic silhouette. Focus on proper shoulder blade retraction:\n\n" +
+      return `### Back & Pull Day Athletic Protocol for ${name}\n\n` +
+             `A wide V-taper frame creates the ultimate aesthetic silhouette. Focus on proper shoulder blade retraction. Best for your goal of **${goal}**:\n\n` +
              "1. **Weighted Pull-ups or Lat Pulldowns**: 4 sets x 8-10 reps (Lats width focus - grip slightly wider than shoulders)\n" +
              "2. **Bent Over Barbell Rows**: 3 sets x 8-10 reps (Thickens upper/mid back - pull towards belly button)\n" +
              "3. **Chest-Supported Dumbbell Rows**: 3 sets x 10-12 reps (Eliminates momentum, pure rhomboid contraction)\n" +
@@ -146,13 +153,13 @@ function generateAestheticCoachResponse(message: string): string {
              "*Coach Tip: Pull with your elbows, not with your hands, to fully engage your lat muscles and minimize bicep dominance.*";
     }
 
-    return "### The Aesthetic Athlete Workout Framework\n\n" +
+    return `### The Aesthetic Athlete Workout Framework for ${name}\n\n` +
            "Success in physical training depends on consistency and progressive load. Here is the golden baseline:\n\n" +
            "1. **Resistance Training**: Train 4-5 times a week, dedicating sets to specific muscle groups to allow 48-72 hours of recovery before retraining.\n" +
            "2. **Set Intensity**: Focus on 3-4 working sets per exercise with 0-2 RIR (Reps in Reserve). Make every set count.\n" +
            "3. **Warm-up**: Spend 5-10 minutes warming up joints and doing light warm-up sets before diving into heavy compounds.\n" +
            "4. **Form First**: Control the weight through full range of motion. Mind-muscle connection is the key to hypertrophy.\n\n" +
-           "What specific routine or split would you like me to custom-design for you? Tell me how many days you can train!";
+           `What specific routine or split would you like me to custom-design for you, ${name}? Tell me how many days you can train!`;
   }
 
   // 3. Nutrition / Meals / Diet / Calories / Macros
@@ -252,7 +259,7 @@ function generateAestheticCoachResponse(message: string): string {
 // API route first
 app.post("/api/coach-chat", async (req, res) => {
   try {
-    const { message, history } = req.body;
+    const { message, history, userProfile } = req.body;
     
     if (!message || typeof message !== "string") {
       return res.status(400).json({ error: "Message string is required." });
@@ -271,17 +278,35 @@ app.post("/api/coach-chat", async (req, res) => {
                       process.env.GEMINI_API_KEY.trim() === "";
 
     if (isMockKey) {
-      const offlineReply = generateAestheticCoachResponse(message);
+      const offlineReply = generateAestheticCoachResponse(message, userProfile);
       return res.json({ reply: offlineReply });
     }
 
-    const systemInstruction = 
+    let systemInstruction = 
       "You are the 'Aesthetic Athlete Coach AI', an elite bodybuilding coach, sports scientist, and performance nutritionist.\n\n" +
       "CRITICAL LIMITATION RULE:\n" +
       "1. You MUST ONLY discuss physical fitness, workout routines, gym exercises, bodybuilding splits, stretching, muscle hypertrophy, cardio routines, physical health, target nutrition, caloric counts, meal preps, hydration, sleep, and recovery.\n" +
       "2. If the user asks a question about general programming/coding, mathematics, software, writing essays, literature, booking travel, historic events not about sports/bodybuilding, news, weather, or other general assistant tasks, you MUST decline to answer.\n" +
       "   - Decline politely but firmly, saying something like: 'As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant.'\n" +
       "3. Style your responses professionally, with a clean, motivational, aesthetic tone. Use bullet points for structured exercises and keep it highly visual and engaging.";
+
+    // Dynamic athlete profile personalization integration
+    if (userProfile && typeof userProfile === "object") {
+      const { name, age, gender, height, weight, fitness_goal, fitness_level, workout_frequency } = userProfile;
+      systemInstruction += `\n\nATHLETE PROFILE METRICS (MUST PERSONALIZE TO THIS ATHLETE):\n` +
+        `- Name: ${name || "Athlete"}\n` +
+        `- Age: ${age || "N/A"}\n` +
+        `- Gender: ${gender || "N/A"}\n` +
+        `- Height: ${height ? height + " cm" : "N/A"}\n` +
+        `- Weight: ${weight ? weight + " kg" : "N/A"}\n` +
+        `- Fitness Goal: ${fitness_goal || "Aesthetic Bodybuilding / Hypertrophy"}\n` +
+        `- Fitness Level: ${fitness_level || "Intermediate"}\n` +
+        `- Workout Frequency: ${workout_frequency || "3-5 sessions/week"}\n\n` +
+        `Actionable Guidelines for Personalization:\n` +
+        `1. Address the athlete by their name ${name || "Athlete"} naturally when welcoming them or explaining customized plans.\n` +
+        `2. Structure all set/rep allocations, training splits, and recovery advice to fit their stated level (${fitness_level || "Intermediate"}).\n` +
+        `3. Calibrate nutritional macro/micro parameters tailored to their weight of ${weight || "75"} kg and fitness goal of "${fitness_goal || "Gain Muscle"}". For example, custom protein recommendations should target ~2g per kg (approx. ${weight ? Math.round(Number(weight) * 2) : 150}g/day). Make your diet templates realistic and aligned with these metrics.`;
+    }
 
     // Structure previous conversation context to maintain memory
     let promptContext = "";
@@ -308,7 +333,7 @@ app.post("/api/coach-chat", async (req, res) => {
       reply = response.text || "Apologies, my physiological CPU experienced a metabolic delay. Let's restart our workout set.";
     } catch (genAiError: any) {
       console.warn("Gemini API call failed, falling back to smart local heuristic engine:", genAiError);
-      reply = generateAestheticCoachResponse(message);
+      reply = generateAestheticCoachResponse(message, userProfile);
     }
 
     return res.json({ reply });
@@ -317,8 +342,8 @@ app.post("/api/coach-chat", async (req, res) => {
     console.error("Coach AI assistant general error:", err);
     // Even if something else completely crashes, let's gracefully fall back to prevent chatbot downtime
     try {
-      const { message } = req.body;
-      const fallbackReply = generateAestheticCoachResponse(message || "");
+      const { message, userProfile } = req.body;
+      const fallbackReply = generateAestheticCoachResponse(message || "", userProfile);
       return res.json({ reply: fallbackReply });
     } catch (innerErr) {
       return res.status(500).json({ error: "Assistant process failed. Re-run set." });

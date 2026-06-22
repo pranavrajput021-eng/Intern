@@ -100,6 +100,7 @@ const LOCAL_NOTIFICATIONS_KEY = 'athlete_notifications';
 
 // Fault Tolerance Core state
 let localModeActive = false;
+let currentUserPromise: Promise<UserProfile | null> | null = null;
 
 export const isLocalModeActive = () => localModeActive;
 export const setLocalModeActive = (active: boolean) => {
@@ -309,8 +310,11 @@ const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQ
 
 export const supabaseService = {
   // --- AUTH SERVICES ---
-  async getCurrentUser(): Promise<UserProfile | null> {
-    return await executeWithFallback(
+  getCurrentUser(): Promise<UserProfile | null> {
+    if (currentUserPromise) {
+      return currentUserPromise;
+    }
+    currentUserPromise = executeWithFallback(
       async () => {
         if (!isSupabaseConfigured || !supabase) return null;
         const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -323,11 +327,16 @@ export const supabaseService = {
             errStr.includes('cors') ||
             errStr.includes('connection')
           ) {
+            currentUserPromise = null;
             throw authError; // throw so executeWithFallback sets localModeActive = true and retrieves defaultUserProfile
           }
+          currentUserPromise = null;
           return null;
         }
-        if (!user) return null;
+        if (!user) {
+          currentUserPromise = null;
+          return null;
+        }
 
         const { data, error } = await supabase
           .from('Users')
@@ -343,6 +352,7 @@ export const supabaseService = {
             errStr.includes('cors') ||
             errStr.includes('connection')
           ) {
+            currentUserPromise = null;
             throw error;
           }
         }
@@ -357,18 +367,26 @@ export const supabaseService = {
       () => {
         return getLocalJSON(LOCAL_SESSION_KEY, defaultUserProfile);
       }
-    );
+    ).catch(err => {
+      currentUserPromise = null;
+      throw err;
+    });
+    return currentUserPromise;
   },
 
   async login(email: string, password?: string): Promise<UserProfile> {
-    return await executeWithFallback(
+    currentUserPromise = null;
+    const loggedUser = await executeWithFallback(
       async () => {
         if (!isSupabaseConfigured || !supabase) {
           throw new Error('Supabase database connection is not configured.');
         }
+        if (!password) {
+          throw new Error('Password is key to accessing your account. Please enter your passcode.');
+        }
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
-          password: password || 'password123',
+          password,
         });
         if (error) throw error;
         if (!data?.user) throw new Error('No user returned from Authentication');
@@ -443,10 +461,13 @@ export const supabaseService = {
         }
       }
     );
+    currentUserPromise = Promise.resolve(loggedUser);
+    return loggedUser;
   },
 
   async register(name: string, email: string, password?: string): Promise<UserProfile> {
-    return await executeWithFallback(
+    currentUserPromise = null;
+    const newProf = await executeWithFallback(
       async () => {
         if (!isSupabaseConfigured || !supabase) {
           throw new Error('Supabase database connection is not configured.');
@@ -462,9 +483,13 @@ export const supabaseService = {
           throw new Error('An account with this email address already exists. Please login instead.');
         }
 
+        if (!password) {
+          throw new Error('Password is required to create a secure account in Supabase Authentication.');
+        }
+
         const { data, error } = await supabase.auth.signUp({
           email,
-          password: password || 'password123',
+          password,
           options: {
             data: { name }
           }
@@ -472,15 +497,15 @@ export const supabaseService = {
         if (error) throw error;
         if (!data?.user) throw new Error('Failed to register user account.');
 
-        const newProf: UserProfile = {
+        const newProfRecord: UserProfile = {
           id: data.user.id,
           name,
           email,
           created_at: new Date().toISOString()
         };
-        const { error: dbErr } = await supabase.from('Users').insert(newProf);
+        const { error: dbErr } = await supabase.from('Users').insert(newProfRecord);
         if (dbErr) throw dbErr;
-        return newProf;
+        return newProfRecord;
       },
       () => {
         const users = getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
@@ -488,7 +513,7 @@ export const supabaseService = {
         if (matched) {
           throw new Error('An account with this email address already is registered in local sandbox.');
         }
-        const newProf: UserProfile = {
+        const newProfRecord: UserProfile = {
           id: generateId(),
           name,
           email,
@@ -499,15 +524,18 @@ export const supabaseService = {
           weight: 70,
           created_at: new Date().toISOString()
         };
-        users.push(newProf);
+        users.push(newProfRecord);
         setLocalJSON(LOCAL_USERS_KEY, users);
-        setLocalJSON(LOCAL_SESSION_KEY, newProf);
-        return newProf;
+        setLocalJSON(LOCAL_SESSION_KEY, newProfRecord);
+        return newProfRecord;
       }
     );
+    currentUserPromise = Promise.resolve(newProf);
+    return newProf;
   },
 
   async logout(): Promise<void> {
+    currentUserPromise = null;
     if (localModeActive) {
       setLocalJSON(LOCAL_SESSION_KEY, null);
       return;
@@ -524,7 +552,8 @@ export const supabaseService = {
   },
 
   async saveOnboarding(profileData: Partial<UserProfile>): Promise<UserProfile> {
-    return await executeWithFallback(
+    currentUserPromise = null;
+    const updated = await executeWithFallback(
       async () => {
         const currentUser = await this.getCurrentUser();
         if (!currentUser) throw new Error('Not logged in');
@@ -569,6 +598,8 @@ export const supabaseService = {
         return updatedProfile;
       }
     );
+    currentUserPromise = Promise.resolve(updated);
+    return updated;
   },
 
   // --- WORKOUTS ---
@@ -828,6 +859,7 @@ export const supabaseService = {
   },
 
   async logWeight(weight: number, dateStr?: string): Promise<WeightLog> {
+    currentUserPromise = null;
     return await executeWithFallback(
       async () => {
         const user = await this.getCurrentUser();

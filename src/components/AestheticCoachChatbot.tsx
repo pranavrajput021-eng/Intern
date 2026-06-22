@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Sparkles, Dumbbell, Bot, User, Trash2 } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, Dumbbell, Bot, User, Trash2, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Message {
@@ -52,12 +52,19 @@ function isMessageWithinPolicy(message: string): boolean {
 
 // Highly realistic, professional fallback response generator
 // in cases where the backend server has connection drops or is unreachable.
-function generateAestheticCoachResponse(message: string): string {
+function generateAestheticCoachResponse(message: string, userProfile?: any): string {
   if (!isMessageWithinPolicy(message)) {
     return "As your dedicated Aesthetic Athlete Coach, I focus exclusively on physical training, target nutrition, and athletic performance. For questions beyond bodybuilding, fitness, and recovery, please consult a generic AI assistant.";
   }
 
   const msg = message.toLowerCase();
+
+  // Extract user parameters for inline personalization
+  const name = userProfile?.name || "Athlete";
+  const goal = userProfile?.fitness_goal || "sculpt a lean, aesthetic physique";
+  const weight = userProfile?.weight ? Number(userProfile.weight) : 75;
+  const height = userProfile?.height ? Number(userProfile.height) : 178;
+  const level = userProfile?.fitness_level || "Intermediate";
 
   // 2. Training structures & splits
   if (
@@ -66,8 +73,8 @@ function generateAestheticCoachResponse(message: string): string {
     msg.includes("squat") || msg.includes("bench") || msg.includes("deadlift") || msg.includes("cardio")
   ) {
     if (msg.includes("split") || msg.includes("4-day") || msg.includes("4 day")) {
-      return "### The Aesthetic Athlete Elite 4-Day Split\n\n" +
-             "Optimize micro-cycle frequency and maximize hypertrophic tension with this structured 4-Day Upper/Lower split:\n\n" +
+      return `### The Aesthetic Athlete Elite 4-Day Split for ${name}\n\n` +
+             `Optimize micro-cycle frequency and maximize hypertrophic tension with this structured 4-Day Upper/Lower split, calibrated for your **${level}** level and goal of **${goal}**:\n\n` +
              "#### **Day 1: Upper Body (Hypertrophy Focused)**\n" +
              "- **Incline Dumbbell Bench Press**: 4 sets x 8-10 reps (3-sec eccentric phase)\n" +
              "- **Seated Cable Lat Row (Neutral grip)**: 4 sets x 10-12 reps\n" +
@@ -88,12 +95,12 @@ function generateAestheticCoachResponse(message: string): string {
              "#### **Day 5: Lower Body & Posterior Chain**\n" +
              "- **Bulgarian Split Squats**: 3 sets x 10-12 reps per leg\n" +
              "- **Lying Leg Curls**: 3 sets x 12-15 reps\n\n" +
-             "*Progressive Overload Rule: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*";
+             `*Progressive Overload Rule for ${name}: Log your weights! Aim to increase load or reps by 1-2% every micro-cycle.*`;
     }
 
     if (msg.includes("chest") || msg.includes("push") || msg.includes("bench")) {
-      return "### Chest & Push Day Hypertrophy Protocol\n\n" +
-             "To carve aesthetic pectoral density and shoulder symmetry, focus on direct vertical and horizontal tension:\n\n" +
+      return `### Chest & Push Day Hypertrophy Protocol for ${name}\n\n` +
+             `To carve aesthetic pectoral density and shoulder symmetry, focus on direct vertical and horizontal tension. Configured for your ${weight} kg frame:\n\n` +
              "1. **Incline Barbell Bench Press**: 4 sets x 6-8 reps (Primary strength compound - targets clavicular head)\n" +
              "2. **Flat Dumbbell Press**: 3 sets x 8-10 reps (Decline chest stretch with convergent squeeze)\n" +
              "3. **Incline Dumbbell Flyes (30-degree incline)**: 3 sets x 12 reps (Focus on deep eccentric stretch)\n" +
@@ -104,8 +111,8 @@ function generateAestheticCoachResponse(message: string): string {
     }
 
     if (msg.includes("leg") || msg.includes("squat") || msg.includes("quad") || msg.includes("hamstring")) {
-      return "### Leg Day Absolute Destruction Protocol\n\n" +
-             "Carving an aesthetic lower body requires balanced quad-to-posterior ratios. Focus on range of motion and depth:\n\n" +
+      return `### Leg Day Absolute Destruction Protocol for ${name}\n\n` +
+             `Carving an aesthetic lower body requires balanced quad-to-posterior ratios. Focus on range of motion and depth. Recommended for your **${level}** track:\n\n` +
              "1. **Barbell Back Squats (A-Stance)**: 4 sets x 6-8 reps (Control the eccentric down to parallel)\n" +
              "2. **Romanian Deadlifts (RDLs)**: 3 sets x 8-10 reps (Hamstring/glute recruitment)\n" +
              "3. **Bulgarian Split Squats**: 3 sets x 10-12 reps per leg (Absolute quad builder)\n" +
@@ -115,8 +122,8 @@ function generateAestheticCoachResponse(message: string): string {
     }
 
     if (msg.includes("back") || msg.includes("pull") || msg.includes("deadlift") || msg.includes("row")) {
-      return "### Back & Pull Day Athletic Protocol\n\n" +
-             "A wide V-taper frame creates the ultimate aesthetic silhouette. Focus on proper shoulder blade retraction:\n\n" +
+      return `### Back & Pull Day Athletic Protocol for ${name}\n\n` +
+             `A wide V-taper frame creates the ultimate aesthetic silhouette. Focus on proper shoulder blade retraction. Best for your goal of **${goal}**:\n\n` +
              "1. **Weighted Pull-ups or Lat Pulldowns**: 4 sets x 8-10 reps (Lats width focus)\n" +
              "2. **Bent Over Barbell Rows**: 3 sets x 8-10 reps (Thickens upper/mid back)\n" +
              "3. **Chest-Supported Dumbbell Rows**: 3 sets x 10-12 reps\n" +
@@ -126,12 +133,12 @@ function generateAestheticCoachResponse(message: string): string {
              "*Coach Tip: Pull with your elbows, not with your hands, to fully engage your lat muscles.*";
     }
 
-    return "### The Aesthetic Athlete Workout Framework\n\n" +
+    return `### The Aesthetic Athlete Workout Framework for ${name}\n\n` +
            "Success in physical training depends on consistency and progressive load. Here is the golden baseline:\n\n" +
            "1. **Resistance Training**: Train 4-5 times a week, dedicating sets to specific muscle groups to allow 48-72 hours of recovery.\n" +
            "2. **Set Intensity**: Focus on 3-4 working sets per exercise with 0-2 RIR (Reps in Reserve).\n" +
            "3. **Form First**: Control the weight through full range of motion. Mind-muscle connection is the key to hypertrophy.\n\n" +
-           "Tell me about your scheduling (e.g. 3, 4, 5-day Push/Pull/Legs option) and let's structure the set!";
+           `What specific routine or split would you like me to custom-design for you, ${name}? Tell me how many days you can train!`;
   }
 
   // 3. Nutrition & Meal plans
@@ -141,8 +148,8 @@ function generateAestheticCoachResponse(message: string): string {
     msg.includes("bulk") || msg.includes("cut")
   ) {
     if (msg.includes("bulk") || msg.includes("gain")) {
-      return "### Clean Bulking Nutrition Architecture\n\n" +
-             "To build premium lean mass without excessive fat storage, target a calculated surplus (+300 to +500 kcal):\n\n" +
+      return `### Clean Bulking Nutrition Architecture for ${name}\n\n` +
+             `To build premium lean mass without excessive fat storage, target a calculated surplus (+300 to +500 kcal):\n\n` +
              "#### **Your Target Macro Ratios**\n" +
              "- **Protein**: 2.0g per kg of bodyweight\n" +
              "- **Carbohydrates**: High complexity grains (jasmine rice, oats, sweet potatoes)\n" +
@@ -156,8 +163,8 @@ function generateAestheticCoachResponse(message: string): string {
     }
 
     if (msg.includes("cut") || msg.includes("lose") || msg.includes("fat")) {
-      return "### Lean Shredding & Cutting Protocol\n\n" +
-             "To peel back fat layers while locking in maximum muscle mass, establish an active calorie deficit (-300 to -500 kcal):\n\n" +
+      return `### Lean Shredding & Cutting Protocol for ${name}\n\n` +
+             `To peel back fat layers while locking in maximum muscle mass, establish an active calorie deficit (-300 to -500 kcal):\n\n` +
              "#### **Hormonal & Muscle Preservation Rules**\n" +
              "- **Protein Intake**: Elevate up to 2.2g per kg of bodyweight (prevents catabolism).\n" +
              "- **Hydration Balance**: Maintain high water intake (3.5L+ daily) to naturally suppress cravings.\n\n" +
@@ -169,12 +176,12 @@ function generateAestheticCoachResponse(message: string): string {
              "*Coach Tip: Track your weight checks consistently in the 'Current Weight' panel on our Overview Dashboard.*";
     }
 
-    return "### Aesthetic Athlete Nutrition Ledger\n\n" +
+    return `### Aesthetic Athlete Nutrition Ledger for ${name}\n\n` +
            "Your body is a high-performance machine; treat your fuel intake as engineering. Here are the cardinal rules:\n\n" +
            "1. **Protein Consistency**: Consume protein every 3-4 hours (30-50g per meal) to maximize Muscle Protein Synthesis (MPS).\n" +
            "2. **Pre-Workout Fuel**: Consume high-glycemic carbohydrates 60-90 minutes before your workout to top off glycogen stores.\n" +
            "3. **Hydration**: Drink at least 3-4 liters of pure water daily. Muscular volume is 70%+ water!\n\n" +
-           "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique?";
+           `Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique, ${name}?`;
   }
 
   // 4. Recovery & Supplements
@@ -183,7 +190,7 @@ function generateAestheticCoachResponse(message: string): string {
     msg.includes("hydrate") || msg.includes("stretch") || msg.includes("creatine") || msg.includes("supplement") || msg.includes("pre-workout")
   ) {
     if (msg.includes("supplement") || msg.includes("creatine")) {
-      return "### Aesthetic Supplementation Protocol\n\n" +
+      return `### Aesthetic Supplementation Protocol for ${name}\n\n` +
              "Supplements exist to accelerate your training output. Focus exclusively on scientifically proven options:\n\n" +
              "1. **Creatine Monohydrate**: 5g daily, taken consistently at any hour to raise cellular ATP.\n" +
              "2. **Whey Isolate Protein**: Post-workout or between meals to easily satisfy your daily protein thresholds.\n" +
@@ -191,7 +198,7 @@ function generateAestheticCoachResponse(message: string): string {
              "4. **Vitamin D3 & Omega-3**: Crucial for natural joint recovery, general safety, and cardiovascular integrity.";
     }
 
-    return "### Athlete Recovery & Sleep Optimization\n\n" +
+    return `### Athlete Recovery & Sleep Optimization for ${name}\n\n` +
            "Muscle hypertrophy occurs during rest, not during training. To build a premium physique, your recovery must match your hard work:\n\n" +
            "- **Sleep Targets**: Secure 7.5 to 8.5 hours of high-quality sleep. The majority of growth hormone discharges happen during deep stages.\n" +
            "- **Cell Hydration**: Active cells require water. Track your water input (aim for 3-4 liters daily) using our hydration tracker on the Overview tab.\n" +
@@ -199,17 +206,18 @@ function generateAestheticCoachResponse(message: string): string {
   }
 
   // 5. General / Default response
-  return "### Aesthetic Pro-Athlete Calibrated Counsel\n\n" +
+  return `### Aesthetic Pro-Athlete Calibrated Counsel for ${name}\n\n` +
          "To optimize your physical output:\n\n" +
          "1. **Continuous Progressive Overload**: If you bench pressed 80kg for 8 reps last week, aim for 80kg for 9 reps or 82.5kg for 8 reps today. Continuous effort leads to certain growth.\n" +
          "2. **Autoregulation Focus**: If you feel fatigue spikes or joint pain, downscale your set loads. Listen to your body and adjust dynamically.\n" +
          "3. **Mind-Muscle Connection**: Perfect your range of motion. Squeeze hard at peak contraction and control the eccentric downphase.\n\n" +
-         "Tell me: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique? Let's dial in your training!";
+         `Tell me, ${name}: are you currently looking to Bulk (gain muscle), Cut (lose fat), or maintain a lean physique? Let's dial in your training!`;
 }
 
-// Custom, lightweight, fast, ultra-premium markdown renderer that formats headers, lists, and bold text.
+// Custom, lightweight, fast, ultra-premium markdown renderer that formats headers, lists, italics, and bold text.
 function parseInlineElements(text: string): React.ReactNode[] | string {
-  const regex = /\*\*(.*?)\*\*/g;
+  // Matches both bold (***, **) and italics (*, _) tokens beautifully
+  const regex = /(\*\*\*|__\*|\*\*_|\*\*|\*|_)(.*?)\1/g;
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -218,11 +226,28 @@ function parseInlineElements(text: string): React.ReactNode[] | string {
     if (match.index > lastIndex) {
       parts.push(text.substring(lastIndex, match.index));
     }
-    parts.push(
-      <strong key={match.index} className="font-extrabold text-emerald-400">
-        {match[1]}
-      </strong>
-    );
+    const token = match[1];
+    const content = match[2];
+
+    if (token === '***' || token === '__*') {
+      parts.push(
+        <strong key={match.index} className="font-extrabold text-emerald-400 italic">
+          {content}
+        </strong>
+      );
+    } else if (token === '**' || token === '__') {
+      parts.push(
+        <strong key={match.index} className="font-extrabold text-emerald-400">
+          {content}
+        </strong>
+      );
+    } else if (token === '*' || token === '_') {
+      parts.push(
+        <span key={match.index} className="italic text-teal-300">
+          {content}
+        </span>
+      );
+    }
     lastIndex = regex.lastIndex;
   }
 
@@ -256,12 +281,23 @@ function parseCustomMarkdown(text: string): React.ReactNode {
           );
         }
 
-        // Unordered lists starting with "- "
-        if (trimmed.startsWith('- ')) {
+        // Blockquotes starting with "> " or ">"
+        if (trimmed.startsWith('>')) {
+          const content = trimmed.startsWith('> ') ? trimmed.substring(2) : trimmed.substring(1);
           return (
-            <div key={idx} className="pl-4 relative text-[11px] text-neutral-300 leading-relaxed my-0.5 text-left">
-              <span className="absolute left-0 text-emerald-500 font-bold">•</span>
-              {parseInlineElements(trimmed.substring(2))}
+            <div key={idx} className="border-l-2 border-emerald-500 bg-emerald-950/20 pl-2.5 py-1 text-[11px] text-neutral-350 italic text-left my-1">
+              {parseInlineElements(content)}
+            </div>
+          );
+        }
+
+        // Unordered lists starting with "- ", "* " or "• "
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ')) {
+          const content = trimmed.substring(2);
+          return (
+            <div key={idx} className="pl-4 relative text-[11px] text-neutral-350 leading-relaxed my-0.5 text-left">
+              <span className="absolute left-1 text-emerald-500 font-bold">•</span>
+              {parseInlineElements(content)}
             </div>
           );
         }
@@ -270,9 +306,18 @@ function parseCustomMarkdown(text: string): React.ReactNode {
         const numMatch = trimmed.match(/^(\d+)\.\s(.*)$/);
         if (numMatch) {
           return (
-            <div key={idx} className="pl-4 relative text-[11px] text-neutral-300 leading-relaxed my-0.5 text-left">
+            <div key={idx} className="pl-4 relative text-[11px] text-neutral-350 leading-relaxed my-0.5 text-left">
               <span className="absolute left-0 text-emerald-500 font-mono text-[10px]">{numMatch[1]}.</span>
               {parseInlineElements(numMatch[2])}
+            </div>
+          );
+        }
+
+        // Highlight custom "Coach Tip" or "Progressive Overload Rule" if the line has it:
+        if (trimmed.includes("Coach Tip:") || trimmed.includes("Progressive Overload Rule:")) {
+          return (
+            <div key={idx} className="mt-2 p-2 bg-emerald-950/30 border border-emerald-900/40 rounded-xl text-[11px] text-emerald-300 font-sans text-left shadow-sm">
+              {parseInlineElements(line)}
             </div>
           );
         }
@@ -301,6 +346,9 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
   const [hasLoadedHistory, setHasLoadedHistory] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPromptTray, setShowPromptTray] = useState(false);
+  const [activePromptCat, setActivePromptCat] = useState("🏋️ Splits");
+  const [loadingPhase, setLoadingPhase] = useState("Calibrating metrics...");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Load message history for specific user when user context changes
@@ -351,6 +399,25 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
     const storageKey = user?.id ? `athlete_chat_history_${user.id}` : 'athlete_chat_history_anonymous';
     localStorage.setItem(storageKey, JSON.stringify(messages));
   }, [messages, user, hasLoadedHistory]);
+
+  // Handle premium coaching load-phases progress carousel
+  useEffect(() => {
+    if (!loading) return;
+    const phases = [
+      "Analyzing baseline body metrics...",
+      "Calibrating hypertrophic splits...",
+      "Structuring safe nutrient pathways...",
+      "Matching performance guidelines...",
+      "Polishing elite biomechanical loops..."
+    ];
+    let idx = 0;
+    setLoadingPhase(phases[0]);
+    const interval = setInterval(() => {
+      idx = (idx + 1) % phases.length;
+      setLoadingPhase(phases[idx]);
+    }, 1250);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   // Typewriter effect state
   const phrases = [
@@ -436,7 +503,8 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
             history: messages.map(m => ({
               role: m.sender === 'coach' ? 'model' : 'user',
               text: m.text
-            }))
+            })),
+            userProfile: user
           })
         });
 
@@ -451,7 +519,7 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
       } catch (err: any) {
         clearTimeout(timeoutId);
         console.warn("API was slow, timed out, or connection failed. Calling high-perf local fallback:", err);
-        responseText = generateAestheticCoachResponse(rawText);
+        responseText = generateAestheticCoachResponse(rawText, user);
       }
 
       // Enforce EXACTLY 6 seconds total response time by checking elapsed duration
@@ -479,7 +547,7 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
       const coachMsg: Message = {
         id: Math.random().toString(36).substring(7),
         sender: 'coach',
-        text: generateAestheticCoachResponse(rawText),
+        text: generateAestheticCoachResponse(rawText, user),
         timestamp: new Date()
       };
       setMessages(prev => [...prev, coachMsg]);
@@ -488,8 +556,47 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
     }
   };
 
+  const categoryPrompts: Record<string, string[]> = {
+    "🏋️ Splits": [
+    "Suggest a 4-day workout split",
+    "Arnold Split vs Push Pull Legs - which is better?",
+    "Design an upper body hypertrophy routine",
+    "I need a 3-day full body athlete routine"
+  ],
+  "🥗 Nutrition": [
+    "Suggest pre-workout meal for mass",
+    "How to clean bulk on a budget?",
+    "Calculate optimal cutting macros for my weight",
+    "What is the golden rule for post-workout carbs?"
+  ],
+  "🧪 Strategy": [
+    "Tips for faster recovery & muscle soreness",
+    "How much water should I drink for hydration?",
+    "Explain correct form for barbell deadlifts",
+    "When is it time to take a deload week?"
+  ]
+};
+
   const handleQuickPrompt = (prompt: string) => {
     handleSend(prompt);
+  };
+
+  const downloadTranscript = () => {
+    if (messages.length <= 1) return;
+    const profileHeader = user ? `# Athlete Profile Context\n- Name: ${user.name || 'Athlete'}\n- Fitness Goal: ${user.fitness_goal || 'N/A'}\n- Primary Weight: ${user.weight ? user.weight + ' kg' : 'N/A'}\n- Level: ${user.fitness_level || 'Intermediate'}\n\n` : "";
+    const text = `${profileHeader}# Aesthetic Athlete AI Coach Session Transcript\nGenerated on: ${new Date().toLocaleDateString()}\n\n---\n\n` + messages
+      .map(m => `### ${m.sender === 'athlete' ? 'Athlete' : '🏋️ Elite Coach AI'}:\n${m.text}\n\n`)
+      .join('---\n\n');
+    
+    const blob = new Blob([text], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `aesthetic_athlete_coach_guide_${user?.id || 'anonymous'}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const clearChat = () => {
@@ -554,7 +661,7 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="w-[calc(100vw-32px)] sm:w-[400px] h-[450px] sm:h-[550px] bg-[#000000] border border-emerald-850/40 rounded-3xl shadow-2xl shadow-emerald-950/40 flex flex-col z-50 overflow-hidden"
+            className="w-[calc(100vw-32px)] sm:w-[420px] h-[480px] sm:h-[570px] bg-[#000000] border border-emerald-850/40 rounded-3xl shadow-2xl shadow-emerald-950/40 flex flex-col z-50 overflow-hidden"
           >
             {/* Header */}
             <div className="bg-[#052316] border-b border-emerald-950/80 px-4 sm:px-5 py-3 sm:py-4 flex items-center justify-between">
@@ -563,34 +670,44 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
                   <Bot className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-black text-neutral-100 flex items-center gap-1.5 leading-none">
+                  <h4 className="text-sm font-black text-neutral-100 flex items-center gap-1.5 leading-none font-sans">
                     Aesthetic Coach AI
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
                   </h4>
-                  <span className="text-[10px] text-emerald-500/80 font-mono">ATHLETIC EXCELLENCE SHELL</span>
+                  <span className="text-[10px] text-emerald-500/80 font-mono tracking-tight uppercase">ATHLETIC EXCELLENCE SHELL</span>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
+                {messages.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={downloadTranscript}
+                    title="Export Coaching Guide (.md)"
+                    className="p-1.5 text-neutral-400 hover:text-emerald-450 hover:bg-emerald-950/35 rounded-lg transition cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={clearChat}
                   title="Clear Conversation"
-                  className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-emerald-950/35 transition cursor-pointer"
+                  className="p-1.5 text-neutral-400 hover:text-rose-450 hover:bg-emerald-950/35 rounded-lg transition cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-emerald-950/35 transition cursor-pointer"
+                  className="p-1.5 text-neutral-400 hover:text-white hover:bg-emerald-950/35 rounded-lg transition cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 text-neutral-400" />
                 </button>
               </div>
             </div>
 
             {/* Conversation Window */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-3 sm:py-4 space-y-3 sm:space-y-4 bg-[#000] custom-scrollbar flex flex-col">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-3 sm:py-4 space-y-3 sm:space-y-4 bg-[#000000] custom-scrollbar flex flex-col">
               {messages.map((m) => (
                 <div
                   key={m.id}
@@ -598,9 +715,9 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
                 >
                   <div className={`flex gap-2 max-w-[85%] sm:max-w-[82%] ${m.sender === 'athlete' ? 'flex-row-reverse' : 'flex-row'} bg-transparent`}>
                     <div className={`w-6.5 h-6.5 rounded-lg shrink-0 flex items-center justify-center text-[10px] uppercase font-bold font-mono ${
-                      m.sender === 'athlete' 
-                        ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/40' 
-                        : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                       m.sender === 'athlete' 
+                         ? 'bg-emerald-950 text-emerald-300 border border-emerald-800/40' 
+                         : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     }`}>
                       {m.sender === 'athlete' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5 text-emerald-400" />}
                     </div>
@@ -616,14 +733,19 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
               ))}
               {loading && (
                 <div className="flex justify-start bg-transparent">
-                  <div className="flex gap-2 bg-transparent">
+                  <div className="flex gap-2 bg-transparent w-full">
                     <div className="w-6.5 h-6.5 rounded-lg shrink-0 flex items-center justify-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       <Bot className="w-3.5 h-3.5 text-emerald-400" />
                     </div>
-                    <div className="bg-neutral-900/60 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1 text-xs text-neutral-400 border border-emerald-950/40">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <div className="flex-1 bg-neutral-900/60 rounded-2xl rounded-tl-none px-4 py-3 flex flex-col gap-1.5 text-xs text-neutral-400 border border-emerald-950/40">
+                      <div className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                      <span className="text-[10px] text-emerald-400/90 font-mono tracking-wide animate-pulse">
+                        Coach is {loadingPhase}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -631,23 +753,52 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Suggestions / Bubbles */}
-            {messages.length === 1 && (
-              <div className="px-4 sm:px-5 pb-2.5 sm:pb-3 flex flex-wrap gap-1.5 bg-[#000]">
-                {[
-                  "Suggest a 4-day workout split",
-                  "Suggest pre-workout meal",
-                  "Tips for faster recovery"
-                ].map((suggest, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleQuickPrompt(suggest)}
-                    className="px-3 py-1.5 text-[10px] text-emerald-300 bg-[#000] border border-emerald-950 hover:border-emerald-800 hover:text-emerald-400 rounded-xl transition duration-150 cursor-pointer text-left"
-                  >
-                    💡 {suggest}
-                  </button>
-                ))}
+            {/* Suggestions Quick Toggler */}
+            <div className="px-4 py-2 bg-emerald-950/5 border-t border-emerald-950/40 flex items-center justify-between text-[10px]">
+              <span className="text-emerald-500/80 font-mono">Suggested Athlete Queries:</span>
+              <button 
+                type="button"
+                onClick={() => setShowPromptTray(!showPromptTray)}
+                className="text-emerald-400 font-bold uppercase hover:text-emerald-300 flex items-center gap-1 transition cursor-pointer"
+              >
+                {showPromptTray ? "Hide Ideas ✕" : "Browse Coaching Prompts 💡"}
+              </button>
+            </div>
+
+            {/* Always-accessible classified Prompts Tray */}
+            {showPromptTray && (
+              <div className="border-t border-emerald-950/40 bg-[#020202] p-3 max-h-[145px] overflow-y-auto space-y-2 text-left">
+                <div className="flex gap-1.5 border-b border-emerald-950/20 pb-1.5 overflow-x-auto scrollbar-none shrink-0">
+                  {Object.keys(categoryPrompts).map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setActivePromptCat(cat)}
+                      className={`px-2 py-0.5 rounded-md text-[9px] font-mono tracking-tight cursor-pointer shrink-0 ${
+                        activePromptCat === cat 
+                          ? "bg-emerald-800 text-white border border-emerald-600/40" 
+                          : "bg-neutral-900/60 text-neutral-400 border border-transparent hover:text-neutral-200"
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-1">
+                  {categoryPrompts[activePromptCat]?.map((p, pIdx) => (
+                    <button
+                      key={pIdx}
+                      type="button"
+                      onClick={() => {
+                        handleQuickPrompt(p);
+                        setShowPromptTray(false);
+                      }}
+                      className="text-[10px] text-emerald-300 text-left hover:text-emerald-200 p-1 rounded hover:bg-emerald-950/20 truncate transition cursor-pointer"
+                    >
+                      💡 {p}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -660,8 +811,8 @@ export default function AestheticCoachChatbot({ user }: { user?: any }) {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask your Coach anything on physical fitness..."
-                className="flex-1 bg-black/80 border border-emerald-950 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs text-neutral-200 placeholder:text-emerald-700/65 focus:outline-none focus:border-emerald-700 transition shadow-inner"
+                placeholder="Ask your Coach split ideas, calories, recovery..."
+                className="flex-1 bg-black/80 border border-emerald-950/60 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs text-neutral-250 placeholder:text-emerald-700/65 focus:outline-none focus:border-emerald-750 transition shadow-inner font-sans"
                 disabled={loading}
               />
               <button
