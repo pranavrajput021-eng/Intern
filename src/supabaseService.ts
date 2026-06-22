@@ -69,6 +69,14 @@ const getIsConfigured = (): boolean => {
 
 export const isSupabaseConfigured = getIsConfigured();
 
+export const isUsingCustomKeys = (): boolean => {
+  return supabaseUrl !== 'https://mkyaqacvhigrkkommrjz.supabase.co';
+};
+
+export const getSupabaseUrlValue = (): string => {
+  return supabaseUrl;
+};
+
 const createSupabaseClientSafely = () => {
   if (!isSupabaseConfigured) return null;
   try {

@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { supabaseService, setLocalModeActive } from '../supabaseService';
+import { supabaseService, setLocalModeActive, isUsingCustomKeys, getSupabaseUrlValue } from '../supabaseService';
 import { UserProfile } from '../types';
 import { 
   KeyRound, Mail, User, ShieldCheck, Dumbbell, 
