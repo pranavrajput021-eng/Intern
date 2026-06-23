@@ -8,7 +8,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { 
   UserProfile, Workout, Exercise, Goal, WeightLog, 
-  NutritionLog, WaterLog, StepLog, MeasurementLog, Achievement, AppNotification 
+  NutritionLog, WaterLog, StepLog, MeasurementLog, Achievement, AppNotification,
+  ContactSubmission
 } from './types';
 
 // Check for Supabase configuration
@@ -105,6 +106,7 @@ const LOCAL_WATER_KEY = 'athlete_water';
 const LOCAL_STEPS_KEY = 'athlete_steps';
 const LOCAL_ACHIEVEMENTS_KEY = 'athlete_achievements';
 const LOCAL_NOTIFICATIONS_KEY = 'athlete_notifications';
+const LOCAL_CONTACTS_KEY = 'athlete_contacts';
 
 // Fault Tolerance Core state
 let localModeActive = false;
@@ -289,6 +291,7 @@ getLocalJSON(LOCAL_WATER_KEY, defaultWater);
 getLocalJSON(LOCAL_STEPS_KEY, defaultSteps);
 getLocalJSON(LOCAL_ACHIEVEMENTS_KEY, defaultAchievements);
 getLocalJSON(LOCAL_NOTIFICATIONS_KEY, defaultNotifications);
+getLocalJSON(LOCAL_CONTACTS_KEY, []);
 
 // Wrapper executor that detects Failed To Fetch and switches engine gracefully
 const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQuery: () => Promise<T> | T): Promise<T> => {
@@ -1504,6 +1507,61 @@ export const supabaseService = {
           averageWorkoutsPerUser: totalUsers ? Number((totalWorkouts / totalUsers).toFixed(1)) : 0,
           systemLogsCount: totalWorkouts + 5
         };
+      }
+    );
+  },
+
+  async submitContactForm(formData: { name: string; email: string; subject: string; message: string; }): Promise<ContactSubmission> {
+    return await executeWithFallback(
+      async () => {
+        const id = generateId();
+        const payload: ContactSubmission = {
+          id,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          created_at: new Date().toISOString()
+        };
+
+        if (!isSupabaseConfigured || !supabase) {
+          throw new Error('Supabase client not configured.');
+        }
+
+        const { error } = await supabase.from('contacts').insert(payload);
+        if (error) throw error;
+        
+        // Also fire off a local notification to simulate the feedback acknowledged state
+        await this.addNotification(
+          'summary',
+          'Feedback Submitted Successfully',
+          `Thank you for contacting Athlete Co. Support! We have logged your request: "${formData.subject}".`
+        );
+
+        return payload;
+      },
+      () => {
+        const id = generateId();
+        const payload: ContactSubmission = {
+          id,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          created_at: new Date().toISOString()
+        };
+
+        const contactsList = getLocalJSON(LOCAL_CONTACTS_KEY, []);
+        contactsList.push(payload);
+        setLocalJSON(LOCAL_CONTACTS_KEY, contactsList);
+
+        this.addNotification(
+          'summary',
+          'Feedback Saved (Sandbox Fallback Mode)',
+          `Your feedback on "${formData.subject}" has been successfully logged locally. In a production build, this is sent straight to your Postgres database!`
+        );
+
+        return payload;
       }
     );
   }

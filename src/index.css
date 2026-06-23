@@ -13,10 +13,19 @@
 
 /* Custom Premium Glassmorphism & Cyber Aesthetics */
 body {
-  background-color: #000000;
+  background-color: #030303 !important;
+  background-image: radial-gradient(rgba(16, 185, 129, 0.05) 1.2px, transparent 1.2px) !important;
+  background-size: 24px 24px !important;
   font-family: var(--font-sans);
   color: #F5F5F5;
   overflow-x: hidden;
+}
+
+/* Elite-level, ultra-smooth CSS transition on theme toggle for visual comfort */
+body, aside, header, div, button, input, select, textarea, span, p, h1, h2, h3, h4, strong {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
+  transition-duration: 250ms !important;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Elegant Scrollbars */
@@ -61,3 +70,607 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.25);
 }
+
+/* --- LIGHT MODE SPECIFIC STYLING --- */
+
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px) !important;
+  background-size: 20px 20px !important;
+  color: #0f172a;
+}
+
+/* Light scrollbars with clean rounded styling */
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid #f1f5f9;
+  border-radius: 99px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Backdrop coordinate dynamic matrix grid override under light theme */
+html.light #dashboard-backdrop {
+  background: radial-gradient(circle at top, rgba(16, 185, 129, 0.16) 0%, rgba(14, 165, 233, 0.08) 50%, #f1f5f9 100%) !important;
+}
+
+/* Light mode specific classes for backdrops to avoid blanket .absolute washing out */
+html.light #dashboard-backdrop .dashboard-glow {
+  opacity: 0.75 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-glow:nth-child(1) {
+  background-color: rgba(16, 185, 129, 0.18) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-glow:nth-child(2) {
+  background-color: rgba(14, 165, 233, 0.14) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-glow:nth-child(3) {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-glow:nth-child(4) {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-glow:nth-child(5) {
+  background-color: rgba(14, 165, 233, 0.12) !important;
+}
+
+html.light #dashboard-backdrop #dashboard-grid-lines {
+  background-image: linear-gradient(rgba(16, 185, 129, 0.22) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(16, 185, 129, 0.22) 1.5px, transparent 1.5px) !important;
+  opacity: 1 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-dot-matrix {
+  background-image: radial-gradient(rgba(16, 185, 129, 0.45) 1.5px, transparent 1.5px) !important;
+  opacity: 0.65 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-dial-circle {
+  border-color: rgba(16, 185, 129, 0.22) !important;
+  opacity: 0.85 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-dial-circle div {
+  border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-telemetry-rings {
+  border-color: rgba(16, 185, 129, 0.22) !important;
+  opacity: 0.8 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-telemetry-rings div {
+  border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+html.light #dashboard-backdrop .dashboard-crosshairs {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  opacity: 1 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-crosshairs span {
+  color: #047857 !important;
+  opacity: 0.8 !important;
+  font-weight: 700 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-heartbeat-svg {
+  opacity: 0.85 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-heartbeat-svg svg path {
+  stroke: #10b981 !important;
+  stroke-opacity: 0.85 !important;
+  stroke-width: 3.5px !important;
+}
+
+/* Handle watermark text opacity in light mode */
+html.light #dashboard-backdrop .dashboard-watermark {
+  opacity: 1 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-watermark span.text-neutral-100 {
+  color: #334155 !important;
+  opacity: 0.085 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-watermark span.text-emerald-400 {
+  color: #0d9488 !important;
+  opacity: 0.55 !important;
+  font-weight: 700 !important;
+}
+
+html.light #dashboard-backdrop .dashboard-accents {
+  background-image: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.18)) !important;
+}
+
+/* Base panels, cards and containers */
+html.light aside {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: 4px 0 16px rgba(15, 23, 42, 0.03) !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.02) !important;
+}
+
+html.light #mobile-bottom-tabs {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-top: 1px solid #e2e8f0 !important;
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.03) !important;
+}
+
+html.light #mobile-drawer-portal .bg-neutral-950 {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+/* Ensure light elements inside aside / header match beautifully */
+html.light aside button {
+  color: #475569 !important;
+}
+
+html.light aside button:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+/* Map the active navigation background states */
+html.light div[layoutid="sidebarActiveBackground"] {
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.09), rgba(16, 185, 129, 0.03)) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Universal Background Replacements for Light Theme (Cards, panels, sheets, modals, cells) */
+html.light .bg-neutral-900,
+html.light .bg-neutral-950,
+html.light .bg-\[\#0b0c10\]\/85,
+html.light .bg-neutral-900\/50,
+html.light .bg-black\/60,
+html.light .bg-\[\#090d0b\],
+html.light .bg-\[\#0a0a0c\],
+html.light .bg-\[\#0a0a0d\],
+html.light .bg-neutral-955\/30,
+html.light .bg-neutral-952\/25,
+html.light .bg-neutral-950\/25,
+html.light .bg-\[\#0D0D0D\],
+html.light .bg-\[\#0E0E0E\],
+html.light .bg-\[\#0A0A0A\],
+html.light .bg-\[\#080808\],
+html.light .bg-\[\#000000\],
+html.light .bg-\[\#020202\],
+html.light .bg-\[\#0E0E0E\]\/10,
+html.light .bg-\[\#080808\]\/40,
+html.light .bg-\[\#000000\]\/85,
+html.light .bg-\[\#052316\],
+html.light .bg-black\/80,
+html.light .bg-neutral-950\/50,
+html.light .bg-black,
+html.light .bg-neutral-850\/80 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 8px -1px rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Secondary Button / Action items override in Light Mode */
+html.light .bg-neutral-800,
+html.light .bg-neutral-850,
+html.light .bg-neutral-700 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+html.light .bg-neutral-800:hover,
+html.light .bg-neutral-850:hover,
+html.light .bg-neutral-700:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Standard Border Mappings for Clean Separation and Graphics */
+html.light [class*="border-neutral-"],
+html.light [class*="border-zinc-"],
+html.light [class*="border-emerald-"],
+html.light [class*="border-teal-"],
+html.light [class*="border-glass-"] {
+  border-color: #e2e8f0 !important;
+}
+
+/* Text overrides using wildcards to match deep dark labels so they are highly visible and crispy */
+html.light [class*="text-neutral-50"],
+html.light [class*="text-neutral-100"],
+html.light [class*="text-neutral-150"],
+html.light [class*="text-neutral-200"],
+html.light [class*="text-neutral-250"],
+html.light [class*="text-neutral-300"],
+html.light [class*="text-neutral-350"],
+html.light [class*="text-white"],
+html.light [class*="text-zinc-100"],
+html.light [class*="text-zinc-200"],
+html.light [class*="text-zinc-300"],
+html.light [class*="text-neutral-950"],
+html.light [class*="text-neutral-900"] {
+  color: #0f172a !important;
+}
+
+html.light [class*="text-neutral-400"],
+html.light [class*="text-neutral-450"],
+html.light [class*="text-zinc-400"],
+html.light [class*="text-zinc-450"] {
+  color: #334155 !important; /* slate-700 */
+}
+
+html.light [class*="text-neutral-500"],
+html.light [class*="text-neutral-550"],
+html.light [class*="text-neutral-600"],
+html.light [class*="text-neutral-605"],
+html.light [class*="text-zinc-500"],
+html.light [class*="text-zinc-550"],
+html.light [class*="text-zinc-600"] {
+  color: #475569 !important; /* slate-600 */
+}
+
+html.light [class*="text-neutral-750"],
+html.light [class*="text-neutral-800"] {
+  color: #64748b !important; /* slate-500 */
+}
+
+/* Placeholder visibility */
+html.light ::placeholder,
+html.light [class*="placeholder-neutral-"]::placeholder,
+html.light [class*="placeholder:text-emerald"]::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Hover class overrides for premium feedback */
+html.light [class*="hover:text-white"]:hover,
+html.light [class*="hover:text-neutral-100"]:hover,
+html.light [class*="hover:text-neutral-200"]:hover,
+html.light [class*="hover:text-neutral-300"]:hover,
+html.light [class*="hover:text-neutral-400"]:hover,
+html.light [class*="group-hover:text-white"]:hover,
+html.light [class*="group-hover:text-neutral-100"]:hover {
+  color: #0f172a !important;
+}
+
+/* High Contrast Accent Texts under Light mode */
+html.light [class*="text-emerald-300"],
+html.light [class*="text-emerald-350"],
+html.light [class*="text-emerald-400"],
+html.light [class*="text-emerald-450"],
+html.light [class*="text-teal-400"],
+html.light [class*="text-cyan-400"] {
+  color: #047857 !important; /* emerald-700 */
+}
+
+html.light [class*="text-sky-450"],
+html.light [class*="text-sky-400"],
+html.light [class*="text-sky-500"],
+html.light [class*="text-indigo-400"],
+html.light [class*="text-indigo-500"] {
+  color: #0369a1 !important; /* sky-700 */
+}
+
+html.light [class*="text-amber-400"],
+html.light [class*="text-amber-500"] {
+  color: #b45309 !important; /* amber-700 */
+}
+
+html.light [class*="text-rose-450"],
+html.light [class*="text-rose-400"],
+html.light [class*="text-red-400"] {
+  color: #b91c1c !important; /* red-700 */
+}
+
+/* Solid Badges & Buttons */
+html.light .bg-emerald-500,
+html.light .bg-emerald-600,
+html.light .bg-emerald-700 {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+html.light .bg-emerald-500 .text-black,
+html.light .bg-emerald-500 text,
+html.light button.bg-emerald-500,
+html.light .bg-\[\#10b981\],
+html.light .bg-emerald-500 .text-neutral-900 {
+  color: #ffffff !important;
+}
+
+/* Form inputs, selections and description text areas */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Secondary Actions */
+html.light button[id^="nav-"] span {
+  color: unset !important;
+}
+
+html.light button[id^="nav-"][id$="active"] span {
+  color: #047857 !important;
+}
+
+/* Overlay & Notifications Panels */
+html.light #notification-center-dropdown,
+html.light .relative div.absolute.bg-neutral-950,
+html.light div.absolute.bg-[#000000]/85 {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* Recharts / SVG Grids under Light Mode */
+html.light .recharts-cartesian-grid-horizontal line,
+html.light .recharts-cartesian-grid-vertical line {
+  stroke: #cbd5e1 !important;
+  stroke-opacity: 0.5;
+}
+
+html.light .recharts-text,
+html.light .recharts-label {
+  fill: #475569 !important;
+}
+
+html.light .recharts-legend-item-text {
+  color: #475569 !important;
+}
+
+/* Emerald Ambient Containers mapped to Soft Green Blocks */
+html.light .bg-\[\#051811\],
+html.light .bg-\[\#01140e\],
+html.light .bg-\[\#052316\],
+html.light .bg-\[\#0e1612\],
+html.light .bg-emerald-950\/30,
+html.light .bg-emerald-950\/20,
+html.light .bg-emerald-950\/45,
+html.light .bg-emerald-500\/10 {
+  background-color: #f0fdf4 !important;
+  color: #166534 !important;
+  border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Soft Red/Danger Alerts */
+html.light .bg-red-950\/25,
+html.light .bg-red-950\/20,
+html.light .bg-red-500\/10,
+html.light .bg-red-650\/40,
+html.light .bg-red-600\/20 {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* --- LIGHT MODE SPECIFIC ADJUSTMENTS --- */
+
+/* Dashboard greeting name styling under light theme */
+html.light #dashboard-user-name-span {
+  background-image: linear-gradient(to right, #047857, #0284c7) !important; /* Premium Emerald to Sky */
+  color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  font-weight: 900 !important;
+}
+
+/* Sidebar Brand name selection under light theme */
+html.light #sidebar-brand-name-strong {
+  background-image: linear-gradient(to right, #0f172a, #047857) !important; /* Premium Slate/Emerald */
+  color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  font-weight: 950 !important;
+}
+
+/* Chatbot UI Enhancements for Light Theme */
+html.light #coach-chatbox {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 10px 20px -5px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Chat Header */
+html.light #coach-chat-header {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+  border-bottom: 1px solid #bbf7d0 !important;
+}
+
+html.light #coach-chat-header h4 {
+  color: #0f172a !important; /* Crisp slate-900 */
+}
+
+html.light #coach-chat-header span.text-\[10px\] {
+  color: #047857 !important; /* Hard emerald label */
+}
+
+/* Conversation Scroll Container */
+html.light #coach-chat-messages-scroll {
+  background-color: #fafbfd !important;
+}
+
+/* Message bubbles */
+html.light #coach-chat-messages-scroll [class*="text-neutral-250"],
+html.light #coach-chat-messages-scroll [class*="bg-neutral-900"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02) !important;
+}
+
+/* Athlete message bubbles */
+html.light #coach-chat-messages-scroll [class*="bg-emerald-950/45"] {
+  background-color: #dcfce7 !important; /* Soft green */
+  color: #14532d !important; /* Tough green */
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 2px 8px rgba(22, 101, 52, 0.03) !important;
+}
+
+html.light #coach-chat-messages-scroll [class*="text-emerald-300"] {
+  color: #14532d !important;
+}
+
+/* Bot avatar badge */
+html.light #coach-chat-messages-scroll [class*="bg-emerald-500/10"] {
+  background-color: #ecfdf5 !important;
+  border-color: #bbf7d0 !important;
+  color: #047857 !important;
+}
+
+/* Athlete avatar badge */
+html.light #coach-chat-messages-scroll [class*="bg-emerald-950"] {
+  background-color: #dcfce7 !important;
+  border-color: #86efac !important;
+  color: #14532d !important;
+}
+
+/* Suggested prompts drawer toggler bar */
+html.light [id="coach-chatbox"] .bg-emerald-950\/5 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light [id="coach-chatbox"] .bg-emerald-950\/5 span {
+  color: #475569 !important;
+}
+
+/* Prompt category drawer itself */
+html.light [id="coach-chatbox"] .bg-\[\#020202\] {
+  background-color: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Category buttons */
+html.light [id="coach-chatbox"] .bg-neutral-900\/60 {
+  background-color: #ffffff !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html.light [id="coach-chatbox"] .bg-neutral-900\/60:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Individual prompt buttons */
+html.light [id="coach-chatbox"] [class*="text-emerald-300"] {
+  color: #047857 !important;
+}
+
+html.light [id="coach-chatbox"] [class*="text-emerald-300"]:hover {
+  background-color: #f0fdf4 !important;
+  color: #065f46 !important;
+}
+
+/* Input Form Footer wrapper */
+html.light #coach-chat-form {
+  background-color: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Input textbox inside chat */
+html.light #coach-chat-input-field {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html.light #coach-chat-input-field:focus {
+  background-color: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Send button */
+html.light #coach-chat-form button[type="submit"] {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+html.light #coach-chat-form button[type="submit"]:hover {
+  background-color: #059669 !important;
+}
+
+html.light #coach-chat-form button[type="submit"]:disabled {
+  background-color: #f1f5f9 !important;
+  color: #94a3b8 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Theme Switcher Pill and Auth layout updates */
+html.light #theme-switcher-pill,
+html.light #auth-theme-switcher-pill {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light #theme-switcher-pill div[style*="translateX"],
+html.light #auth-theme-switcher-pill div[style*="translateX"] {
+  background-color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light #auth-screen-layout {
+  background-color: #f8fafc !important;
+  background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px) !important;
+  background-size: 24px 24px !important;
+}
+
+html.light #auth-screen-layout .absolute.bg-black {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+html.light #auth-screen-layout .bg-\[\#0a0a0d\] {
+  background-color: #ffffff !important;
+}
+
+html.light #auth-form-card {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.05), 0 10px 10px -5px rgba(15, 23, 42, 0.03) !important;
+}
+
+html.light #auth-screen-layout h1 {
+  background-image: linear-gradient(to right, #047857, #0284c7) !important;
+  color: transparent !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+
+
+

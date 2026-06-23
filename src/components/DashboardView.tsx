@@ -649,7 +649,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             </div>
             
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
-              Welcome, <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-300 to-emerald-400 drop-shadow-sm">{formatName(user.name)}</span>
+              Welcome, <span id="dashboard-user-name-span" className="bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-300 to-emerald-400 drop-shadow-sm">{formatName(user.name)}</span>
             </h2>
             
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-200 font-semibold">

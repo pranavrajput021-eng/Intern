@@ -112,3 +112,13 @@ export interface AppNotification {
   created_at: string;
   read: boolean;
 }
+
+export interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  created_at: string;
+}
+

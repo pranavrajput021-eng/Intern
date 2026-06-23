@@ -10,16 +10,18 @@ import { UserProfile } from '../types';
 import { 
   KeyRound, Mail, User, ShieldCheck, Dumbbell, 
   Sparkles, CheckCircle2, ChevronRight, Gauge, 
-  HelpCircle, LogIn, UserPlus, Info
+  HelpCircle, LogIn, UserPlus, Info, Sun, Moon
 } from 'lucide-react';
 
 interface AuthScreenProps {
   onAuthSuccess: (user: UserProfile) => void;
+  theme?: 'dark' | 'light';
+  setTheme?: (theme: 'dark' | 'light') => void;
 }
 
 type AuthMode = 'login' | 'register' | 'onboarding' | 'forgot_password';
 
-export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
+export default function AuthScreen({ onAuthSuccess, theme, setTheme }: AuthScreenProps) {
   const isDev = typeof window !== 'undefined' && (
     window.location.hostname.includes('localhost') || 
     window.location.hostname.includes('127.0.0.1') || 
@@ -270,6 +272,30 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
 
   return (
     <div id="auth-screen-layout" className="min-h-screen bg-[#07070a] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
+      {/* Floating Theme Toggle Switch */}
+      {setTheme && theme && (
+        <div 
+          id="auth-theme-switcher-pill"
+          className="absolute top-4 right-4 z-50 p-0.5 bg-neutral-950/60 border border-neutral-800 rounded-xl flex items-center gap-0.5 cursor-pointer select-none shadow-lg backdrop-blur-md h-[34px] w-[64px]"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          <div 
+            className="absolute top-0.5 bottom-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg transition-transform duration-300 ease-out"
+            style={{
+              transform: theme === 'dark' ? 'translateX(0px)' : 'translateX(28px)',
+              width: '28px'
+            }}
+          />
+          <div className="w-7 h-7 flex items-center justify-center z-10 transition">
+            <Sun className={`w-3.5 h-3.5 transition duration-200 ${theme === 'dark' ? 'text-amber-400 font-bold scale-115 drop-shadow-[0_0_8px_rgba(251,191,36,0.35)]' : 'text-neutral-500 scale-90'}`} />
+          </div>
+          <div className="w-7 h-7 flex items-center justify-center z-10 transition">
+            <Moon className={`w-3.5 h-3.5 transition duration-200 ${theme === 'light' ? 'text-indigo-600 font-bold scale-115 drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]' : 'text-neutral-500 scale-90'}`} />
+          </div>
+        </div>
+      )}
+
       {/* Modern Premium Minimalist Backdrop with elegant, balanced visual gradients and subtle professional details */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-black select-none">
         {/* Soft, professional, blurred radiant ambient glows (blue & green) */}

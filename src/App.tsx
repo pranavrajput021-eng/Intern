@@ -18,11 +18,13 @@ import WorkoutHistory from './components/WorkoutHistory';
 import ProfilePage from './components/ProfilePage';
 import AdminPanel from './components/AdminPanel';
 import NotificationCenter from './components/NotificationCenter';
+import ContactFormModal from './components/ContactFormModal';
 
 // Icons
 import { 
   LayoutDashboard, Dumbbell, Apple, TrendingUp, Trophy, 
-  History, User, ShieldCheck, Bell, Sparkles, Menu, X, LogOut, Info 
+  History, User, ShieldCheck, Bell, Sparkles, Menu, X, LogOut, Info,
+  Sun, Moon, Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -31,6 +33,21 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Theme state: dark or light
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('athlete-theme') as 'dark' | 'light') || 'dark';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('athlete-theme', theme);
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+    } else {
+      root.classList.remove('light');
+    }
+  }, [theme]);
+
   // States for notifications
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
@@ -38,6 +55,9 @@ export default function App() {
 
   // Mobile sidebar drawer
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  // Contact form popup state
+  const [contactFormOpen, setContactFormOpen] = useState<boolean>(false);
 
   // Tab labels mapping for title updates
   const tabLabels: Record<string, string> = {
@@ -122,7 +142,7 @@ export default function App() {
 
   // If session expired or unauthenticated
   if (!user) {
-    return <AuthScreen onAuthSuccess={handleUpdateUser} />;
+    return <AuthScreen onAuthSuccess={handleUpdateUser} theme={theme} setTheme={setTheme} />;
   }
 
   // Define sidebar navigation configuration
@@ -200,7 +220,7 @@ export default function App() {
             </motion.div>
             <div>
               <span className="text-[10px] text-emerald-400 tracking-widest font-mono select-none block leading-none font-bold uppercase">AESTHETIC PORTAL</span>
-              <strong className="text-sm font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-100 to-emerald-400">ATHLETE CO.</strong>
+              <strong id="sidebar-brand-name-strong" className="text-sm font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-100 to-emerald-400">ATHLETE CO.</strong>
             </div>
           </div>
 
@@ -267,6 +287,14 @@ export default function App() {
             </div>
           </div>
           <button 
+            id="sidebar-contact"
+            onClick={() => setContactFormOpen(true)} 
+            className="w-full py-2 mb-2 bg-[#020202] hover:bg-neutral-900 border border-emerald-950 hover:border-emerald-500 text-neutral-300 hover:text-emerald-400 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            Contact Form
+          </button>
+          <button 
             id="sidebar-logout"
             onClick={handleLogout} 
             className="w-full py-2 bg-neutral-950/50 hover:bg-neutral-950 border border-emerald-950 hover:border-red-950 hover:text-red-400 text-neutral-500 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer"
@@ -283,23 +311,23 @@ export default function App() {
         {/* Premium Immersive Cyber-Athletic Dashboard Backdrop */}
         <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#012017]/25 via-[#07070a] to-[#000000]">
           {/* Soft multi-point ambient glows - beautifully matching deep emerald and ultra-dark metallic silver */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-555/[0.03] blur-[150px]" />
-          <div className="absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/[0.02] blur-[140px]" />
-          <div className="absolute top-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full bg-white/[0.015] blur-[120px]" />
-          <div className="absolute bottom-24 left-[10%] w-72 h-72 rounded-full bg-emerald-900/[0.02] blur-[110px]" />
-          <div className="absolute top-1/4 right-[20%] w-72 h-72 rounded-full bg-zinc-900/[0.15] blur-[100px]" />
+          <div className="dashboard-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-555/[0.03] blur-[150px]" />
+          <div className="dashboard-glow absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/[0.02] blur-[140px]" />
+          <div className="dashboard-glow absolute top-[-50px] left-[-100px] w-[500px] h-[500px] rounded-full bg-white/[0.015] blur-[120px]" />
+          <div className="dashboard-glow absolute bottom-24 left-[10%] w-72 h-72 rounded-full bg-emerald-900/[0.02] blur-[110px]" />
+          <div className="dashboard-glow absolute top-1/4 right-[20%] w-72 h-72 rounded-full bg-zinc-900/[0.15] blur-[100px]" />
 
           {/* Fine-line coordinate dynamic matrix grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.012)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.012)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
+          <div id="dashboard-grid-lines" className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.012)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.012)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
 
           {/* Dot Matrix Fields (adds technical depth) */}
-          <div className="absolute top-36 right-16 w-64 h-32 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+          <div className="dashboard-dot-matrix absolute top-36 right-16 w-64 h-32 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
                style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.15) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
-          <div className="absolute bottom-40 left-12 w-72 h-40 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
+          <div className="dashboard-dot-matrix absolute bottom-40 left-12 w-72 h-40 opacity-25 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] hidden md:block" 
                style={{ backgroundImage: 'radial-gradient(rgba(16, 185, 129, 0.15) 1.5px, transparent 1.5px)', backgroundSize: '16px 16px' }} />
 
           {/* Glowing concentric dial/wireframe in top-right */}
-          <div className="absolute -top-32 -right-32 w-[450px] h-[450px] rounded-full border border-emerald-500/[0.03] flex items-center justify-center opacity-70">
+          <div className="dashboard-dial-circle absolute -top-32 -right-32 w-[450px] h-[450px] rounded-full border border-emerald-500/[0.03] flex items-center justify-center opacity-70">
             <div className="w-[380px] h-[380px] rounded-full border border-dashed border-emerald-500/[0.02] flex items-center justify-center animate-[spin_180s_linear_infinite]">
               <div className="w-[300px] h-[300px] rounded-full border border-zinc-800/20 flex items-center justify-center">
                 <div className="w-4 h-4 border-r border-t border-emerald-500/10" />
@@ -308,7 +336,7 @@ export default function App() {
           </div>
 
           {/* Glowing athletic target/telemetry rings in bottom-left */}
-          <div className="absolute -bottom-40 -left-40 w-[550px] h-[550px] rounded-full border border-emerald-500/[0.03] flex items-center justify-center opacity-60">
+          <div className="dashboard-telemetry-rings absolute -bottom-40 -left-40 w-[550px] h-[550px] rounded-full border border-emerald-500/[0.03] flex items-center justify-center opacity-60">
             <div className="w-[470px] h-[470px] rounded-full border border-dashed border-emerald-500/[0.02] flex items-center justify-center animate-[spin_120s_linear_infinite_reverse]">
               <div className="w-[390px] h-[390px] rounded-full border border-zinc-800/15 flex items-center justify-center">
                 <div className="w-64 h-64 rounded-full border border-dotted border-emerald-500/[0.02]" />
@@ -317,15 +345,15 @@ export default function App() {
           </div>
 
           {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile */}
-          <div className="hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-emerald-500/[0.04] opacity-75">
+          <div className="dashboard-crosshairs hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-emerald-500/[0.04] opacity-75">
             <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-emerald-500/30">SEC_PORTAL_01</span>
           </div>
-          <div className="hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/[0.04] opacity-75">
+          <div className="dashboard-crosshairs hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/[0.04] opacity-75">
             <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/30">SEC_PORTAL_02</span>
           </div>
 
           {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
-          <div className="absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.12] pointer-events-none select-none z-0">
+          <div className="dashboard-heartbeat-svg absolute bottom-16 left-0 right-0 h-20 md:h-24 opacity-[0.12] pointer-events-none select-none z-0">
             <svg className="w-full h-full" viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
               <path 
                 d="M0,50 L200,50 L220,50 L230,30 L240,70 L250,50 L260,50 L400,50 L420,50 L430,20 L440,85 L450,45 L460,55 L470,50 L700,50 L720,10 L730,90 L745,45 L755,55 L765,50 L1000,50 L1020,40 L1028,25 L1035,75 L1042,50 L1200,50 L1440,50" 
@@ -338,14 +366,14 @@ export default function App() {
           </div>
 
           {/* Ultra-High-End Clean Typography Watermark centered behind content but fully readable */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.035] z-[0] px-4">
+          <div className="dashboard-watermark absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-[0.035] z-[0] px-4">
             <span className="text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[13rem] font-black tracking-[0.25em] uppercase font-sans text-neutral-100 block leading-none select-none drop-shadow-[0_0_80px_rgba(16,185,129,0.12)]">ATHLETE</span>
             <span className="text-[9px] sm:text-xs font-mono tracking-[0.5em] sm:tracking-[0.8em] uppercase text-emerald-400 block mt-3 select-none">PORTAL OVERVIEW DEVICE</span>
           </div>
 
           {/* Diagonal Technical Accent Bars across corners */}
-          <div className="absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/[0.04] rotate-12 origin-top-right transform scale-150" />
-          <div className="absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/[0.04] rotate-12 origin-bottom-left transform scale-150" />
+          <div className="dashboard-accents absolute top-0 right-0 w-80 h-1 bg-gradient-to-r from-transparent to-emerald-500/[0.04] rotate-12 origin-top-right transform scale-150" />
+          <div className="dashboard-accents absolute bottom-0 left-0 w-80 h-1 bg-gradient-to-l from-transparent to-emerald-500/[0.04] rotate-12 origin-bottom-left transform scale-150" />
         </div>
         
         {/* TOP ROW RESPONSIVE HEADER */}
@@ -389,6 +417,28 @@ export default function App() {
           <div className="flex items-center gap-4 relative">
             <div className="flex items-center gap-3 text-right">
               <span className="hidden sm:inline-block text-xs text-neutral-200 font-medium">Athlete ID: <strong className="text-neutral-200 font-bold">{user.name.split(' ')[0]}</strong></span>
+            </div>
+
+            {/* Theme Selector Sliding Pill Switcher */}
+            <div 
+              id="theme-switcher-pill"
+              className="relative p-0.5 bg-neutral-950/80 border border-neutral-850/80 rounded-xl flex items-center gap-0.5 cursor-pointer select-none h-[34px] w-[64px]"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              <div 
+                className="absolute top-0.5 bottom-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg transition-transform duration-300 ease-out"
+                style={{
+                  transform: theme === 'dark' ? 'translateX(0px)' : 'translateX(28px)',
+                  width: '28px'
+                }}
+              />
+              <div className="w-7 h-7 flex items-center justify-center z-10 transition">
+                <Sun className={`w-3.5 h-3.5 transition duration-200 ${theme === 'dark' ? 'text-amber-400 font-bold scale-115 drop-shadow-[0_0_8px_rgba(251,191,36,0.35)]' : 'text-neutral-500 scale-90'}`} />
+              </div>
+              <div className="w-7 h-7 flex items-center justify-center z-10 transition">
+                <Moon className={`w-3.5 h-3.5 transition duration-200 ${theme === 'light' ? 'text-indigo-600 font-bold scale-115 drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]' : 'text-neutral-500 scale-90'}`} />
+              </div>
             </div>
 
             {/* Notification Bell */}
@@ -541,7 +591,16 @@ export default function App() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-neutral-900">
+            <div className="pt-4 border-t border-neutral-900 space-y-2">
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setContactFormOpen(true);
+                }}
+                className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 text-neutral-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
+              >
+                <Mail className="w-4 h-4 text-emerald-400" /> Contact Form
+              </button>
               <button 
                 onClick={handleLogout}
                 className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 text-red-400 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
@@ -554,6 +613,17 @@ export default function App() {
           <div className="flex-1" onClick={() => setMobileMenuOpen(false)} />
         </div>
       )}
+
+      {/* RENDER CONTACT FORM MODAL POPUP */}
+      <AnimatePresence>
+        {contactFormOpen && (
+          <ContactFormModal 
+            user={user} 
+            isOpen={contactFormOpen} 
+            onClose={() => setContactFormOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
 
     </div>
   );
