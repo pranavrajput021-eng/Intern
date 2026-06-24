@@ -272,34 +272,54 @@ export default function App() {
         </div>
 
         {/* Footer/Signout box with motivating stats / bio sync status */}
-        <div className="p-4 border-t border-emerald-950/60 z-10 relative bg-black/60 backdrop-blur-sm">
+        <div className={`p-4 border-t z-10 relative backdrop-blur-sm transition-colors duration-200 ${
+          theme === 'light' 
+            ? 'bg-slate-50/90 border-slate-200' 
+            : 'bg-black/60 border-emerald-950/60'
+        }`}>
 
           <div className="flex items-center gap-3 mb-3 p-1">
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="w-8 h-8 rounded-full border border-emerald-900 bg-[#000] flex items-center justify-center text-xs font-bold uppercase text-emerald-400"
+              className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold uppercase transition-colors duration-200 ${
+                theme === 'light'
+                  ? 'border-emerald-250 bg-emerald-50 text-emerald-700'
+                  : 'border-emerald-900 bg-[#000] text-emerald-400'
+              }`}
             >
               {user.name.substring(0, 2)}
             </motion.div>
             <div className="min-w-0 text-left">
-              <p className="font-semibold text-xs text-neutral-200 truncate leading-tight">{user.name}</p>
-              <p className="text-[10px] text-neutral-550 truncate leading-none font-mono">{user.email}</p>
+              <p className={`font-semibold text-xs truncate leading-tight transition-colors duration-200 ${
+                theme === 'light' ? 'text-slate-800' : 'text-neutral-200'
+              }`}>{user.name}</p>
+              <p className={`text-[10px] truncate leading-none font-mono transition-colors duration-200 ${
+                theme === 'light' ? 'text-slate-500' : 'text-neutral-400'
+              }`}>{user.email}</p>
             </div>
           </div>
           <button 
             id="sidebar-contact"
             onClick={() => setContactFormOpen(true)} 
-            className="w-full py-2 mb-2 bg-[#020202] hover:bg-neutral-900 border border-emerald-950 hover:border-emerald-500 text-neutral-300 hover:text-emerald-400 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer"
+            className={`w-full py-2 mb-2 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer border ${
+              theme === 'light'
+                ? 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-400'
+                : 'bg-[#020202] hover:bg-neutral-900 border border-emerald-950 hover:border-emerald-500 text-neutral-300 hover:text-emerald-400'
+            }`}
           >
-            <Mail className="w-3.5 h-3.5" />
+            <Mail className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-emerald-600' : 'text-emerald-450'}`} />
             Contact Form
           </button>
           <button 
             id="sidebar-logout"
             onClick={handleLogout} 
-            className="w-full py-2 bg-neutral-950/50 hover:bg-neutral-950 border border-emerald-950 hover:border-red-950 hover:text-red-400 text-neutral-500 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer"
+            className={`w-full py-2 rounded-xl text-[10px] font-bold font-mono tracking-wider flex items-center gap-2 justify-center transition-all duration-200 cursor-pointer border ${
+              theme === 'light'
+                ? 'bg-white hover:bg-rose-50 border-slate-200 hover:border-rose-300 text-slate-600 hover:text-rose-600'
+                : 'bg-neutral-950/50 hover:bg-neutral-950 border border-emerald-950 hover:border-red-950 hover:text-red-400 text-neutral-500'
+            }`}
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-rose-500' : 'text-neutral-500'}`} />
             Log Out
           </button>
         </div>
@@ -561,52 +581,100 @@ export default function App() {
       {/* MOBILE DRAWER PORTAL POPUP */}
       {mobileMenuOpen && (
         <div id="mobile-drawer-portal" className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden flex justify-start animate-fade-in duration-200">
-          <div className="w-72 bg-neutral-950 h-full border-r border-neutral-900 p-5 flex flex-col justify-between animate-in slide-in-from-left duration-250">
+          <div className={`w-72 h-full p-5 flex flex-col justify-between animate-in slide-in-from-left duration-250 border-r transition-colors duration-200 ${
+            theme === 'light' ? 'bg-white border-slate-200' : 'bg-neutral-950 border-neutral-900'
+          }`}>
             <div className="space-y-6">
-              <div className="flex justify-between items-center border-b border-neutral-900 pb-4">
+              <div className={`flex justify-between items-center border-b pb-4 transition-colors duration-200 ${
+                theme === 'light' ? 'border-slate-100' : 'border-neutral-900'
+              }`}>
                 <div className="flex items-center gap-2">
-                  <Dumbbell className="text-emerald-400 w-5 h-5" />
-                  <strong className="text-sm font-black text-neutral-100">ATHLETE SYSTEM</strong>
+                  <Dumbbell className={`w-5 h-5 ${theme === 'light' ? 'text-emerald-600' : 'text-emerald-400'}`} />
+                  <strong className={`text-sm font-black uppercase tracking-tight transition-colors duration-200 ${
+                    theme === 'light' ? 'text-slate-900' : 'text-neutral-100'
+                  }`}>ATHLETE SYSTEM</strong>
                 </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-neutral-500 hover:text-neutral-200 cursor-pointer">
+                <button onClick={() => setMobileMenuOpen(false)} className={`p-1 cursor-pointer transition ${
+                  theme === 'light' ? 'text-slate-400 hover:text-slate-800' : 'text-neutral-500 hover:text-neutral-200'
+                }`}>
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               <div className="space-y-1 text-left">
-                {navItems.map((item) => (
-                  <button
-                    key={item.key}
-                    onClick={() => handleNavigate(item.key)}
-                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center gap-3 transition cursor-pointer ${
-                      activeTab === item.key 
-                        ? 'bg-emerald-500 text-black font-bold' 
-                        : 'text-neutral-200 hover:text-neutral-100 hover:bg-neutral-900/40'
-                    }`}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </button>
-                ))}
+                {navItems.map((item) => {
+                  const isItemActive = activeTab === item.key;
+                  return (
+                    <button
+                      key={item.key}
+                      onClick={() => handleNavigate(item.key)}
+                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center gap-3 transition cursor-pointer ${
+                        isItemActive 
+                          ? theme === 'light'
+                            ? 'bg-emerald-550/15 border border-emerald-300 text-emerald-700 shadow-sm'
+                            : 'bg-emerald-500 text-black font-bold shadow-lg shadow-emerald-500/10' 
+                          : theme === 'light'
+                            ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                            : 'text-neutral-200 hover:text-neutral-100 hover:bg-neutral-900/40'
+                      }`}
+                    >
+                      <div className={isItemActive ? (theme === 'light' ? 'text-emerald-600 font-bold' : 'text-black') : (theme === 'light' ? 'text-slate-500' : 'text-neutral-400')}>
+                        {item.icon}
+                      </div>
+                      <span className={isItemActive ? 'font-bold' : ''}>{item.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-neutral-900 space-y-2">
-              <button 
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setContactFormOpen(true);
-                }}
-                className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 text-neutral-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
-              >
-                <Mail className="w-4 h-4 text-emerald-400" /> Contact Form
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="w-full py-2.5 bg-neutral-900 hover:bg-neutral-850 text-red-400 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
-              >
-                <LogOut className="w-4 h-4" /> Log Out
-              </button>
+            <div className={`pt-4 border-t space-y-3 transition-colors duration-200 ${
+              theme === 'light' ? 'border-slate-100' : 'border-neutral-900'
+            }`}>
+              {/* Cohesive User Info section inside the mobile drawer */}
+              <div className="flex items-center gap-3 px-2 py-1">
+                <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold uppercase transition-colors duration-200 ${
+                  theme === 'light'
+                    ? 'border-emerald-250 bg-emerald-50 text-emerald-700'
+                    : 'border-emerald-900 bg-[#000] text-emerald-400'
+                }`}>
+                  {user.name.substring(0, 2)}
+                </div>
+                <div className="min-w-0 text-left">
+                  <p className={`font-semibold text-xs truncate leading-tight transition-colors duration-200 ${
+                    theme === 'light' ? 'text-slate-800' : 'text-neutral-200'
+                  }`}>{user.name}</p>
+                  <p className={`text-[10px] truncate leading-none font-mono transition-colors duration-200 ${
+                    theme === 'light' ? 'text-slate-500' : 'text-neutral-400'
+                  }`}>{user.email}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <button 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setContactFormOpen(true);
+                  }}
+                  className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border ${
+                    theme === 'light'
+                      ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700'
+                      : 'bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 text-neutral-300'
+                  }`}
+                >
+                  <Mail className={`w-4 h-4 ${theme === 'light' ? 'text-emerald-600' : 'text-emerald-400'}`} /> Contact Form
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border ${
+                    theme === 'light'
+                      ? 'bg-slate-50 hover:bg-rose-50 border-slate-200 text-rose-600'
+                      : 'bg-neutral-905 hover:bg-[#0d0d11] border-neutral-900 text-red-400'
+                  }`}
+                >
+                  <LogOut className={`w-4 h-4 ${theme === 'light' ? 'text-rose-500' : 'text-red-450'}`} /> Log Out
+                </button>
+              </div>
             </div>
           </div>
           {/* Overlay Click-Away */}
@@ -621,6 +689,7 @@ export default function App() {
             user={user} 
             isOpen={contactFormOpen} 
             onClose={() => setContactFormOpen(false)} 
+            isLightMode={theme === 'light'}
           />
         )}
       </AnimatePresence>

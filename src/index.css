@@ -198,6 +198,102 @@ html.light #dashboard-backdrop .dashboard-accents {
   background-image: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.18)) !important;
 }
 
+/* --- DARK MODE BACKDROP ENHANCEMENT (MAKES DESIGN HIGHLY VISIBLE & CRISP) --- */
+html:not(.light) #dashboard-backdrop {
+  background: radial-gradient(circle at top, rgba(16, 185, 129, 0.03) 0%, rgba(9, 9, 11, 0.99) 70%, #030303 100%) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow {
+  opacity: 0.15 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(1) {
+  background-color: rgba(16, 185, 129, 0.04) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(2) {
+  background-color: rgba(16, 185, 129, 0.02) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(3) {
+  background-color: rgba(255, 255, 255, 0.01) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(4) {
+  background-color: rgba(16, 185, 129, 0.02) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(5) {
+  background-color: rgba(63, 63, 70, 0.08) !important;
+}
+
+html:not(.light) #dashboard-backdrop #dashboard-grid-lines {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px) !important;
+  opacity: 1 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-dot-matrix {
+  background-image: radial-gradient(rgba(16, 185, 129, 0.06) 1.5px, transparent 1.5px) !important;
+  opacity: 0.3 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-dial-circle {
+  border-color: rgba(255, 255, 255, 0.015) !important;
+  opacity: 0.5 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-dial-circle div {
+  border-color: rgba(255, 255, 255, 0.008) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-telemetry-rings {
+  border-color: rgba(16, 185, 129, 0.02) !important;
+  opacity: 0.5 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-telemetry-rings div {
+  border-color: rgba(16, 185, 129, 0.01) !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-crosshairs {
+  border-color: rgba(255, 255, 255, 0.02) !important;
+  opacity: 0.5 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-crosshairs span {
+  color: rgba(255, 255, 255, 0.15) !important;
+  font-weight: 500 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-heartbeat-svg {
+  opacity: 0.08 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-heartbeat-svg svg path {
+  stroke: #10b981 !important;
+  stroke-opacity: 0.15 !important;
+  stroke-width: 1.5px !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-watermark {
+  opacity: 0.5 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-watermark span.text-neutral-100 {
+  color: #ffffff !important;
+  opacity: 0.015 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-watermark span.text-emerald-400 {
+  color: #10b981 !important;
+  opacity: 0.04 !important;
+  font-weight: 600 !important;
+}
+
+html:not(.light) #dashboard-backdrop .dashboard-accents {
+  background-image: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.02)) !important;
+}
+
 /* Base panels, cards and containers */
 html.light aside {
   background-color: #ffffff !important;
