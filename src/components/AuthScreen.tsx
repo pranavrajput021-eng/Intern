@@ -1012,8 +1012,8 @@ export default function AuthScreen({ onAuthSuccess, theme, setTheme }: AuthScree
                       <span className="w-1.5 h-1.5 rounded-full bg-[#00E38C] animate-ping" />
                       Live Biometric Stream
                     </span>
-                    <h3 className={`text-lg font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'} font-display`}>ATHLETE PROTOCOL HUD</h3>
-                    <p className={`text-xs ${isLight ? 'text-slate-700 font-medium' : 'text-neutral-400'}`}>Monitoring real-time cybernetic feedback, active load indexes, and synchronization pools.</p>
+                    <h3 className={`text-lg font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'} font-display`}>ATHLETE PERFORMANCE HUD</h3>
+                    <p className={`text-xs ${isLight ? 'text-slate-700 font-medium' : 'text-neutral-400'}`}>Monitoring real-time metabolic feedback, simulated active intensity, and training load indexes.</p>
                   </div>
 
                   {/* Stunning real-time heartbeat monitor */}

@@ -18,7 +18,6 @@ import {
   ResponsiveContainer, BarChart, Bar, LineChart, Line, CartesianGrid
 } from 'recharts';
 import { motion, AnimatePresence } from 'motion/react';
-import AestheticCoachChatbot from './AestheticCoachChatbot';
 
 interface DashboardViewProps {
   user: UserProfile;
@@ -309,11 +308,11 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
       const goalLower = (user.fitness_goal || '').toLowerCase();
       let advice = '';
       if (goalLower.includes('muscle') || goalLower.includes('gain') || goalLower.includes('bulk')) {
-        advice = `[BIO-DYNAMIC ANALYSIS] Anabolic index high (current weight ${currentWeight} kg). Based on your target goal of "${user.fitness_goal}", dynamic myofibrillar split optimization is recommended. Ensure +350g complex carbohydrates. Progressive load targets set: 85% 1-Rep-Max. Focus on the eccentric motion phase.`;
+        advice = `[PERSONAL TRAINING INSIGHT] Your current weight is ${currentWeight} kg. Based on your target goal of "${user.fitness_goal}", progressive overload is recommended. Try to add 2.5-5 lbs on your main lifts this week, focus on quality repetitions, and target 1.6g - 2.2g of protein per kg of body weight daily.`;
       } else if (goalLower.includes('fat') || goalLower.includes('lose') || goalLower.includes('cut') || goalLower.includes('lean')) {
-        advice = `[BIO-DYNAMIC ANALYSIS] Lipolysis efficiency high. Hydration state: ${waterAmount}ml. Steadied metabolic baseline registered. To secure optimum definition: Schedule a high-intensity intervals split of 25 mins. Rest boundaries must stay strict at 45s.`;
+        advice = `[NUTRITIONAL ADVICE] Active hydration tracker state: ${waterAmount}ml. To optimize fat loss while preserving muscle, aim to maintain a moderate caloric deficit, stay strictly consistent with your hydration targets, and include 3-4 strength training sessions weekly with a 45-60s rest window.`;
       } else {
-        advice = `[BIO-DYNAMIC ANALYSIS] Cardiovascular homeostatic index is superb. Aesthetic Score is currently ${calcFitnessScore()}/100. Maximize central nervous system stability by emphasizing time-under-tension. Target high-concentric control output today.`;
+        advice = `[WELLNESS ADVICE] Overall consistency remains solid. Your computed Athletic Score is ${calcFitnessScore()}/100. Maximize your results by emphasizing sleep quality, consistent daily steps, and focusing on form-control rather than speed during exercises.`;
       }
       setMantraText(advice);
       setIsGeneratingMantra(false);
@@ -667,7 +666,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
               className="px-4 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-xl flex items-center gap-2 transition hover:border-emerald-400/60 disabled:opacity-50 select-none cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              {isGeneratingMantra ? 'Scanning Physiology...' : 'Generate Athletic Mantra'}
+              {isGeneratingMantra ? 'Analyzing Parameters...' : 'Generate Training Advice'}
             </button>
             <button 
               id="start-workout-action"
@@ -680,7 +679,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           </div>
         </div>
 
-        {/* Bio-scanner visual interactive display */}
+        {/* Dynamic visual progress analyzer */}
         <AnimatePresence>
           {(physiologicalScanActive || mantraText) && (
             <motion.div 
@@ -695,7 +694,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
                   <div className="flex justify-between items-center text-xs font-mono text-emerald-400">
                     <span className="flex items-center gap-2">
                       <span className="inline-block w-20 h-1.5 bg-emerald-400 animate-pulse rounded" />
-                      COGNITIVE SYNAPTIC METRIC INTERPRETATION IN PROGRESS
+                      ANALYZING ATHLETIC DATA AND PERFORMANCE PARAMETERS
                     </span>
                     <span>91%</span>
                   </div>
@@ -1492,7 +1491,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
               {activeChartTab === 'weight' && "Biometric trend advice"}
               {activeChartTab === 'goals' && "Milestone Completion"}
             </h3>
-            <p className="text-xs text-neutral-450">Physiological guidance contextualized around user parameters.</p>
+            <p className="text-xs text-neutral-450">Fitness guidance personalized to your active training parameters.</p>
           </div>
 
           <div className="flex-1 my-5 flex flex-col justify-center text-left bg-transparent">
@@ -1503,7 +1502,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
                   <span className="text-xl font-bold font-mono text-emerald-400">{caloriesThisWeek} kcal</span>
                 </div>
                 <p className="text-[11px] text-neutral-350 leading-relaxed font-mono">
-                  [BIO-EFFICIENCY ANALYSIS] Consuming fat and muscle substrates at correct intervals. Based on your active splits, the metabolic burn value is healthy. You are sustaining high concentric energy outputs.
+                  [METABOLIC OVERVIEW] Your energy output and active calorie burn remain steady. Based on your current training routine, you are sustaining proper calorie burn for fat loss and muscle maintenance.
                 </p>
               </div>
             )}
@@ -1511,7 +1510,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             {activeChartTab === 'weight' && (
               <div className="space-y-3.5 bg-transparent">
                 <div className="p-3.5 bg-[#080808] border border-neutral-900 rounded-2xl">
-                  <span className="text-[9px] font-mono text-neutral-500 uppercase block font-bold mb-0.5">Chronologically Calculated Trend</span>
+                  <span className="text-[9px] font-mono text-neutral-500 uppercase block font-bold mb-0.5">Personalized Weight Trend Advice</span>
                   <span className="text-sm font-bold text-neutral-200 block truncate">{weightAnalysis.analysis}</span>
                 </div>
                 <p className="text-[11px] text-emerald-400 leading-normal font-mono bg-emerald-950/15 border border-emerald-900/30 p-2.5 rounded-xl">
@@ -1560,9 +1559,6 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
         </div>
 
       </div>
-
-      {/* Floating Aesthetic Coach AI Chatbot Assistant */}
-      <AestheticCoachChatbot user={user} />
 
     </motion.div>
   );

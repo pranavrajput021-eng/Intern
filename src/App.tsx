@@ -19,6 +19,7 @@ import ProfilePage from './components/ProfilePage';
 import AdminPanel from './components/AdminPanel';
 import NotificationCenter from './components/NotificationCenter';
 import ContactFormModal from './components/ContactFormModal';
+import AestheticCoachChatbot from './components/AestheticCoachChatbot';
 
 // Icons
 import { 
@@ -157,7 +158,7 @@ export default function App() {
     { key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> },
   ];
   return (
-    <div id="main-frame-layout" className="min-h-screen bg-[#000000] text-neutral-100 flex font-sans relative overflow-x-hidden antialiased">
+    <div id="main-frame-layout" className="h-screen max-h-screen overflow-hidden bg-[#000000] text-neutral-100 flex font-sans relative antialiased">
       
       {/* 1. SIDEBAR NAVIGATION FOR DESKTOP */}
       <aside className="hidden lg:flex flex-col justify-between w-64 bg-black border-r border-[#032215]/80 shrink-0 relative overflow-hidden">
@@ -326,9 +327,9 @@ export default function App() {
       </aside>
 
       {/* 2. MAIN CONTAINER WITH INNER BODY SCROLLER */}
-      <div className="flex-1 flex flex-col min-w-0 relative pb-20 lg:pb-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full max-h-screen overflow-hidden relative pb-20 lg:pb-0">
         
-        {/* Premium Immersive Cyber-Athletic Dashboard Backdrop */}
+        {/* Premium Immersive Fitness Tracker Dashboard Backdrop */}
         <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#08080a]/60 via-[#030304] to-[#000000]">
           {/* Soft multi-point ambient glows - beautifully matching deep emerald and ultra-dark metallic silver */}
           <div className="dashboard-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-555/[0.03] blur-[150px]" />
@@ -337,7 +338,7 @@ export default function App() {
           <div className="dashboard-glow absolute bottom-24 left-[10%] w-72 h-72 rounded-full bg-emerald-900/[0.02] blur-[110px]" />
           <div className="dashboard-glow absolute top-1/4 right-[20%] w-72 h-72 rounded-full bg-zinc-900/[0.15] blur-[100px]" />
 
-          {/* Fine-line coordinate dynamic matrix grid */}
+          {/* Fine-line grid lines */}
           <div id="dashboard-grid-lines" className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.012)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(16,185,129,0.012)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-100" />
 
           {/* Dot Matrix Fields (adds technical depth) */}
@@ -364,12 +365,12 @@ export default function App() {
             </div>
           </div>
 
-          {/* Corner Telemetry and Calibration Vector Crosshairs - Hidden on mobile */}
+          {/* Corner Reference Anchors and Crosshairs - Hidden on mobile */}
           <div className="dashboard-crosshairs hidden xl:block absolute top-[15%] left-10 w-32 h-32 border-l border-t border-emerald-500/[0.04] opacity-75">
-            <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-emerald-500/30">SEC_PORTAL_01</span>
+            <span className="absolute top-2 left-2 text-[8px] font-mono tracking-widest text-emerald-500/30">REF_GRID_01</span>
           </div>
           <div className="dashboard-crosshairs hidden xl:block absolute bottom-[15%] right-10 w-32 h-32 border-r border-b border-emerald-500/[0.04] opacity-75">
-            <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/30">SEC_PORTAL_02</span>
+            <span className="absolute bottom-2 right-2 text-[8px] font-mono tracking-widest text-[#10b981]/30">REF_GRID_02</span>
           </div>
 
           {/* Dynamic Biometric SVG Horizontal Pulse/Heartbeat Graph - running along center-bottom */}
@@ -693,6 +694,9 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Persistent Floating Aesthetic Coach AI Chatbot Assistant */}
+      <AestheticCoachChatbot user={user} />
 
     </div>
   );
