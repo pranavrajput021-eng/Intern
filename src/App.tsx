@@ -329,7 +329,7 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 relative pb-20 lg:pb-0">
         
         {/* Premium Immersive Cyber-Athletic Dashboard Backdrop */}
-        <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#012017]/25 via-[#07070a] to-[#000000]">
+        <div id="dashboard-backdrop" className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-radial-at-t from-[#08080a]/60 via-[#030304] to-[#000000]">
           {/* Soft multi-point ambient glows - beautifully matching deep emerald and ultra-dark metallic silver */}
           <div className="dashboard-glow absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-emerald-555/[0.03] blur-[150px]" />
           <div className="dashboard-glow absolute bottom-[-150px] right-[-100px] w-[500px] h-[500px] rounded-full bg-emerald-500/[0.02] blur-[140px]" />

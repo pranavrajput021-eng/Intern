@@ -741,7 +741,15 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         
         {/* STAT 1: Weight */}
-        <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -6, scale: 1.015, borderColor: 'rgba(0, 227, 140, 0.4)' }}
+          className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group transition cursor-pointer"
+        >
+          {/* Diagnostic moving scanline */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+            <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-scanline-sweep" />
+          </div>
           <div className="flex justify-between items-start mb-2">
             <span className="text-xs text-neutral-200 font-semibold tracking-wide">Current Weight</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-emerald-400">
@@ -755,10 +763,18 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
             </span>
             <span className="text-neutral-300 font-medium">since start</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* STAT 2: Burning Calories */}
-        <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -6, scale: 1.015, borderColor: 'rgba(239, 68, 68, 0.4)' }}
+          className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group transition cursor-pointer"
+        >
+          {/* Diagnostic moving scanline */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+            <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-red-400 to-transparent animate-scanline-sweep" />
+          </div>
           <div className="flex justify-between items-start mb-2">
             <span className="text-xs text-neutral-200 font-semibold tracking-wide">Calories Burned</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-red-400">
@@ -767,10 +783,18 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           </div>
           <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{caloriesThisWeek} <span className="text-xs text-neutral-300 font-sans">kcal</span></p>
           <p className="text-[11px] text-neutral-300 font-medium mt-1">This rolling week</p>
-        </div>
+        </motion.div>
 
         {/* STAT 3: Daily Steps & Distance */}
-        <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -6, scale: 1.015, borderColor: 'rgba(59, 130, 246, 0.4)' }}
+          className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group transition cursor-pointer"
+        >
+          {/* Diagnostic moving scanline */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+            <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-scanline-sweep" />
+          </div>
           <div className="flex justify-between items-start mb-2">
             <span className="text-xs text-neutral-200 font-semibold tracking-wide">Daily Steps</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-blue-400">
@@ -779,10 +803,18 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           </div>
           <p className="text-2xl font-bold text-neutral-100 font-mono tracking-tight">{stepsToday.toLocaleString()} <span className="text-[10px] text-neutral-300 font-sans font-medium">/ 10k</span></p>
           <p className="text-[11px] text-neutral-300 font-medium mt-1">{distanceToday} km walked today</p>
-        </div>
+        </motion.div>
 
         {/* STAT 4: Streak & score */}
-        <div className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group hover:border-neutral-700 transition">
+        <motion.div 
+          variants={itemVariants}
+          whileHover={{ y: -6, scale: 1.015, borderColor: 'rgba(245, 158, 11, 0.4)' }}
+          className="bg-neutral-950/40 border border-neutral-800/80 rounded-2xl p-4.5 backdrop-blur-md relative overflow-hidden group transition cursor-pointer"
+        >
+          {/* Diagnostic moving scanline */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-350">
+            <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent animate-scanline-sweep" />
+          </div>
           <div className="flex justify-between items-start mb-2">
             <span className="text-xs text-neutral-200 font-semibold tracking-wide">Aesthetic Score</span>
             <div className="p-1.5 bg-neutral-900 border border-neutral-800 rounded-lg text-amber-400">
@@ -793,7 +825,7 @@ export default function DashboardView({ user, onNavigate, triggerRefreshSignal }
           <div className="flex items-center gap-1 mt-1 text-[11px] text-neutral-300">
             <span className="text-amber-400 font-bold">🔥 {workoutStreak} Day Streak</span>
           </div>
-        </div>
+        </motion.div>
 
       </div>
 

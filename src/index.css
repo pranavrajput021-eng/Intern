@@ -13,8 +13,8 @@
 
 /* Custom Premium Glassmorphism & Cyber Aesthetics */
 body {
-  background-color: #030303 !important;
-  background-image: radial-gradient(rgba(16, 185, 129, 0.05) 1.2px, transparent 1.2px) !important;
+  background-color: #000000 !important;
+  background-image: radial-gradient(rgba(0, 227, 140, 0.07) 1.2px, transparent 1.2px) !important;
   background-size: 24px 24px !important;
   font-family: var(--font-sans);
   color: #F5F5F5;
@@ -35,17 +35,18 @@ body, aside, header, div, button, input, select, textarea, span, p, h1, h2, h3, 
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #000000 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #022c22;
+  background: rgba(0, 227, 140, 0.2) !important;
   border-radius: 9999px;
-  border: 1px solid #064e3b;
+  border: 1px solid rgba(0, 227, 140, 0.4) !important;
+  box-shadow: 0 0 8px rgba(0, 227, 140, 0.3) !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #064e3b;
+  background: rgba(0, 227, 140, 0.45) !important;
 }
 
 /* Glow Aesthetics */
@@ -200,7 +201,7 @@ html.light #dashboard-backdrop .dashboard-accents {
 
 /* --- DARK MODE BACKDROP ENHANCEMENT (MAKES DESIGN HIGHLY VISIBLE & CRISP) --- */
 html:not(.light) #dashboard-backdrop {
-  background: radial-gradient(circle at top, rgba(16, 185, 129, 0.03) 0%, rgba(9, 9, 11, 0.99) 70%, #030303 100%) !important;
+  background: radial-gradient(circle at top, rgba(12, 12, 14, 0.75) 0%, rgba(0, 0, 0, 1) 85%) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow {
@@ -208,90 +209,234 @@ html:not(.light) #dashboard-backdrop .dashboard-glow {
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(1) {
-  background-color: rgba(16, 185, 129, 0.04) !important;
+  background-color: rgba(24, 24, 27, 0.45) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(2) {
-  background-color: rgba(16, 185, 129, 0.02) !important;
+  background-color: rgba(18, 18, 20, 0.3) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(3) {
-  background-color: rgba(255, 255, 255, 0.01) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(4) {
-  background-color: rgba(16, 185, 129, 0.02) !important;
+  background-color: rgba(18, 18, 20, 0.3) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-glow:nth-child(5) {
-  background-color: rgba(63, 63, 70, 0.08) !important;
+  background-color: rgba(24, 24, 27, 0.45) !important;
 }
 
 html:not(.light) #dashboard-backdrop #dashboard-grid-lines {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px) !important;
+  background-image: linear-gradient(rgba(0, 227, 140, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 227, 140, 0.025) 1px, transparent 1px) !important;
   opacity: 1 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-dot-matrix {
-  background-image: radial-gradient(rgba(16, 185, 129, 0.06) 1.5px, transparent 1.5px) !important;
-  opacity: 0.3 !important;
+  background-image: radial-gradient(rgba(0, 227, 140, 0.15) 1.5px, transparent 1.5px) !important;
+  opacity: 0.55 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-dial-circle {
-  border-color: rgba(255, 255, 255, 0.015) !important;
-  opacity: 0.5 !important;
+  border-color: rgba(0, 227, 140, 0.04) !important;
+  opacity: 0.75 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-dial-circle div {
-  border-color: rgba(255, 255, 255, 0.008) !important;
+  border-color: rgba(0, 227, 140, 0.02) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-telemetry-rings {
-  border-color: rgba(16, 185, 129, 0.02) !important;
-  opacity: 0.5 !important;
+  border-color: rgba(0, 227, 140, 0.05) !important;
+  opacity: 0.75 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-telemetry-rings div {
-  border-color: rgba(16, 185, 129, 0.01) !important;
+  border-color: rgba(0, 227, 140, 0.02) !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-crosshairs {
-  border-color: rgba(255, 255, 255, 0.02) !important;
-  opacity: 0.5 !important;
+  border-color: rgba(0, 227, 140, 0.08) !important;
+  opacity: 0.75 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-crosshairs span {
-  color: rgba(255, 255, 255, 0.15) !important;
-  font-weight: 500 !important;
+  color: rgba(0, 227, 140, 0.45) !important;
+  font-weight: 700 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-heartbeat-svg {
-  opacity: 0.08 !important;
+  opacity: 0.22 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-heartbeat-svg svg path {
-  stroke: #10b981 !important;
-  stroke-opacity: 0.15 !important;
-  stroke-width: 1.5px !important;
+  stroke: #00e38c !important;
+  stroke-opacity: 0.35 !important;
+  stroke-width: 2px !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-watermark {
-  opacity: 0.5 !important;
+  opacity: 0.65 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-watermark span.text-neutral-100 {
   color: #ffffff !important;
-  opacity: 0.015 !important;
+  opacity: 0.025 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-watermark span.text-emerald-400 {
-  color: #10b981 !important;
-  opacity: 0.04 !important;
-  font-weight: 600 !important;
+  color: #00e38c !important;
+  opacity: 0.09 !important;
+  font-weight: 700 !important;
 }
 
 html:not(.light) #dashboard-backdrop .dashboard-accents {
-  background-image: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.02)) !important;
+  background-image: linear-gradient(to right, transparent, rgba(0, 227, 140, 0.05)) !important;
+}
+
+/* Base panels, cards and containers for PURE EXTREME DARK (pitch black with cyber green glowing borders) */
+html:not(.light) aside {
+  background-color: #000000 !important;
+  border-right: 1px solid rgba(0, 227, 140, 0.15) !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.95), inset -1px 0 10px rgba(0, 227, 140, 0.02) !important;
+}
+
+html:not(.light) header {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  border-bottom: 1px solid rgba(0, 227, 140, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.95) !important;
+}
+
+html:not(.light) #mobile-bottom-tabs {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  border-top: 1px solid rgba(0, 227, 140, 0.15) !important;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.95) !important;
+}
+
+html:not(.light) #mobile-drawer-portal .bg-neutral-950 {
+  background-color: #000000 !important;
+  border-right: 1px solid rgba(0, 227, 140, 0.15) !important;
+}
+
+/* Universal Background Replacements for Pure Extreme Dark Theme (Cards, panels, sheets, modals, cells) */
+html:not(.light) .bg-neutral-900,
+html:not(.light) .bg-neutral-950,
+html:not(.light) .bg-zinc-900,
+html:not(.light) .bg-zinc-950,
+html:not(.light) .bg-slate-900,
+html:not(.light) .bg-slate-950,
+html:not(.light) .bg-\[\#0b0c10\]\/85,
+html:not(.light) .bg-neutral-900\/50,
+html:not(.light) .bg-zinc-900\/50,
+html:not(.light) .bg-slate-900\/50,
+html:not(.light) .bg-black\/60,
+html:not(.light) .bg-\[\#090d0b\],
+html:not(.light) .bg-\[\#0a0a0c\],
+html:not(.light) .bg-\[\#0a0a0d\],
+html:not(.light) .bg-neutral-955\/30,
+html:not(.light) .bg-neutral-952\/25,
+html:not(.light) .bg-neutral-950\/25,
+html:not(.light) .bg-zinc-950\/25,
+html:not(.light) .bg-slate-950\/25,
+html:not(.light) .bg-\[\#0D0D0D\],
+html:not(.light) .bg-\[\#0E0E0E\],
+html:not(.light) .bg-\[\#0A0A0A\],
+html:not(.light) .bg-\[\#080808\],
+html:not(.light) .bg-\[\#000000\],
+html:not(.light) .bg-\[\#020202\],
+html:not(.light) .bg-\[\#0E0E0E\]\/10,
+html:not(.light) .bg-\[\#080808\]\/40,
+html:not(.light) .bg-\[\#000000\]\/85,
+html:not(.light) .bg-\[\#052316\],
+html:not(.light) .bg-black\/80,
+html:not(.light) .bg-neutral-950\/50,
+html:not(.light) .bg-zinc-950\/50,
+html:not(.light) .bg-black,
+html:not(.light) .bg-neutral-850\/80 {
+  background-color: #000000 !important;
+  color: #F5F5F5 !important;
+  border: 1px solid rgba(0, 227, 140, 0.16) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.98), inset 0 0 12px rgba(0, 227, 140, 0.02) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+/* Hover class overrides for pure dark modern look */
+html:not(.light) .bg-neutral-900:hover,
+html:not(.light) .bg-neutral-950:hover,
+html:not(.light) .bg-zinc-900:hover,
+html:not(.light) .bg-zinc-950:hover,
+html:not(.light) .bg-slate-900:hover,
+html:not(.light) .bg-slate-950:hover,
+html:not(.light) .bg-black\/60:hover {
+  border-color: rgba(0, 227, 140, 0.35) !important;
+  box-shadow: 0 0 25px rgba(0, 227, 140, 0.08), inset 0 0 16px rgba(0, 227, 140, 0.04) !important;
+}
+
+/* Secondary Actions / Buttons in Extreme Dark Theme */
+html:not(.light) .bg-neutral-800,
+html:not(.light) .bg-neutral-850,
+html:not(.light) .bg-neutral-700,
+html:not(.light) .bg-zinc-800,
+html:not(.light) .bg-zinc-850,
+html:not(.light) .bg-zinc-700,
+html:not(.light) .bg-slate-800,
+html:not(.light) .bg-slate-850,
+html:not(.light) .bg-slate-700 {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  color: #F5F5F5 !important;
+  border: 1px solid rgba(0, 227, 140, 0.15) !important;
+  box-shadow: none !important;
+}
+
+html:not(.light) .bg-neutral-800:hover,
+html:not(.light) .bg-neutral-850:hover,
+html:not(.light) .bg-neutral-700:hover,
+html:not(.light) .bg-zinc-800:hover,
+html:not(.light) .bg-zinc-850:hover,
+html:not(.light) .bg-zinc-700:hover,
+html:not(.light) .bg-slate-800:hover,
+html:not(.light) .bg-slate-850:hover,
+html:not(.light) .bg-slate-700:hover {
+  background-color: rgba(0, 227, 140, 0.06) !important;
+  border-color: rgba(0, 227, 140, 0.35) !important;
+}
+
+/* Sliding active backgrounds in sidebar */
+html:not(.light) div[layoutid="sidebarActiveBackground"] {
+  background: linear-gradient(to right, rgba(0, 227, 140, 0.1), rgba(0, 227, 140, 0.01)) !important;
+  border: 1px solid rgba(0, 227, 140, 0.3) !important;
+}
+
+/* Explicit form controls design under Extreme Dark Mode */
+html:not(.light) input,
+html:not(.light) select,
+html:not(.light) textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(0, 227, 140, 0.2) !important;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.8) !important;
+}
+
+html:not(.light) input:focus,
+html:not(.light) select:focus,
+html:not(.light) textarea:focus {
+  border-color: rgba(0, 227, 140, 0.6) !important;
+  box-shadow: 0 0 12px rgba(0, 227, 140, 0.18), inset 0 1px 4px rgba(0,0,0,0.9) !important;
+}
+
+/* All dark mode borders overrides to keep extreme dark sharp and neon-trimmed */
+html:not(.light) [class*="border-neutral-800"],
+html:not(.light) [class*="border-neutral-900"],
+html:not(.light) [class*="border-zinc-800"],
+html:not(.light) [class*="border-zinc-900"],
+html:not(.light) [class*="border-slate-800"],
+html:not(.light) [class*="border-slate-900"],
+html:not(.light) [class*="border-white/5"],
+html:not(.light) [class*="border-white/10"],
+html:not(.light) [class*="border-white/20"] {
+  border-color: rgba(0, 227, 140, 0.15) !important;
 }
 
 /* Base panels, cards and containers */
@@ -766,6 +911,74 @@ html.light #auth-screen-layout h1 {
   -webkit-background-clip: text !important;
   background-clip: text !important;
 }
+
+/* Futuristic moving animations for Luxury Cyber Fitness */
+@keyframes scanline-sweep {
+  0% {
+    transform: translateY(-120%);
+  }
+  100% {
+    transform: translateY(220%);
+  }
+}
+
+@keyframes neon-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 227, 140, 0.05), 0 0 10px rgba(0, 227, 140, 0.02);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 227, 140, 0.15), 0 0 25px rgba(0, 227, 140, 0.08);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+@keyframes pulse-wave {
+  0% {
+    stroke-dashoffset: 400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-scanline-sweep {
+  animation: scanline-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-neon-pulse {
+  animation: neon-glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-pulse-wave {
+  stroke-dasharray: 200;
+  animation: pulse-wave 3s linear infinite;
+}
+
+/* Explicit select option styling for contrast fix */
+select option {
+  background-color: #0c0c0c !important;
+  color: #ffffff !important;
+  font-family: inherit;
+}
+
+html.light select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-family: inherit;
+}
+
 
 
 

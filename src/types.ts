@@ -15,6 +15,11 @@ export interface UserProfile {
   fitness_level?: string; // e.g. "Beginner", "Intermediate", "Advanced"
   workout_frequency?: string; // e.g. "3-4 days/week"
   created_at?: string;
+  avatar?: string;
+  bio?: string;
+  role?: 'user' | 'moderator' | 'admin';
+  is_banned?: boolean;
+  mfa_enabled?: boolean;
 }
 
 export interface Workout {

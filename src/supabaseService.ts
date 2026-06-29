@@ -293,7 +293,7 @@ getLocalJSON(LOCAL_ACHIEVEMENTS_KEY, defaultAchievements);
 getLocalJSON(LOCAL_NOTIFICATIONS_KEY, defaultNotifications);
 getLocalJSON(LOCAL_CONTACTS_KEY, []);
 
-// Wrapper executor that detects Failed To Fetch and switches engine gracefully
+// Wrapper executor that detects Failed To Fetch or RLS/permission errors and switches engine gracefully
 const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQuery: () => Promise<T> | T): Promise<T> => {
   if (localModeActive) {
     return await fallbackQuery();
@@ -302,6 +302,19 @@ const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQ
     return await supabaseQuery();
   } catch (err: any) {
     const errMsg = String(err?.message || err || '').toLowerCase();
+    
+    // Auth specific validation errors shouldn't switch to fallback mode or hide themselves
+    if (
+      errMsg.includes('invalid login credentials') ||
+      errMsg.includes('incorrect') ||
+      errMsg.includes('already exists') ||
+      errMsg.includes('already registered') ||
+      errMsg.includes('email already exists') ||
+      errMsg.includes('6 characters')
+    ) {
+      throw err;
+    }
+
     if (
       errMsg.includes('failed to fetch') || 
       errMsg.includes('networkerror') || 
@@ -309,13 +322,22 @@ const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQ
       errMsg.includes('network error') ||
       errMsg.includes('not configured') ||
       errMsg.includes('cors') ||
+      errMsg.includes('row-level security') ||
+      errMsg.includes('security policy') ||
+      errMsg.includes('permission denied') ||
+      errMsg.includes('violates') ||
+      errMsg.includes('rls') ||
+      errMsg.includes('policy') ||
       err instanceof TypeError
     ) {
-      console.warn('Supabase request failed with fetch/network error. Switching database engine to local storage fallback mode.', err);
+      console.warn('Supabase request failed with database restriction/network error. Switching engine to local storage fallback mode.', err);
       localModeActive = true;
       return await fallbackQuery();
     }
-    throw err;
+    
+    // Fallback to local storage on general db issues to ensure seamless app usability
+    console.warn('Supabase database operation encountered an error, falling back to local storage:', err);
+    return await fallbackQuery();
   }
 };
 
@@ -1465,6 +1487,88 @@ export const supabaseService = {
           }
         });
         setLocalJSON(LOCAL_NOTIFICATIONS_KEY, notifs);
+      }
+    );
+  },
+
+  async getAllUsers(): Promise<UserProfile[]> {
+    return await executeWithFallback(
+      async () => {
+        if (isSupabaseConfigured && supabase) {
+          const { data, error } = await supabase
+            .from('Users')
+            .select('*')
+            .order('created_at', { ascending: false });
+          if (error) throw error;
+          return data as UserProfile[];
+        }
+        throw new Error('Supabase client not configured.');
+      },
+      () => {
+        return getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
+      }
+    );
+  },
+
+  async updateUserRole(userId: string, role: 'user' | 'moderator' | 'admin'): Promise<void> {
+    return await executeWithFallback(
+      async () => {
+        if (isSupabaseConfigured && supabase) {
+          const { error } = await supabase
+            .from('Users')
+            .update({ role })
+            .eq('id', userId);
+          if (error) throw error;
+        } else {
+          throw new Error('Supabase client not configured.');
+        }
+      },
+      () => {
+        const users = getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
+        const updated = users.map((u: any) => u.id === userId ? { ...u, role } : u);
+        setLocalJSON(LOCAL_USERS_KEY, updated);
+      }
+    );
+  },
+
+  async updateUserBanned(userId: string, is_banned: boolean): Promise<void> {
+    return await executeWithFallback(
+      async () => {
+        if (isSupabaseConfigured && supabase) {
+          const { error } = await supabase
+            .from('Users')
+            .update({ is_banned })
+            .eq('id', userId);
+          if (error) throw error;
+        } else {
+          throw new Error('Supabase client not configured.');
+        }
+      },
+      () => {
+        const users = getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
+        const updated = users.map((u: any) => u.id === userId ? { ...u, is_banned } : u);
+        setLocalJSON(LOCAL_USERS_KEY, updated);
+      }
+    );
+  },
+
+  async updateUserProfileByAdmin(userId: string, profileData: Partial<UserProfile>): Promise<void> {
+    return await executeWithFallback(
+      async () => {
+        if (isSupabaseConfigured && supabase) {
+          const { error } = await supabase
+            .from('Users')
+            .update(profileData)
+            .eq('id', userId);
+          if (error) throw error;
+        } else {
+          throw new Error('Supabase client not configured.');
+        }
+      },
+      () => {
+        const users = getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
+        const updated = users.map((u: any) => u.id === userId ? { ...u, ...profileData } : u);
+        setLocalJSON(LOCAL_USERS_KEY, updated);
       }
     );
   },

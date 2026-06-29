@@ -1,126 +1,107 @@
-# Aesthetic Athlete: Workout and Nutrition Platform
+# Aesthetic Athlete: Core Fitness Tracker & AI Coaching Dashboard
 
-Aesthetic Athlete is a full-stack fitness tracking platform built with React, TypeScript, Express, Supabase, and PostgreSQL. The platform enables users to track workouts, nutrition, hydration, body measurements, and fitness goals while providing AI-assisted workout and nutrition guidance through an integrated coaching chatbot.
-
----
-
-## Technical Specifications & System Modules
-
-### 1. Chatbot Assistant (Aesthetic Coach)
-An interactive conversational interface utilizing the `@google/genai` TypeScript SDK.
-- **Scope Parameters**: Configured strictly to supply feedback on physical splits, nutrition frameworks, supplement queries, and muscle recovery.
-- **Message Rendering Pipeline**: Uses a custom React-based token parsing engine to format LLM outputs into clean custom nested list nodes and headers.
-- **User Message History Persistence**: Implements separate `localStorage` partitions indexed on unique logged-in `user.id` strings, successfully reloading historic state across login sessions.
-- **Response Delay Constraints & Fallback Handler**: Implements a strict `6000ms` total response time window using `AbortController` signals. Instantly handles timeout or disconnection events by reverting to a local regex response rulebook.
-
-### 2. Workout Manager
-An active workout tracker featuring dynamic metronome aids and browser timer notifications.
-- **Active Workout Session State**: Manages active training blocks, tracking elapsed durations, working set loads, and target reps.
-- **Audio Synthesis**: Leverages standard HTML5 `AudioContext` to generate standard pitch-perfect synthesized rest-period complete sounds natively.
-- **Rest State Metronome**: Synchronizes visual countdown metrics to encourage structural rest parameters between high-intensity lifts.
-- **Session Control Overlays**: Includes customized, non-disruptive dialogs handling session termination and final workout summaries.
-
-### 3. Nutrition Ledger & Hydration Monitor
-Structured calorie metrics mapping dietary inputs against calculated baseline targets.
-- **Caloric Balance Targets**: Calculates target caloric deficits or surpluses depending on target goals, rendering dynamic target ratios.
-- **Macronutrient Comparisons**: Uses custom visualizations to project logged carbs, proteins, and fats against target athlete benchmarks.
-- **Hydration Logging Metric**: Registers simple fluid intake updates to maintain an accurate daily fluid log.
-- **Log Mutations**: Provides methods to instantly create, list, and destroy meal log entries.
-
-### 4. Performance Analytics Dashboard
-Aggregated biometric trends organized into structured data graphs.
-- **Volume Accumulation Graphs**: Plots workout frequencies across trailing 6-month cycles.
-- **Biometric Trends**: Visualizes historical bodyweight metrics and resulting BMI ratios.
-- **Body Circumferences Monitor**: Tracks dimensional data trends for chest, biceps, waist, hips, and thighs.
-- **Muscle Target Allocations**: Displays distribution vectors for active muscle targets.
-- **Stride Metrics & Personal Benchmarks**: Tracks step counts and registers top performance achievements.
+Aesthetic Athlete is a responsive full-stack fitness, biometric, and nutrition tracking application. It features a modern, interactive design, a high-contrast dark theme, and detailed analytical charts to help athletes monitor and achieve their fitness goals.
 
 ---
 
-## System Stack & Dependencies
+## What Users Can Do
 
-### **Client Architecture (Single Page Application)**
-- **React 19 & TypeScript**: Provides static type validation and state synchronization.
-- **Vite**: Asset packaging and local dev server.
-- **Tailwind CSS**: Simple responsive grid structuring and layout layouts with standard utility classes.
-- **Lucide Icons**: Standard UI vector icons.
-- **Recharts & Motion**: Responsive charting configurations and transition animations.
+### 1. Performance Overview & Dashboard
+- **Daily Progress at a Glance**: View real-time progress on daily activity metrics, including step counts, active calories burned, training duration, and water intake.
+- **Goal Checking**: Instantly check current status against personalized targets with visual progress bars.
+- **Simulated Bio-Indicators**: Interact with real-time biometric visual aids, including an animated heartbeat indicator and simulated activity trackers.
+- **Flexible Styling Options**: Toggle easily between a custom-designed dark theme and a high-contrast light theme for optimal readability in any environment.
 
-### **Server-Side API Proxy**
-- **Express Backend (Node.js)**: Proxies outgoing API calls and holds backend environments.
-- **Gemini API Integrations**: Calls the Gemini Flash model to return text blocks regarding sports splits.
-- **PostgreSQL / Supabase Integration**: Schema structures for muscle groups, workout records, fluid limits, steps, weights, and user credentials.
+### 2. Workout Logging & Pacing Manager
+- **Active Exercise Logging**: Log workouts in real-time, tracking exercise types, working weight, repetitions, and total sets.
+- **Built-in Rest Metronome**: Stay on track during workouts with configurable rest timers and an interactive metronome countdown ring.
+- **Audio Prompts**: Hear synthesized audio alerts directly in the browser when a rest timer completes.
+- **Workout History**: Look back at previously logged workouts to monitor strength development and training volume over time.
+
+### 3. Nutrition & Hydration Tracker
+- **Nutritional Calibrations**: Log meals and snacks to track daily calorie, protein, carbohydrate, and fat intake against calculated goals.
+- **Macronutrient Balances**: View current daily macronutrient distributions using responsive visual gauges.
+- **Hydration Ledger**: Quick-log water intake using pre-set increment buttons to maintain proper hydration levels.
+
+### 4. Progress Analytics Dashboard
+- **Long-term Progress Charts**: Review interactive charts displaying body weight fluctuations, daily step trends, and workout frequencies over several weeks or months.
+- **Body Measurements Tracker**: Log and monitor physical measurements for key areas (chest, biceps, waist, hips, and thighs) to see physical transformations.
+- **Muscle Target Analysis**: View visual breakdowns showing which muscle groups receive the most focus and intensity.
+
+### 5. Personal AI Fitness Coach
+- **Tailored Guidance**: Ask fitness, supplement, and nutrition questions to receive tailored advice.
+- **Quick Prompt Cards**: Click pre-defined shortcut buttons for advice on workouts, recovery, supplements, or dietary habits.
+- **History Retention**: Access past coaching conversations, which are saved locally under individual accounts.
+- **Local Fallback Mode**: Receive reliable, rules-based feedback instantly if the network is disconnected or the AI backend experiences a timeout.
+
+### 6. Account Onboarding & Personalization
+- **Secure Access**: Register and log in to protect and sync workout logs and personal history.
+- **Profile Calibration**: Customize personal height, weight, activity levels, and fitness goals (such as muscle growth, fat loss, or body recomposition).
 
 ---
 
-## Folder Architecture
+## Technical Stack
 
-```dir
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons, Recharts, and Framer Motion for smooth transitions.
+- **Backend API Server**: Express server hosting secure endpoints and managing safe routing.
+- **AI Integration**: Server-side `@google/genai` integration keeping API keys protected.
+- **Data Synchronization**: Database connections for user-specific logs, nutrition records, goals, and active sessions.
+
+---
+
+## Directory Structure
+
+```text
 ├── src/
-│   ├── components/            # UI components and view controllers
-│   │   ├── AestheticCoachChatbot.tsx  # Chatbot component with dynamic history loading
-│   │   ├── WorkoutManager.tsx          # Workout active tracking with notification metronome
-│   │   ├── NutritionAndHydration.tsx   # Meal registry and macronutrient tracking
-│   │   ├── AnalyticsView.tsx           # Recharts panels for body circumferences and weights
-│   │   ├── DashboardView.tsx           # Home summary dashboard view
-│   │   ├── AuthScreen.tsx              # Onboarding and credential forms
+│   ├── components/                # Modular UI views and panels
+│   │   ├── DashboardView.tsx      # Performance overview and real-time dashboard
+│   │   ├── WorkoutManager.tsx     # Active workout tracker and rest metronome
+│   │   ├── NutritionAndHydration.tsx # Meal tracker and hydration controls
+│   │   ├── AnalyticsView.tsx      # Interactive charts and body measurements
+│   │   ├── AestheticCoachChatbot.tsx # AI fitness coach and prompt library
+│   │   ├── AuthScreen.tsx         # User onboarding and login interface
+│   │   ├── ProfilePage.tsx        # Profile configuration and goal settings
 │   │   └── ...
-│   ├── supabaseService.ts     # Supabase DB schema mapping and communication scripts
-│   ├── types.ts               # Shared TypeScript type and enum declarations
-│   ├── main.tsx               # Client entry point
-│   └── App.tsx                # Context router and core visual layout launcher
-├── server.ts                  # Express server serving static assets and API routes
-├── package.json               # Package dependencies and standard scripts
-└── README.md                  # System Documentation README
+│   ├── supabaseService.ts         # Supabase client and sync operations
+│   ├── types.ts                   # Standard TypeScript interfaces
+│   ├── main.tsx                   # Main entry point
+│   └── App.tsx                    # Core app layout and page router
+├── server.ts                      # Express API proxy and static asset server
+├── package.json                   # Dependencies and npm scripts
+└── README.md                      # Project Documentation
 ```
 
 ---
 
-## Local Development & Setup Instructions
+## Getting Started
 
-Ensure Node.js v18+ is installed on the local system.
-
-### 1. Install System Dependencies
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Properties
-Create a `.env` file in the project root containing target credentials:
+### 2. Set Up Environment Variables
+Create a `.env` file in the project root:
 ```env
-# Server secret keys (do not expose to the client browser)
+# Server secret key (never exposed to browser)
 GEMINI_API_KEY=your_gemini_api_key
 
-# Supabase connectivity URLs
+# Supabase coordinates
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### 3. Launch Local Development Server
+### 3. Run Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to inspect the live local app.
+Open [http://localhost:3000](http://localhost:3000) in your web browser.
 
-### 4. High-Performance Server Compilation
+### 4. Build and Launch in Production
 ```bash
-# Builds production static build files and bundles server.ts to dist/server.cjs
+# Compiles the client code and bundles server.ts into dist/server.cjs
 npm run build
 
-# Boots the compiled backend server environment securely
+# Runs the compiled production build
 npm run start
 ```
-
----
-
-## Responsive Layout details
-Designed to handle multi-sized window layouts:
-- **Navigation Controls**: Relies on bottom-aligned navigators to ensure convenient access on mobile viewport ratios.
-- **Touch Event Scaling**: Leverages minimum hover and responsive padded elements sizing for touch targets.
-- **Fluid Layout Grids**: Dynamically structures triple-columns desktop configurations into compact single-row lists.
-
----
-
-## Security Configurations & API Proxying
-- **Secret Key Protection**: Keeps `GEMINI_API_KEY` hidden inside backend processes (`server.ts`). Upstream endpoints proxy chatbot queries through Express routes.
-- **Offline Reliability Code**: If external network requests fail or time out, the client falls back immediately to localized response rules to ensure functional consistency.
