@@ -5,7 +5,14 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { supabaseService } from '../supabaseService';
+import { 
+  supabaseService, 
+  isLocalModeActive, 
+  setLocalModeActive, 
+  isUsingCustomKeys, 
+  getSupabaseUrlValue,
+  supabase
+} from '../supabaseService';
 import { 
   ShieldCheck, ShieldAlert, Users, Dumbbell, Send, Plus, 
   Activity, BellRing, Database, ChevronRight, CheckCircle2,
@@ -60,6 +67,152 @@ export const getStandardAvatar = (role: string = 'user'): string => {
   }
   return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="grad-${role}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${startCol}"/><stop offset="100%" style="stop-color:${endCol}"/></linearGradient></defs><rect width="100" height="100" fill="url(%23grad-${role})"/><circle cx="50" cy="40" r="18" fill="%23050505"/><path d="M25 80 c0-15 10-22 25-22 s25 7 25 22" fill="%23050505"/></svg>`;
 };
+
+const SUPABASE_INIT_SQL = `-- 1. Create Users profile table
+CREATE TABLE IF NOT EXISTS public."Users" (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  age INTEGER,
+  gender TEXT,
+  height NUMERIC,
+  weight NUMERIC,
+  fitness_goal TEXT,
+  fitness_level TEXT,
+  workout_frequency TEXT,
+  avatar TEXT,
+  bio TEXT,
+  role TEXT DEFAULT 'user',
+  is_banned BOOLEAN DEFAULT false,
+  mfa_enabled BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS on Users
+ALTER TABLE public."Users" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view all users" ON public."Users"
+  FOR SELECT USING (true);
+
+CREATE POLICY "Users can update their own record" ON public."Users"
+  FOR UPDATE USING (auth.uid() = id);
+
+-- 2. Create Workouts table
+CREATE TABLE IF NOT EXISTS public."Workouts" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  workout_name TEXT NOT NULL,
+  workout_type TEXT NOT NULL,
+  duration INTEGER NOT NULL,
+  calories_burned INTEGER NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 3. Create Exercises table
+CREATE TABLE IF NOT EXISTS public."Exercises" (
+  id TEXT PRIMARY KEY,
+  workout_id TEXT REFERENCES public."Workouts"(id) ON DELETE CASCADE,
+  exercise_name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  sets INTEGER NOT NULL,
+  reps INTEGER NOT NULL,
+  weight NUMERIC NOT NULL,
+  rest_time INTEGER,
+  notes TEXT
+);
+
+-- 4. Create Goals table
+CREATE TABLE IF NOT EXISTS public."Goals" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  goal_type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  target_value NUMERIC NOT NULL,
+  current_value NUMERIC NOT NULL,
+  unit TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  estimated_completion TIMESTAMP WITH TIME ZONE
+);
+
+-- 5. Create WeightLogs table
+CREATE TABLE IF NOT EXISTS public."WeightLogs" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  weight NUMERIC NOT NULL,
+  date DATE NOT NULL
+);
+
+-- 6. Create MeasurementLogs table
+CREATE TABLE IF NOT EXISTS public."MeasurementLogs" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  chest NUMERIC,
+  waist NUMERIC,
+  hips NUMERIC,
+  arms NUMERIC,
+  thighs NUMERIC,
+  date DATE NOT NULL
+);
+
+-- 7. Create NutritionLogs table
+CREATE TABLE IF NOT EXISTS public."NutritionLogs" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  food_name TEXT NOT NULL,
+  quantity TEXT,
+  calories INTEGER NOT NULL,
+  protein NUMERIC NOT NULL,
+  carbs NUMERIC NOT NULL,
+  fats NUMERIC NOT NULL,
+  date DATE NOT NULL
+);
+
+-- 8. Create WaterLogs table
+CREATE TABLE IF NOT EXISTS public."WaterLogs" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  amount INTEGER NOT NULL,
+  date DATE NOT NULL
+);
+
+-- 9. Create StepLogs table
+CREATE TABLE IF NOT EXISTS public."StepLogs" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  steps INTEGER NOT NULL,
+  distance NUMERIC NOT NULL,
+  date DATE NOT NULL
+);
+
+-- 10. Create Achievements table
+CREATE TABLE IF NOT EXISTS public."Achievements" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  achievement_key TEXT NOT NULL,
+  unlocked_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 11. Create Notifications table
+CREATE TABLE IF NOT EXISTS public."Notifications" (
+  id TEXT PRIMARY KEY,
+  user_id UUID REFERENCES public."Users"(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  read BOOLEAN DEFAULT false
+);
+
+-- 12. Create contacts table
+CREATE TABLE IF NOT EXISTS public.contacts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);`;
 
 // Initial Mock Users
 const INITIAL_USERS: UserProfileSimulated[] = [
@@ -161,7 +314,63 @@ export default function AdminPanel({ onRefreshAlertsHub }: AdminPanelProps) {
   }, []);
 
   // Tabs for sub-modules
-  const [adminTab, setAdminTab] = useState<'users' | 'security' | 'auth_simulator' | 'analytics_hub'>('users');
+  const [adminTab, setAdminTab] = useState<'users' | 'security' | 'auth_simulator' | 'analytics_hub' | 'supabase_db'>('users');
+
+  // Supabase connection status states
+  const [dbTestState, setDbTestState] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle');
+  const [dbTestMessage, setDbTestMessage] = useState<string>('');
+  const [showAnonKey, setShowAnonKey] = useState<boolean>(false);
+  const [sqlCopied, setSqlCopied] = useState<boolean>(false);
+  const [isLocalMode, setIsLocalMode] = useState<boolean>(isLocalModeActive());
+
+  const testSupabaseConnection = async () => {
+    setDbTestState('testing');
+    setDbTestMessage('Initiating API handshake with Supabase REST Endpoint...');
+    try {
+      if (!supabase) {
+        throw new Error('Supabase Client is not initialized. Please ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
+      }
+      
+      const startTime = performance.now();
+      const { data, error, count } = await supabase
+        .from('Users')
+        .select('id', { count: 'exact', head: true });
+        
+      const endTime = performance.now();
+      const latency = Math.round(endTime - startTime);
+
+      if (error) {
+        throw error;
+      }
+
+      setDbTestState('success');
+      setDbTestMessage(`Successfully connected to Supabase! Latency: ${latency}ms. Connection status is active. Successfully verified the "Users" schema relation with ${count ?? 0} registered user rows.`);
+      
+      setLocalModeActive(false);
+      setIsLocalMode(false);
+    } catch (err: any) {
+      console.error('Supabase connectivity test failed:', err);
+      setDbTestState('failed');
+      const errorMessage = err?.message || String(err);
+      
+      let friendlyHint = "Check that your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are correct and that you've run the table initialization script.";
+      if (errorMessage.toLowerCase().includes('relation') || errorMessage.toLowerCase().includes('does not exist')) {
+        friendlyHint = 'Database server responded, but the "Users" table is missing. Run the SQL initialization script below in your Supabase SQL Editor to generate the schema.';
+      } else if (errorMessage.toLowerCase().includes('failed to fetch') || errorMessage.toLowerCase().includes('invalid url')) {
+        friendlyHint = 'Could not contact the database server. Ensure your Supabase project is active, your domain is correct, and network CORS policies allow requests from this domain.';
+      } else if (errorMessage.toLowerCase().includes('api key') || errorMessage.toLowerCase().includes('invalid api key') || errorMessage.toLowerCase().includes('jwt')) {
+        friendlyHint = 'API Key handshake failed. Please check that your VITE_SUPABASE_ANON_KEY is a valid, unexpired Anonymous key.';
+      }
+
+      setDbTestMessage(`Error: ${errorMessage}. Hint: ${friendlyHint}`);
+    }
+  };
+
+  const copySqlToClipboard = () => {
+    navigator.clipboard.writeText(SUPABASE_INIT_SQL);
+    setSqlCopied(true);
+    setTimeout(() => setSqlCopied(false), 3000);
+  };
 
   // Core States
   const [users, setUsers] = useState<UserProfileSimulated[]>([]);
@@ -171,17 +380,25 @@ export default function AdminPanel({ onRefreshAlertsHub }: AdminPanelProps) {
     setLoadingUsers(true);
     try {
       const allUsers = await supabaseService.getAllUsers();
-      const mapped: UserProfileSimulated[] = allUsers.map((u: any) => ({
-        id: u.id,
-        name: u.name || 'Anonymous Athlete',
-        email: u.email || '',
-        role: u.role || 'user',
-        is_banned: !!u.is_banned,
-        avatar: u.avatar || getStandardAvatar(u.role || 'user'),
-        bio: u.bio || 'No athletic biography provided.',
-        created_at: u.created_at ? u.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
-        mfa_enabled: !!u.mfa_enabled
-      }));
+      
+      // Map only fetched real users from database/local storage
+      const mapped: UserProfileSimulated[] = allUsers.map((u: any) => {
+        const emailLower = (u.email || '').toLowerCase();
+        const role: 'user' | 'moderator' | 'admin' = (emailLower === 'pranav456@gmail.com' || emailLower === 'pranavrajput021@gmail.com') ? 'admin' : (u.role || 'user');
+        
+        return {
+          id: u.id,
+          name: u.name || 'Anonymous Athlete',
+          email: u.email || '',
+          role,
+          is_banned: !!u.is_banned,
+          avatar: u.avatar || getStandardAvatar(role),
+          bio: u.bio || 'No athletic biography provided.',
+          created_at: u.created_at ? u.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+          mfa_enabled: !!u.mfa_enabled
+        };
+      });
+
       setUsers(mapped);
       localStorage.setItem('admin_users', JSON.stringify(mapped));
     } catch (err) {
@@ -856,6 +1073,14 @@ export default function AdminPanel({ onRefreshAlertsHub }: AdminPanelProps) {
           }`}
         >
           <Activity className="w-4 h-4" /> Concurrency & Trends
+        </button>
+        <button
+          onClick={() => setAdminTab('supabase_db')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl transition duration-250 cursor-pointer ${
+            adminTab === 'supabase_db' ? 'bg-emerald-500 text-black font-bold' : 'text-neutral-400 hover:text-neutral-200'
+          }`}
+        >
+          <Database className="w-4 h-4" /> Supabase Connection
         </button>
       </div>
 
@@ -1786,6 +2011,197 @@ export default function AdminPanel({ onRefreshAlertsHub }: AdminPanelProps) {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {adminTab === 'supabase_db' && (
+        <div className="space-y-6 animate-fadeIn">
+          {/* CORE CONNECTION GATEWAY */}
+          <div className={`p-6 rounded-3xl border transition-colors duration-200 text-left ${
+            isLight ? 'bg-white border-slate-200' : 'bg-[#0a0a0d] border-neutral-850'
+          }`}>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-900 pb-5 mb-5">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-widest">Supabase Integration Engine</span>
+                <h3 className="text-lg font-black tracking-tight uppercase">Database Connection & Control Terminal</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={testSupabaseConnection}
+                  disabled={dbTestState === 'testing'}
+                  className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-450 active:scale-95 text-black px-4 py-2 rounded-xl text-xs font-bold font-mono transition duration-200 disabled:opacity-50 cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${dbTestState === 'testing' ? 'animate-spin' : ''}`} />
+                  Test Live Handshake
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              {/* Left Column: Connectivity & Active Engine */}
+              <div className="lg:col-span-1 space-y-4">
+                
+                {/* Engine Status Card */}
+                <div className="p-5 bg-black/40 border border-neutral-850 rounded-2xl">
+                  <h4 className="text-[11px] font-mono font-bold text-neutral-400 uppercase mb-3 flex items-center gap-1">
+                    <Sliders className="w-3.5 h-3.5 text-emerald-400" /> Active Database Mode
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-neutral-400 font-semibold">Current Engine:</span>
+                      <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md ${
+                        isLocalMode 
+                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
+                          : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      }`}>
+                        {isLocalMode ? 'LOCAL SANDBOXED FALLBACK' : 'LIVE SUPABASE DATABASE'}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-neutral-400 leading-relaxed">
+                      {isLocalMode 
+                        ? 'The system has failed to reach your custom Supabase server (or no keys are set), meaning all records are stored in browser localStorage.' 
+                        : 'System is successfully linked directly to the live cloud database. Changes persist instantly in your cloud project.'
+                      }
+                    </p>
+
+                    <div className="pt-2 border-t border-neutral-900/60 flex gap-2">
+                      <button
+                        onClick={() => {
+                          const target = !isLocalMode;
+                          setLocalModeActive(target);
+                          setIsLocalMode(target);
+                        }}
+                        className="w-full text-center py-1.5 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-850 text-neutral-200 hover:text-white font-mono text-[10.5px] border border-neutral-800 transition cursor-pointer"
+                      >
+                        Force Switch to {isLocalMode ? 'Live Engine' : 'Local Sandbox'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Configuration Specs */}
+                <div className="p-5 bg-black/40 border border-neutral-850 rounded-2xl">
+                  <h4 className="text-[11px] font-mono font-bold text-neutral-400 uppercase mb-3">
+                    Handshake Environment
+                  </h4>
+                  <div className="space-y-2 text-xs">
+                    <div className="space-y-1">
+                      <span className="text-neutral-500 block text-[10px] uppercase font-mono">Supabase URL endpoint</span>
+                      <input 
+                        type="text" 
+                        readOnly 
+                        value={getSupabaseUrlValue()} 
+                        className="w-full bg-black/50 border border-neutral-900 text-neutral-300 rounded px-2.5 py-1.5 text-[11px] font-mono select-all focus:outline-none"
+                      />
+                    </div>
+                    <div className="space-y-1 pt-2">
+                      <span className="text-neutral-500 block text-[10px] uppercase font-mono">Integration Status</span>
+                      <div className="flex items-center gap-1.5 text-xs text-neutral-300 font-medium">
+                        {isUsingCustomKeys() ? (
+                          <>
+                            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                            <span>Custom Private Project Linked</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
+                            <span>Using Shared Demo Fallback</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Middle & Right Column: Diagnostics logs & SQL schema assist */}
+              <div className="lg:col-span-2 space-y-4">
+                
+                {/* Diagnostics Log */}
+                <div className="p-5 bg-black/40 border border-neutral-850 rounded-2xl">
+                  <h4 className="text-[11px] font-mono font-bold text-neutral-400 uppercase mb-2 flex items-center justify-between">
+                    <span>Handshake Diagnostics terminal</span>
+                    {dbTestState !== 'idle' && (
+                      <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded font-bold ${
+                        dbTestState === 'testing' ? 'text-blue-400 animate-pulse' :
+                        dbTestState === 'success' ? 'text-emerald-400' : 'text-red-400'
+                      }`}>
+                        [{dbTestState}]
+                      </span>
+                    )}
+                  </h4>
+                  <div className="bg-black/50 border border-neutral-900 rounded-xl p-3 font-mono text-[11px] text-zinc-300 min-h-24 max-h-40 overflow-y-auto space-y-1 select-all">
+                    {dbTestState === 'idle' ? (
+                      <p className="text-neutral-500 italic">No handshake test run yet. Click "Test Live Handshake" to query your remote server.</p>
+                    ) : (
+                      <div className="whitespace-pre-wrap leading-relaxed">
+                        {dbTestMessage}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Integration Guide */}
+                <div className="p-5 bg-black/40 border border-neutral-850 rounded-2xl space-y-3">
+                  <h4 className="text-[11px] font-mono font-bold text-neutral-400 uppercase">
+                    Setup instructions: Linking your own database
+                  </h4>
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    Follow these simple steps to hook your custom Supabase database to this terminal:
+                  </p>
+                  <ol className="list-decimal list-inside text-[11px] text-neutral-400 space-y-2 leading-relaxed">
+                    <li>Create a new free project at <a href="https://supabase.com" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline inline-flex items-center gap-0.5">supabase.com <ExternalLink className="w-3 h-3" /></a></li>
+                    <li>Copy your <strong className="text-neutral-300">Project URL</strong> and <strong className="text-neutral-300 font-mono">anon</strong> public key from Project Settings → API.</li>
+                    <li>Open <strong className="text-neutral-300">AI Studio Settings</strong> (gear icon) or the Secrets manager, and add these environment variables:
+                      <div className="mt-1.5 ml-4 bg-black/50 border border-neutral-900 rounded p-2 text-[10.5px] font-mono text-zinc-300 space-y-1">
+                        <div>VITE_SUPABASE_URL = <span className="text-emerald-400">your_project_url</span></div>
+                        <div>VITE_SUPABASE_ANON_KEY = <span className="text-emerald-400">your_anon_key</span></div>
+                      </div>
+                    </li>
+                    <li>Go to your Supabase project's <strong className="text-neutral-300">SQL Editor</strong>, paste the initialization script below, and run it to create your database tables instantly.</li>
+                  </ol>
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* SQL Table Schema Assist */}
+            <div className="mt-6 border-t border-neutral-900 pt-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-extrabold uppercase font-mono text-emerald-400 flex items-center gap-1.5">
+                    <FileText className="w-4 h-4" /> SQL Schema initialization script
+                  </h4>
+                  <p className="text-[11px] text-neutral-500">Run this SQL code in your Supabase SQL Editor to provision all table relationships with 100% type compatibility.</p>
+                </div>
+                <button
+                  onClick={copySqlToClipboard}
+                  className="flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white px-3 py-1.5 rounded-xl text-[10.5px] font-mono border border-neutral-800 transition active:scale-95 cursor-pointer"
+                >
+                  {sqlCopied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="w-3.5 h-3.5" />
+                      Copy SQL script
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="bg-black/60 rounded-xl border border-neutral-900 p-4 font-mono text-[10.5px] text-zinc-400 max-h-96 overflow-y-auto leading-relaxed select-all">
+                <pre>{SUPABASE_INIT_SQL}</pre>
+              </div>
+            </div>
+
+          </div>
         </div>
       )}
 

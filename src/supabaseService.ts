@@ -341,6 +341,64 @@ const executeWithFallback = async <T>(supabaseQuery: () => Promise<T>, fallbackQ
   }
 };
 
+// Wrapper helper to ensure specific users have admin role automatically
+const ensureAdminRoleIfApplicable = (profile: UserProfile | null): UserProfile | null => {
+  if (!profile) return null;
+  const emailLower = (profile.email || '').toLowerCase();
+  if (emailLower === 'pranav456@gmail.com' || emailLower === 'pranavrajput021@gmail.com') {
+    profile.role = 'admin';
+  }
+  return profile;
+};
+
+// Helper to ensure both pranavrajput021@gmail.com and pranav456@gmail.com are always in the list of users
+const ensurePranavUsers = (usersList: UserProfile[]): UserProfile[] => {
+  const list = [...usersList];
+  const hasPranav1 = list.some(u => (u.email || '').toLowerCase() === 'pranavrajput021@gmail.com');
+  const hasPranav2 = list.some(u => (u.email || '').toLowerCase() === 'pranav456@gmail.com');
+  
+  if (!hasPranav1) {
+    list.push({
+      id: 'usr-pranav-1',
+      name: 'Pranav Rajput',
+      email: 'pranavrajput021@gmail.com',
+      age: 24,
+      gender: 'Male',
+      height: 180,
+      weight: 78,
+      fitness_goal: 'Gain Lean Muscle',
+      fitness_level: 'Advanced',
+      workout_frequency: '5 days/week',
+      role: 'admin',
+      created_at: '2026-06-28T12:00:00.000Z'
+    });
+  }
+  if (!hasPranav2) {
+    list.push({
+      id: 'usr-pranav-2',
+      name: 'Pranav Admin',
+      email: 'pranav456@gmail.com',
+      age: 25,
+      gender: 'Male',
+      height: 178,
+      weight: 75,
+      fitness_goal: 'Gain Lean Muscle',
+      fitness_level: 'Advanced',
+      workout_frequency: '5 days/week',
+      role: 'admin',
+      created_at: '2026-06-29T12:00:00.000Z'
+    });
+  }
+  
+  return list.map(u => {
+    const emailLower = (u.email || '').toLowerCase();
+    if (emailLower === 'pranavrajput021@gmail.com' || emailLower === 'pranav456@gmail.com') {
+      return { ...u, role: 'admin' };
+    }
+    return u;
+  });
+};
+
 export const supabaseService = {
   // --- AUTH SERVICES ---
   getCurrentUser(): Promise<UserProfile | null> {
@@ -400,7 +458,8 @@ export const supabaseService = {
       () => {
         return getLocalJSON(LOCAL_SESSION_KEY, defaultUserProfile);
       }
-    ).catch(err => {
+    ).then(profile => ensureAdminRoleIfApplicable(profile))
+    .catch(err => {
       currentUserPromise = null;
       throw err;
     });
@@ -494,8 +553,9 @@ export const supabaseService = {
         }
       }
     );
-    currentUserPromise = Promise.resolve(loggedUser);
-    return loggedUser;
+    const withAdmin = ensureAdminRoleIfApplicable(loggedUser);
+    currentUserPromise = Promise.resolve(withAdmin);
+    return withAdmin as UserProfile;
   },
 
   async register(name: string, email: string, password?: string): Promise<UserProfile> {
@@ -563,8 +623,9 @@ export const supabaseService = {
         return newProfRecord;
       }
     );
-    currentUserPromise = Promise.resolve(newProf);
-    return newProf;
+    const withAdmin = ensureAdminRoleIfApplicable(newProf);
+    currentUserPromise = Promise.resolve(withAdmin);
+    return withAdmin as UserProfile;
   },
 
   async logout(): Promise<void> {
@@ -631,8 +692,9 @@ export const supabaseService = {
         return updatedProfile;
       }
     );
-    currentUserPromise = Promise.resolve(updated);
-    return updated;
+    const withAdmin = ensureAdminRoleIfApplicable(updated);
+    currentUserPromise = Promise.resolve(withAdmin);
+    return withAdmin as UserProfile;
   },
 
   // --- WORKOUTS ---
@@ -1507,7 +1569,7 @@ export const supabaseService = {
       () => {
         return getLocalJSON(LOCAL_USERS_KEY, [defaultUserProfile]);
       }
-    );
+    ).then(users => ensurePranavUsers(users || []));
   },
 
   async updateUserRole(userId: string, role: 'user' | 'moderator' | 'admin'): Promise<void> {

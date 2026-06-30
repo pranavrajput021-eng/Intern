@@ -155,7 +155,7 @@ export default function App() {
     { key: 'goals', label: 'Goals & Badges', icon: <Trophy className="w-5 h-5" /> },
     { key: 'history', label: 'History Ledger', icon: <History className="w-5 h-5" /> },
     { key: 'profile', label: 'Profile Bio', icon: <User className="w-5 h-5" /> },
-    { key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> },
+    ...(user.role === 'admin' ? [{ key: 'admin', label: 'Admin Terminal', icon: <ShieldCheck className="w-5 h-5" /> }] : []),
   ];
   return (
     <div id="main-frame-layout" className="h-screen max-h-screen overflow-hidden bg-[#000000] text-neutral-100 flex font-sans relative antialiased">
